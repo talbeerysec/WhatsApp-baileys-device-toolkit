@@ -2,7 +2,7 @@
 
 **Enhanced WhatsApp Web API library with advanced device management and silent ping capabilities**
 
-This is a specialized fork of [Baileys](https://github.com/WhiskeySockets/Baileys) that extends the original library with powerful device management tools, comprehensive logging, and a modern web interface for WhatsApp protocol testing and analysis.
+This is a specialized fork of [Baileys](https://github.com/WhiskeySockets/Baileys) that extends the original library with powerful WhatsApp user device tools with  a modern web interface for WhatsApp protocol testing and analysis.
 
 ## 🚀 Key Features
 
@@ -19,11 +19,6 @@ This is a specialized fork of [Baileys](https://github.com/WhiskeySockets/Bailey
 - **Developer Tools**: Protocol testing and analysis tools
 - **Socket.io Integration**: Real-time updates and communication
 
-### 📋 Enhanced Logging & Monitoring
-- **Detailed Protocol Logging**: Complete stanza logging for protocol analysis
-- **Delete Ping Message Tracking**: Enhanced logging for delete ping operations
-- **Binary Protocol Analysis**: Deep inspection of WhatsApp's binary protocol
-- **Device-Specific Event Tracking**: Monitor events per device with detailed metadata
 
 ## 📦 Installation
 
@@ -119,11 +114,7 @@ This project is licensed under **GPLv3** - see the [LICENSE](LICENSE) file for d
 ## 🙏 Acknowledgments
 
 - **[Baileys](https://github.com/WhiskeySockets/Baileys)** - The original WhatsApp Web API library that this toolkit extends
-- **[WhiskeySockets Team](https://github.com/WhiskeySockets)** - For the excellent foundation and protocol implementation
-- **Signal Protocol** - For the end-to-end encryption implementation
-- **[@pokearaujo](https://github.com/pokearaujo/multidevice)** - For insights on WhatsApp Multi-Device workings
-- **[@Sigalor](https://github.com/sigalor/whatsapp-web-reveng)** - For WhatsApp Web protocol analysis
-- **[@Rhymen](https://github.com/Rhymen/go-whatsapp/)** - For the Go implementation reference
+
 
 ---
 
