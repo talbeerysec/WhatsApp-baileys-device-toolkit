@@ -6,6 +6,7 @@ desktop.ini
 
 # Environment & Config
 .env
+!web-ui/server/.env
 .env.local
 .env.production
 .env.development
