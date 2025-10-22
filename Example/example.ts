@@ -1365,7 +1365,8 @@ const startSock = async() => {
 					}
 					break
 					
-				case 'silentping9':
+				// COMMENTED OUT - TypeScript errors with IMessage interface
+				/* case 'silentping9':
 					if(args.length >= 2) {
 						const user = args[0]
 						const deviceId = parseInt(args[1])
@@ -1443,9 +1444,10 @@ const startSock = async() => {
 						console.log('Note: This sends an app state fatal exception notification')
 						console.log('      to test low-level app state handling and internal behavior.')
 					}
-					break
+					break */
 					
-				case 'silentping10':
+				// COMMENTED OUT - TypeScript errors with IMessage interface
+				/* case 'silentping10':
 					if(args.length >= 2) {
 						const user = args[0]
 						const deviceId = parseInt(args[1])
@@ -1540,7 +1542,7 @@ const startSock = async() => {
 						console.log('Note: This sends a peer data operation request message')
 						console.log('      to test P2P data operations and device coordination capabilities.')
 					}
-					break
+					break */
 					
 				case 'silentping11':
 					if(args.length >= 2) {
