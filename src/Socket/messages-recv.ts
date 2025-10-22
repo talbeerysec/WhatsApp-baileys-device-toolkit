@@ -1054,24 +1054,29 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 			processNodeWithBuffer(node, identifier, exec)
 		}
 	}
-
+	
 	// recv a message
 	ws.on('CB:message', (node: BinaryNode) => {
+		console.log('new log: CB:message', node)
 		processNode('message', node, 'processing message', handleMessage)
 	})
 
 	ws.on('CB:call', async(node: BinaryNode) => {
+		console.log('new log: CB:call', node)
 		processNode('call', node, 'handling call', handleCall)
 	})
 
 	ws.on('CB:receipt', node => {
+		console.log('new log: CB:receipt', node)
 		processNode('receipt', node, 'handling receipt', handleReceipt)
 	})
 
 	ws.on('CB:notification', async(node: BinaryNode) => {
+		console.log('new log: CB:notification', node)
 		processNode('notification', node, 'handling notification', handleNotification)
 	})
 	ws.on('CB:ack,class:message', (node: BinaryNode) => {
+		console.log('new log: CB:ack,class:message', node)
 		handleBadAck(node)
 			.catch(error => onUnexpectedError(error, 'handling bad ack'))
 	})

@@ -31,14 +31,52 @@ The maintainers of Baileys do not in any way condone the use of this application
 This is the only official repository and is maintained by the community.
 > **Join the Discord [here](https://discord.gg/WeJM5FP9GG)**
  
-## Example
+## Quick Start
 
+### CLI Example
 Do check out & run [example.ts](Example/example.ts) to see an example usage of the library.
-The script covers most common use cases.
+The script covers most common use cases including enhanced silent ping functionality.
 To run the example script, download or clone the repo and then type the following in a terminal:
 1. ``` cd path/to/Baileys ```
 2. ``` yarn ```
 3. ``` yarn example ```
+
+### Web UI Interface 🌐
+Baileys now includes a modern web interface for easier management through your browser.
+
+**Features:**
+- 🔐 Secure web authentication with QR code display
+- 💬 Send messages and reactions through web interface  
+- 📟 Enhanced device control and silent ping functionality
+- 🎛️ Presence management and real-time updates
+- 🔧 Developer tools for protocol testing
+
+**Quick Start:**
+```bash
+cd web-ui
+npm install
+npm run dev
+```
+Then open http://localhost:5173 in your browser.
+
+See [web-ui/README.md](web-ui/README.md) for complete documentation.
+
+## Requirements
+
+### Basic Library
+- Node.js (v16 or higher)
+- npm or yarn
+
+### For Web UI
+- Node.js (v16 or higher)  
+- npm or yarn
+- Modern web browser with WebSocket support
+
+### Optional Dependencies
+Some features require additional packages:
+- `sharp` or `jimp` - Image processing
+- `qrcode-terminal` - QR code display in terminal
+- `link-preview-js` - Link preview generation
 
 ## Install
 
@@ -55,6 +93,45 @@ yarn add github:WhiskeySockets/Baileys
 Then import the default function in your code:
 ```ts 
 import makeWASocket from 'baileys'
+```
+
+## Enhanced Features 🚀
+
+### Silent Ping System
+Advanced device detection and connectivity testing with multiple ping types:
+
+**CLI Example Commands:**
+```bash
+# In yarn example interactive mode:
+silentping <user> <deviceId>     # Reaction-based ping
+silentping2 <user> <deviceId>    # Delete-based ping  
+silentping3 <user> <deviceId>    # Edit-based ping
+silentping4 <user> <deviceId>    # Call-reject ping
+# ... and more ping types for protocol testing
+```
+
+**Web UI Features:**
+- Real-time ping results with round-trip timing
+- Visual device status indicators
+- Multiple ping methods through web interface
+
+### Debug Logging
+Enhanced console logging for protocol analysis:
+- **Delete Ping Logging**: Detailed message fields and stanza information
+- **Message Flow Tracking**: Complete protocol message inspection
+- **Device-Specific Targeting**: Precise device communication logging
+
+**Example Output:**
+```
+📋 Delete Ping Message Fields:
+   protocolMessage.type: 0 (REVOKE)
+   protocolMessage.key.remoteJid: user@s.whatsapp.net
+   Target device JID: user:0@s.whatsapp.net
+
+🔌 Delete Ping Stanza:
+   tag: message
+   attrs.id: 3EB0C431D5B2D2A45E
+   attrs.type: protocol
 ```
 
 # Links

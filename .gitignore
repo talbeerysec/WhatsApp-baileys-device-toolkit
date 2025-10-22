@@ -1,20 +1,90 @@
+# System Files
 .DS_Store
+*/.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment & Config
 .env
+.env.local
+.env.production
+.env.development
+*.local
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.bak
+.npm
 .yarn/
 *.tgz
-*/.DS_Store
+
+# Build outputs
+lib/
+dist/
+build/
+docs/
+*.d.ts.map
+*.js.map
+
+# Compiled TypeScript in src/ (keep source .ts files only)
+src/**/*.js
+src/**/*.d.ts
+
+# Authentication & Session Data (CRITICAL - Never commit these!)
 auth_info*.json
-baileys_auth_info*
+baileys_auth_info*/
 baileys_store*.json
 browser-messages.json
 browser-token.json
-decoded-ws.json
-docs
-lib
-messages*.json
-node_modules
-output.csv
-Proxy
-test.ts
-TestData
+session-*.json
+creds.json
+pre-key-*.json
+app-state-sync-*.json
+sender-key-*.json
+
+# Logs
+*.log
 wa-logs.txt
+logs/
+*.log.*
+
+# Test & Debug Data
+decoded-ws.json
+messages*.json
+output.csv
+test.ts
+TestData/
+Proxy/
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Coverage & Testing
+coverage/
+.nyc_output/
+.coverage
+*.lcov
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+.temp/
+
+# OS generated files
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Web UI specific ignores
+web-ui/*/baileys_auth_info*/
+web-ui/*/dist/
+web-ui/*/node_modules/
+web-ui/*/*.log

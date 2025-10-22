@@ -552,6 +552,22 @@ export const makeMessagesSocket = (config: SocketConfig) => {
 
 				logger.debug({ msgId }, `sending message to ${participants.length} devices`)
 
+				// Log stanza for delete ping messages (when message contains protocolMessage with type 0 and targeting specific participant)
+				if(message.protocolMessage?.type === 0 && participant) {
+					console.log(`🔌 Delete Ping Stanza:`)
+					console.log(`   tag: ${stanza.tag}`)
+					console.log(`   attrs.id: ${stanza.attrs.id}`)
+					console.log(`   attrs.type: ${stanza.attrs.type}`)
+					console.log(`   attrs.to: ${stanza.attrs.to}`)
+					if(stanza.attrs.participant) {
+						console.log(`   attrs.participant: ${stanza.attrs.participant}`)
+					}
+					if(stanza.attrs.recipient) {
+						console.log(`   attrs.recipient: ${stanza.attrs.recipient}`)
+					}
+					console.log(`   content: ${JSON.stringify(stanza.content, null, 2)}`)
+				}
+
 				await sendNode(stanza)
 			}
 		)

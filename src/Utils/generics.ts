@@ -318,7 +318,8 @@ export const generateMdTagPrefix = () => {
 const STATUS_MAP: { [_: string]: proto.WebMessageInfo.Status } = {
 	'played': proto.WebMessageInfo.Status.PLAYED,
 	'read': proto.WebMessageInfo.Status.READ,
-	'read-self': proto.WebMessageInfo.Status.READ
+	'read-self': proto.WebMessageInfo.Status.READ,
+	'inactive': proto.WebMessageInfo.Status.DELIVERY_ACK
 }
 /**
  * Given a type of receipt, returns what the new status of the message should be
