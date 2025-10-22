@@ -61,7 +61,12 @@ Launch the modern web interface for easier device management:
 
 ```bash
 cd web-ui
-npm install
+# Install dependencies for both server and client
+npm run install:all
+# Or install individually:
+# cd server && npm install && cd ../client && npm install
+
+# Start development servers
 npm run dev
 ```
 
