@@ -5,5 +5,6 @@
     "excludeExternals": true,
     "includeVersion": false,
     "out": "docs",
-    "gaID": "G-WBY63HR4VS"
+    "gaID": "G-WBY63HR4VS",
+    "favicon": "favicon.svg"
 }

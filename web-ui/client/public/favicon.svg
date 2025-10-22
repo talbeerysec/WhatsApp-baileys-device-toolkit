@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#25D366;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#128C7E;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#grad)"/>
+
+  <!-- Back bubble (third device) -->
+  <path d="M 24 28 Q 24 18 34 18 L 54 18 Q 64 18 64 28 L 64 43 Q 64 53 54 53 L 39 53 L 29 63 L 29 53 Q 24 53 24 43 Z"
+        fill="white"
+        opacity="0.4"/>
+
+  <!-- Middle bubble (second device) -->
+  <path d="M 30 35 Q 30 25 40 25 L 60 25 Q 70 25 70 35 L 70 50 Q 70 60 60 60 L 45 60 L 35 70 L 35 60 Q 30 60 30 50 Z"
+        fill="white"
+        opacity="0.7"/>
+
+  <!-- Front bubble (primary device) -->
+  <path d="M 36 42 Q 36 32 46 32 L 66 32 Q 76 32 76 42 L 76 57 Q 76 67 66 67 L 51 67 L 41 77 L 41 67 Q 36 67 36 57 Z"
+        fill="white"
+        opacity="0.95"/>
+
+  <!-- Message lines in front bubble -->
+  <line x1="44" y1="42" x2="68" y2="42" stroke="#128C7E" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="44" y1="50" x2="64" y2="50" stroke="#128C7E" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="44" y1="58" x2="66" y2="58" stroke="#128C7E" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
