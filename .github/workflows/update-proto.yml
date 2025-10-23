@@ -22,12 +22,14 @@ jobs:
         with:
           node-version: 20.x
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@4.x --activate
 
       - name: Install packages
         run: |
-          yarn install
+          yarn install --immutable
           yarn --cwd proto-extract install
 
       - name: Update WAProto.proto

@@ -27,10 +27,17 @@ jobs:
         echo "::set-output name=commit-msg::$(git log -1 --pretty=%B)"
         
     - name: Setup Node.js environment
-      uses: actions/setup-node@v2.1.1
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+
+    - name: Setup Yarn
+      run: |
+        corepack enable
+        corepack prepare yarn@4.x --activate
 
     - name: Install Dependencies
-      run: yarn
+      run: yarn install --immutable
 
     - name: Build
       run: yarn run build:all
