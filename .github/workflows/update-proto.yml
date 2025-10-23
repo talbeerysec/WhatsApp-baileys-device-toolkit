@@ -22,10 +22,13 @@ jobs:
         with:
           node-version: 20.x
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install packages
         run: |
-          yarn
-          yarn --pure-lockfile --cwd proto-extract
+          yarn install
+          yarn --cwd proto-extract install
 
       - name: Update WAProto.proto
         id: wa_proto_info
