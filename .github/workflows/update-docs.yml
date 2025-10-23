@@ -26,15 +26,14 @@ jobs:
         echo "::set-output name=package-version::$(jq -r .version package.json)"
         echo "::set-output name=commit-msg::$(git log -1 --pretty=%B)"
         
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
       with:
         node-version: 20.x
-
-    - name: Setup Yarn
-      run: |
-        corepack enable
-        corepack prepare yarn@4.x --activate
+        cache: 'yarn'
 
     - name: Install Dependencies
       run: yarn install --immutable
