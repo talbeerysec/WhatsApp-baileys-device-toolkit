@@ -30,6 +30,7 @@ jobs:
         run: |
           yarn install --immutable
           yarn --cwd proto-extract install
+        # Using Yarn 4.9.2 via Corepack
 
       - name: Update WAProto.proto
         id: wa_proto_info
