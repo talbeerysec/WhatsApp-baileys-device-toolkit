@@ -1,4 +1,4 @@
-name: Update WAProto (Fixed)
+name: Update WAProto
 
 on:
   schedule:
