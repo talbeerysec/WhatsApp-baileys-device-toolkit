@@ -32,7 +32,7 @@ jobs:
       - name: Install packages
         run: |
           yarn install --immutable
-          cd proto-extract && touch yarn.lock && yarn install
+          cd proto-extract && yarn install
         # Using Yarn 4.9.2 via Corepack
 
       - name: Update WAProto.proto
