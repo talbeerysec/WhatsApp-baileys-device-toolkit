@@ -100,7 +100,7 @@ const QRCodeDisplay: React.FC = () => {
               <strong>How to scan:</strong>
             </Typography>
             <Typography variant="body2" align="center" color="text.secondary">
-              WhatsApp → Settings → Linked Devices → Link a Device
+              WhatsApp → Settings (iOS) / Three-dot menu (Android) → Linked Devices → Link a Device
             </Typography>
           </Paper>
           
