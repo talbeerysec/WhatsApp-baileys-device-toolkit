@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 20.x
           cache: 'yarn'
+          cache-dependency-path: |
+            yarn.lock
+            proto-extract/yarn.lock
 
       - name: Install packages
         run: |
