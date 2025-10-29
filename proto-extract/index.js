@@ -81,7 +81,7 @@ async function findAppModules() {
     'LimitSharing$TriggerType'
   );
 
-  const qrModules = acorn.parse(patchedQrData).body;
+  const qrModules = acorn.parse(patchedQrData, { ecmaVersion: 'latest' }).body;
   
   const result = qrModules.filter((m) => {
     const expressions = extractAllExpressions(m);

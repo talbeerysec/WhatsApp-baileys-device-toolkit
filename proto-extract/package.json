@@ -6,8 +6,8 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "acorn": "^6.4.1",
-    "acorn-walk": "^6.1.1",
+    "acorn": "^8.12.1",
+    "acorn-walk": "^8.3.4",
     "request": "^2.88.0",
     "request-promise-core": "^1.1.2",
     "request-promise-native": "^1.0.7"
