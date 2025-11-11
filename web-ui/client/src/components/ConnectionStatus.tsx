@@ -132,9 +132,14 @@ const ConnectionStatus: React.FC = () => {
           </Alert>
         )}
 
-        <Typography variant="caption" color="text.secondary" display="block" mt={1}>
-          Last updated: {new Date(connectionStatus.lastUpdate).toLocaleString()}
-        </Typography>
+        <Box mt={1}>
+          <Typography variant="caption" color="text.secondary" display="block">
+            Baileys v{connectionStatus.baileysVersion || 'Unknown'}
+          </Typography>
+          <Typography variant="caption" color="text.secondary" display="block">
+            Last updated: {new Date(connectionStatus.lastUpdate).toLocaleString()}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );

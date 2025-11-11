@@ -24,6 +24,7 @@ export interface ConnectionStatus {
     name: string;
   };
   lastUpdate: string;
+  baileysVersion?: string;
 }
 
 export interface ChatInfo {
@@ -69,12 +70,14 @@ export interface SendMessageRequest {
   jid: string;
   message: string;
   type?: 'text' | 'reaction';
+  timestamp?: number; // Unix timestamp in seconds (optional, for research/testing)
 }
 
 export interface SendToDeviceRequest {
   user: string;
   deviceId: number;
   message: string;
+  timestamp?: number; // Unix timestamp in seconds (optional, for research/testing)
 }
 
 export interface ReactRequest {

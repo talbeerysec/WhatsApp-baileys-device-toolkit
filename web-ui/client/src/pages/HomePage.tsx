@@ -130,6 +130,12 @@ const HomePage: React.FC = () => {
                 </ListItem>
                 <ListItem>
                   <ListItemText
+                    primary="Baileys Version"
+                    secondary={connectionStatus.baileysVersion || 'Unknown'}
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
                     primary="Last Update"
                     secondary={new Date(connectionStatus.lastUpdate).toLocaleString()}
                   />

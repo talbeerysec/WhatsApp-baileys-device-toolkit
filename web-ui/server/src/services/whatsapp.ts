@@ -1,13 +1,14 @@
 import { EventEmitter } from 'events';
 import path from 'path';
 // Import Baileys from the parent project
-import makeWASocket, { 
-  AnyMessageContent, 
-  DisconnectReason, 
-  fetchLatestBaileysVersion, 
+import makeWASocket, {
+  AnyMessageContent,
+  DisconnectReason,
+  fetchLatestBaileysVersion,
   generateMessageIDV2,
-  makeCacheableSignalKeyStore, 
-  makeInMemoryStore, 
+  generateWAMessageFromContent,
+  makeCacheableSignalKeyStore,
+  makeInMemoryStore,
   useMultiFileAuthState,
   WASocket,
   WAMessageKey,
@@ -36,7 +37,8 @@ export class WhatsAppService extends EventEmitter {
   private connectionStatus: ConnectionStatus = {
     state: 'close',
     isAuthenticated: false,
-    lastUpdate: new Date().toISOString()
+    lastUpdate: new Date().toISOString(),
+    baileysVersion: '6.7.21'
   };
 
   constructor() {
@@ -297,9 +299,10 @@ export class WhatsAppService extends EventEmitter {
       state,
       isAuthenticated,
       user,
-      lastUpdate: new Date().toISOString()
+      lastUpdate: new Date().toISOString(),
+      baileysVersion: '6.7.21'
     };
-    
+
     this.emit('connection.status', this.connectionStatus);
   }
 
@@ -342,31 +345,70 @@ export class WhatsAppService extends EventEmitter {
     }));
   }
 
-  async sendMessage(jid: string, message: string): Promise<string> {
+  async sendMessage(jid: string, message: string, timestamp?: number): Promise<string> {
     if (!this.isConnected() || !this.sock) {
       throw new Error('WhatsApp not connected');
     }
 
-    const result = await this.sock.sendMessage(jid, { text: message });
+    const messageContent: AnyMessageContent = { text: message };
+    const messageOptions: any = {};
+
+    // Add custom timestamp if provided (research mode - no validation)
+    if (timestamp !== undefined) {
+      messageOptions.timestamp = new Date(timestamp * 1000); // Convert Unix seconds to Date
+      console.log(`📅 Sending message with custom timestamp: ${timestamp} (${new Date(timestamp * 1000).toISOString()})`);
+    }
+
+    const result = await this.sock.sendMessage(jid, messageContent, messageOptions);
     return result.key.id!;
   }
 
-  async sendMessageToDevice(user: string, deviceId: number, message: string): Promise<string> {
+  async sendMessageToDevice(user: string, deviceId: number, message: string, timestamp?: number): Promise<string> {
     if (!this.isConnected() || !this.sock) {
       throw new Error('WhatsApp not connected');
     }
 
     const normalJid = `${user}@s.whatsapp.net`;
     const deviceSpecificJid = deviceId !== undefined ? `${user}:${deviceId}@s.whatsapp.net` : normalJid;
+
+    // Generate a proper WAMessage with custom timestamp
     const messageId = generateMessageIDV2(this.sock.user?.id);
 
-    await this.sock.relayMessage(normalJid, { conversation: message }, {
+    const messageOptions: any = {
+      userJid: this.sock.user?.id,
+      messageId: messageId
+    };
+
+    // Add custom timestamp if provided (research mode - no validation)
+    if (timestamp !== undefined) {
+      messageOptions.timestamp = new Date(timestamp * 1000); // Convert Unix seconds to Date
+      console.log(`📅 Sending device message with custom timestamp: ${timestamp} (${new Date(timestamp * 1000).toISOString()})`);
+    }
+
+    // Generate a proper WAMessage with the timestamp baked in
+    const waMessage = generateWAMessageFromContent(
+      normalJid,
+      { conversation: message },
+      messageOptions
+    );
+
+    const relayOptions: any = {
       messageId: messageId,
       participant: {
         jid: deviceSpecificJid,
         count: 0
       }
-    });
+    };
+
+    // Add timestamp to stanza attributes (in addition to the protobuf messageTimestamp)
+    if (timestamp !== undefined) {
+      relayOptions.additionalAttributes = {
+        t: Math.floor(timestamp).toString() // Unix timestamp in seconds as string
+      };
+      console.log(`📅 Adding timestamp to stanza attributes: t=${timestamp}`);
+    }
+
+    await this.sock.relayMessage(normalJid, waMessage.message!, relayOptions);
 
     return messageId;
   }
