@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import path from 'path';
-// Import Baileys from the parent project
+// Import Baileys from the compiled library (ES modules)
 import makeWASocket, {
   AnyMessageContent,
   DisconnectReason,
@@ -13,7 +13,7 @@ import makeWASocket, {
   WASocket,
   WAMessageKey,
   WAPresence
-} from '../../../../src';
+} from '../../../../lib/index.js';
 import { Boom } from '@hapi/boom';
 import NodeCache from 'node-cache';
 import P from 'pino';
