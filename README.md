@@ -13,7 +13,7 @@ This is a specialized fork of [Baileys](https://github.com/WhiskeySockets/Bailey
 - **Device-Specific Targeting**: Send messages and operations to specific devices using device IDs
 - **Silent Ping Operations**: 11 different types of silent ping for comprehensive device testing
 - **Device Fingerprinting**: Advanced device identification and analysis capabilities
-- **iOS Device Detection**: Improved iOS device classification with race condition fix
+
 
 ### 🌐 Modern Web Interface
 - **React-based UI**: Clean, responsive interface built with Material-UI
