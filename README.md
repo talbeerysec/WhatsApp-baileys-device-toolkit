@@ -112,17 +112,6 @@ Some features require additional packages:
 - **Improved Stability**: Enhanced error handling and session management
 
 ## 🤝 Contributing & License
-
-### Contributing
-This toolkit is built for security research and protocol analysis. Contributions welcome for:
-
-- Additional silent ping types and device fingerprinting methods
-- Enhanced protocol analysis and logging features
-- Web UI improvements and new developer tools
-- Documentation improvements and examples
-- Security enhancements and bug fixes
-
-### License
 This project is licensed under **GPLv3** - see the [LICENSE](LICENSE) file for details.
 
 ### Usage Disclaimer
