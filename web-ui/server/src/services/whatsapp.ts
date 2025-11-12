@@ -387,7 +387,7 @@ export class WhatsAppService extends EventEmitter {
     }
 
     const result = await this.sock.sendMessage(jid, messageContent, messageOptions);
-    return result.key.id!;
+    return result?.key.id || '';
   }
 
   async sendMessageToDevice(user: string, deviceId: number, message: string, timestamp?: number): Promise<string> {
@@ -475,7 +475,7 @@ export class WhatsAppService extends EventEmitter {
       }
     });
 
-    return result.key.id!;
+    return result?.key.id || '';
   }
 
   async updatePresence(jid: string, presence: WAPresence): Promise<void> {

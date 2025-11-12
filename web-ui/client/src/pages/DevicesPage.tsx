@@ -122,7 +122,7 @@ const DevicesPage: React.FC = () => {
     });
 
     try {
-      await ApiService.silentPing({ user, deviceId, type: 'reaction' });
+      await ApiService.silentPing({ user, deviceId, type: 'edit' });
     } catch (err) {
       // Update status to offline on error
       setDeviceStatuses(prev => {
@@ -162,9 +162,9 @@ const DevicesPage: React.FC = () => {
     });
 
     try {
-      // First, send reaction ping
-      await ApiService.silentPing({ user, deviceId, type: 'reaction' });
-      
+      // First, send edit ping
+      await ApiService.silentPing({ user, deviceId, type: 'edit' });
+
       // Wait a moment then send delete ping
       setTimeout(async () => {
         try {
@@ -174,7 +174,7 @@ const DevicesPage: React.FC = () => {
         }
       }, 2000);
     } catch (err) {
-      console.error('Reaction ping failed:', err);
+      console.error('Edit ping failed:', err);
     }
   };
 
@@ -205,8 +205,8 @@ const DevicesPage: React.FC = () => {
           let status: DeviceStatus['status'] = existing.status;
           let updatedFingerprint = existing.fingerprint || {};
 
-          // Update overall status for reaction pings
-          if (result.type === 'reaction') {
+          // Update overall status for edit pings
+          if (result.type === 'edit') {
             if (result.status === 'delivered' || result.status === 'read') {
               status = 'online';
             } else if (result.status === 'timeout' || result.status === 'failed') {
@@ -217,11 +217,11 @@ const DevicesPage: React.FC = () => {
           }
 
           // Track fingerprinting results
-          if (result.type === 'reaction') {
-            updatedFingerprint.reactionPing = result.status === 'delivered' || result.status === 'read' 
-              ? 'success' 
-              : result.status === 'timeout' || result.status === 'failed' 
-                ? 'timeout' 
+          if (result.type === 'edit') {
+            updatedFingerprint.reactionPing = result.status === 'delivered' || result.status === 'read'
+              ? 'success'
+              : result.status === 'timeout' || result.status === 'failed'
+                ? 'timeout'
                 : 'pending';
           } else if (result.type === 'delete') {
             updatedFingerprint.deletePing = result.status === 'delivered' || result.status === 'read'
@@ -290,7 +290,7 @@ const DevicesPage: React.FC = () => {
     };
   }, [socket]);
 
-  const handleSilentPing = async (deviceId: number, type: 'reaction' | 'delete' | 'edit' | 'call-reject' | 'unknown' | 'poll-response' | 'button-response' | 'device-sent' | 'app-state' | 'peer-data-operation' = 'reaction') => {
+  const handleSilentPing = async (deviceId: number, type: 'reaction' | 'delete' | 'edit' | 'call-reject' | 'unknown' | 'poll-response' | 'button-response' | 'device-sent' | 'app-state' | 'peer-data-operation' | 'malformed-message' = 'reaction') => {
     setPingLoading(`${user}:${deviceId}:${type}`);
     setMessage('');
 
@@ -346,14 +346,14 @@ const DevicesPage: React.FC = () => {
       const startTime = Date.now();
       
       const checkAndFingerprint = (result: SilentPingResult) => {
-        // Only process reaction ping results that indicate the device is online
-        if (result.type === 'reaction' && 
-            (result.status === 'delivered' || result.status === 'read') && 
-            result.user === user && 
+        // Only process edit ping results that indicate the device is online
+        if (result.type === 'edit' &&
+            (result.status === 'delivered' || result.status === 'read') &&
+            result.user === user &&
             !fingerprintedDevices.has(result.deviceId)) {
-          
+
           fingerprintedDevices.add(result.deviceId);
-          
+
           setTimeout(async () => {
             try {
               if (result.deviceId === 0) {
@@ -361,14 +361,14 @@ const DevicesPage: React.FC = () => {
                 console.log(`🔍 Device ${result.deviceId} is online! Fingerprinting with delete ping...`);
                 await ApiService.silentPing({ user, deviceId: result.deviceId, type: 'delete' });
               } else {
-                // Secondary device: send call-reject ping for type detection  
+                // Secondary device: send call-reject ping for type detection
                 console.log(`🔍 Device ${result.deviceId} is online! Fingerprinting with call-reject ping...`);
                 await ApiService.silentPing({ user, deviceId: result.deviceId, type: 'call-reject' });
               }
             } catch (err) {
               console.error(`❌ Failed to fingerprint device ${result.deviceId}:`, err);
             }
-          }, 1000); // Small delay to ensure reaction ping processing is complete
+          }, 1000); // Small delay to ensure edit ping processing is complete
         }
       };
       
@@ -383,23 +383,23 @@ const DevicesPage: React.FC = () => {
         console.log('✅ Profile event handler registered successfully');
       }
       
-      // Step 1: Send reaction pings to all devices to determine which are online
-      console.log('📡 Step 1: Testing all devices with reaction pings...');
-      
-      const reactionPromises = devices.map(async (device, index) => {
+      // Step 1: Send edit pings to all devices to determine which are online
+      console.log('📡 Step 1: Testing all devices with edit pings...');
+
+      const editPromises = devices.map(async (device, index) => {
         const deviceId = device.device || 0;
         // Add small staggered delay to prevent overwhelming the system
         await new Promise(resolve => setTimeout(resolve, index * 200));
-        
+
         try {
-          await ApiService.silentPing({ user, deviceId, type: 'reaction' });
-          console.log(`✅ Reaction ping sent to device ${deviceId}`);
+          await ApiService.silentPing({ user, deviceId, type: 'edit' });
+          console.log(`✅ Edit ping sent to device ${deviceId}`);
         } catch (err) {
-          console.error(`❌ Failed to send reaction ping to device ${deviceId}:`, err);
+          console.error(`❌ Failed to send edit ping to device ${deviceId}:`, err);
         }
       });
       
-      await Promise.all(reactionPromises);
+      await Promise.all(editPromises);
       
       // Step 2: Monitor ping results and fingerprint devices as they come online
       console.log('📡 Step 2: Monitoring for online devices and fingerprinting...');
@@ -451,7 +451,7 @@ const DevicesPage: React.FC = () => {
         Discover devices for users, check their online status, and identify device types through ping fingerprinting.
       </Typography>
       <Typography variant="body2" color="text.secondary" paragraph>
-        <strong>Profile All:</strong> Automatically tests all devices with reaction pings, then fingerprints online devices 
+        <strong>Profile All:</strong> Automatically tests all devices with edit pings, then fingerprints online devices
         (delete ping for primary device OS detection, call-reject ping for secondary device type detection).
       </Typography>
 
