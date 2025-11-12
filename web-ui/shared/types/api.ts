@@ -25,6 +25,7 @@ export interface ConnectionStatus {
   };
   lastUpdate: string;
   baileysVersion?: string;
+  errorMessage?: string;
 }
 
 export interface ChatInfo {

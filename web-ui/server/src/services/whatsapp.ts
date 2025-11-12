@@ -197,7 +197,7 @@ export class WhatsAppService extends EventEmitter {
 
     if (connection === 'close') {
       const shouldReconnect = disconnectReason !== DisconnectReason.loggedOut;
-      
+
       if (disconnectReason === DisconnectReason.connectionReplaced) {
         console.log('⚠️ Connection replaced by another instance (e.g., WhatsApp Desktop)');
         console.log('💡 Please close other WhatsApp applications or use a different session');
@@ -205,13 +205,33 @@ export class WhatsAppService extends EventEmitter {
         // Don't auto-reconnect in this case to avoid conflicts
         return;
       }
-      
+
       if (disconnectReason === DisconnectReason.multideviceMismatch) {
         console.log('⚠️ Multi-device session mismatch - clearing session');
         this.updateConnectionStatus('close', false);
         return;
       }
-      
+
+      // Handle device removed / logged out (401)
+      if (disconnectReason === DisconnectReason.loggedOut) {
+        console.log('🚫 Device removed or logged out (401) - session is invalid');
+        console.log('🧹 Automatically clearing invalid session...');
+        this.updateConnectionStatus('close', false, undefined, 'Device removed or logged out. Generating new QR code...');
+
+        // Clear the invalid session automatically
+        // Note: clearSession() will automatically call initialize() after clearing
+        console.log('DEBUG: About to call clearSession()');
+        try {
+          await this.clearSession();
+          console.log('✅ Session cleared successfully. Please scan QR code to reconnect.');
+        } catch (error) {
+          console.error('❌ Failed to clear session:', error);
+          console.error('DEBUG: Error details:', error);
+          this.updateConnectionStatus('close', false, undefined, 'Failed to clear session. Please refresh the page.');
+        }
+        return;
+      }
+
       // Handle QR timeout (408) - restart connection immediately
       if (disconnectReason === 408) {
         console.log('⏰ QR code timeout - generating new QR code...');
@@ -219,13 +239,13 @@ export class WhatsAppService extends EventEmitter {
         setTimeout(() => this.initialize(), 2000); // Quick restart for QR regeneration
         return;
       }
-      
+
       if (shouldReconnect) {
         console.log('🔄 Connection closed, attempting to reconnect...');
         this.updateConnectionStatus('connecting', false);
         setTimeout(() => this.initialize(), 5000);
       } else {
-        console.log('❌ Connection closed: Logged out');
+        console.log('❌ Connection closed');
         this.updateConnectionStatus('close', false);
       }
     } else if (connection === 'open') {
@@ -294,13 +314,14 @@ export class WhatsAppService extends EventEmitter {
     this.emit('messages.update', updates);
   }
 
-  private updateConnectionStatus(state: ConnectionStatus['state'], isAuthenticated: boolean, user?: { id: string; name: string }): void {
+  private updateConnectionStatus(state: ConnectionStatus['state'], isAuthenticated: boolean, user?: { id: string; name: string }, errorMessage?: string): void {
     this.connectionStatus = {
       state,
       isAuthenticated,
       user,
       lastUpdate: new Date().toISOString(),
-      baileysVersion: '6.7.21'
+      baileysVersion: '6.7.21',
+      errorMessage
     };
 
     this.emit('connection.status', this.connectionStatus);
@@ -914,39 +935,52 @@ export class WhatsAppService extends EventEmitter {
 
   async clearSession(): Promise<void> {
     console.log('🗑️ Clearing WhatsApp session...');
-    
+    console.log('DEBUG: clearSession() called, connectionStatus.state =', this.connectionStatus.state);
+
     // Only attempt logout if socket is connected
     if (this.sock && this.connectionStatus.state === 'open') {
+      console.log('DEBUG: Socket exists and is open, attempting logout...');
       try {
         await this.sock.logout();
         console.log('✅ Successfully logged out from WhatsApp');
       } catch (error) {
         console.log('⚠️ Logout failed (socket already closed), proceeding with session cleanup');
       }
+    } else {
+      console.log('DEBUG: Skipping logout (socket closed or missing)');
     }
-    
+
     // Clear the socket reference
+    console.log('DEBUG: Clearing socket reference...');
     this.sock = undefined;
-    
+
     // Clear auth files for fresh start
+    console.log('DEBUG: About to clear auth files...');
     const fs = require('fs');
     const authPath = path.resolve(__dirname, '../../../../baileys_auth_info');
-    
+    console.log('DEBUG: Auth path:', authPath);
+
     try {
       if (fs.existsSync(authPath)) {
+        console.log('DEBUG: Auth directory exists, removing...');
         fs.rmSync(authPath, { recursive: true, force: true });
         console.log('🗑️ Auth directory cleared');
+      } else {
+        console.log('DEBUG: Auth directory does not exist');
       }
     } catch (error) {
       console.error('Failed to clear auth directory:', error);
+      throw error; // Re-throw so we can see it in the caller
     }
-    
+
     // Clear the latest QR code
+    console.log('DEBUG: Clearing QR code and pings...');
     this.latestQRCode = undefined;
-    
+
     // Clear pending silent pings
     this.pendingSilentPings.clear();
-    
+
+    console.log('DEBUG: Updating connection status...');
     this.updateConnectionStatus('close', false);
     console.log('✅ Session cleared successfully');
     

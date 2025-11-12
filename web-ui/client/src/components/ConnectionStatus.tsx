@@ -132,6 +132,12 @@ const ConnectionStatus: React.FC = () => {
           </Alert>
         )}
 
+        {connectionStatus.errorMessage && (
+          <Alert severity="warning" sx={{ mt: 2 }}>
+            {connectionStatus.errorMessage}
+          </Alert>
+        )}
+
         <Box mt={1}>
           <Typography variant="caption" color="text.secondary" display="block">
             Baileys v{connectionStatus.baileysVersion || 'Unknown'}
