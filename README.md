@@ -13,7 +13,7 @@ This is a specialized fork of [Baileys](https://github.com/WhiskeySockets/Bailey
 - **Device-Specific Targeting**: Send messages and operations to specific devices using device IDs
 - **Silent Ping Operations**: 11 different types of silent ping for comprehensive device testing
 - **Device Fingerprinting**: Advanced device identification and analysis capabilities
-
+- **iOS Device Detection**: Improved iOS device classification with race condition fix
 
 ### 🌐 Modern Web Interface
 - **React-based UI**: Clean, responsive interface built with Material-UI
@@ -112,7 +112,22 @@ Some features require additional packages:
 - **Improved Stability**: Enhanced error handling and session management
 
 ## 🤝 Contributing & License
-This project is licensed under **GPLv3** - see the [LICENSE](LICENSE) file for details.
+
+### Contributing
+This toolkit is built for security research and protocol analysis. Contributions welcome for:
+
+- Additional silent ping types and device fingerprinting methods
+- Enhanced protocol analysis and logging features
+- Web UI improvements and new developer tools
+- Documentation improvements and examples
+- Security enhancements and bug fixes
+
+### License
+This project is licensed under the **GNU General Public License v3.0 (GPLv3)** - see the [LICENSE](LICENSE) file for details.
+
+**Original Work**: This toolkit is based on [Baileys](https://github.com/WhiskeySockets/Baileys), which is MIT licensed. The original MIT license attribution is preserved in the [NOTICE](NOTICE) file as required.
+
+**License Compatibility**: The MIT license permits incorporation into GPLv3 projects. All modifications and additions to the original Baileys code are licensed under GPLv3, making the combined work GPLv3-licensed as a whole.
 
 ### Usage Disclaimer
 ⚠️ **Important**: This toolkit is intended for educational and security research purposes. Users are responsible for ensuring compliance with WhatsApp's Terms of Service and applicable laws. The authors are not responsible for any misuse of this software.

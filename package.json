@@ -11,7 +11,7 @@
   "repository": {
     "url": "git@github.com:WhiskeySockets/Baileys.git"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "author": "Rajeh Taher",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
