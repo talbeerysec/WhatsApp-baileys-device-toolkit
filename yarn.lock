@@ -5,6 +5,13 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@adiwajshing/keyed-db@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "@adiwajshing/keyed-db@npm:0.2.4"
+  checksum: 10c0/d4f578e232e55cb0f651fed66dd63f81d1736167e33b2db1ab6d4b756790e3d37808007cefb09e1d4859abd703e622568c50de1a2c30f1237f222891b839a57a
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.2.0":
   version: 2.3.0
   resolution: "@ampproject/remapping@npm:2.3.0"
@@ -2840,6 +2847,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "baileys@workspace:."
   dependencies:
+    "@adiwajshing/keyed-db": "npm:^0.2.4"
     "@cacheable/node-cache": "npm:^1.4.0"
     "@eslint/eslintrc": "npm:^3.3.1"
     "@eslint/js": "npm:^9.31.0"

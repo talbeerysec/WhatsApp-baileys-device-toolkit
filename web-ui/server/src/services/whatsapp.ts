@@ -13,8 +13,8 @@ import makeWASocket, {
   WAMessageKey,
   WAPresence
 } from '../../../../lib/index.js';
-// Store was removed from main exports in v6.7.21, import directly
-import { makeInMemoryStore } from '../../../../lib/Store/index.js';
+// Store was removed from main exports in v6.7.21, import directly (skip index to avoid cache-manager dep)
+import makeInMemoryStore from '../../../../lib/Store/make-in-memory-store.js';
 import { Boom } from '@hapi/boom';
 import NodeCache from 'node-cache';
 import P from 'pino';
@@ -300,14 +300,19 @@ export class WhatsAppService extends EventEmitter {
         };
         
         console.log(`🎯 Silent ping ${status} received for ${pingInfo.user}:${pingInfo.deviceId} (${roundTripTime}ms)`);
-        
+
         // Emit the ping result
         this.emit('ping.result', result);
-        
-        // Clean up tracking on final status (delivered or read)
-        if (update.status >= 3) {
+
+        // Clean up tracking based on ping type and status
+        // For 'delete' pings: iOS devices respond with ACK (status 2), which is the definitive response
+        // For other pings: Wait for delivered/read (status >= 3)
+        const shouldCleanup = (pingInfo.type === 'delete' && update.status >= 2) || update.status >= 3;
+
+        if (shouldCleanup) {
           clearTimeout(pingInfo.timeoutId);
           this.pendingSilentPings.delete(messageId);
+          console.log(`🧹 Cleaned up tracking for ${pingInfo.type} ping to ${pingInfo.user}:${pingInfo.deviceId} (status: ${status})`);
         }
       }
     }
