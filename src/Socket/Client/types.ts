@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import { URL } from 'url'
-import { SocketConfig } from '../../Types'
+import type { SocketConfig } from '../../Types'
 
 export abstract class AbstractSocketClient extends EventEmitter {
 	abstract get isOpen(): boolean
@@ -8,12 +8,15 @@ export abstract class AbstractSocketClient extends EventEmitter {
 	abstract get isClosing(): boolean
 	abstract get isConnecting(): boolean
 
-	constructor(public url: URL, public config: SocketConfig) {
+	constructor(
+		public url: URL,
+		public config: SocketConfig
+	) {
 		super()
 		this.setMaxListeners(0)
 	}
 
 	abstract connect(): Promise<void>
 	abstract close(): Promise<void>
-	abstract send(str: Uint8Array | string, cb?: (err?: Error) => void): boolean;
+	abstract send(str: Uint8Array | string, cb?: (err?: Error) => void): boolean
 }

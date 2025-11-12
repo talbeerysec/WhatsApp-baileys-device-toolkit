@@ -1,5 +1,5 @@
-import { USyncQueryProtocol } from '../../Types/USync'
-import { assertNodeErrorFree, BinaryNode } from '../../WABinary'
+import type { USyncQueryProtocol } from '../../Types/USync'
+import { assertNodeErrorFree, type BinaryNode } from '../../WABinary'
 
 export type StatusData = {
 	status?: string | null
@@ -12,7 +12,7 @@ export class USyncStatusProtocol implements USyncQueryProtocol {
 	getQueryElement(): BinaryNode {
 		return {
 			tag: 'status',
-			attrs: {},
+			attrs: {}
 		}
 	}
 
@@ -21,23 +21,23 @@ export class USyncStatusProtocol implements USyncQueryProtocol {
 	}
 
 	parser(node: BinaryNode): StatusData | undefined {
-		if(node.tag === 'status') {
+		if (node.tag === 'status') {
 			assertNodeErrorFree(node)
-			let status: string | null = node?.content!.toString()
+			let status: string | null = node?.content?.toString() ?? null
 			const setAt = new Date(+(node?.attrs.t || 0) * 1000)
-			if(!status) {
-				if(+node.attrs?.code === 401) {
+			if (!status) {
+				if (node.attrs?.code && +node.attrs.code === 401) {
 					status = ''
 				} else {
 					status = null
 				}
-			} else if(typeof status === 'string' && status.length === 0) {
+			} else if (typeof status === 'string' && status.length === 0) {
 				status = null
 			}
 
 			return {
 				status,
-				setAt,
+				setAt
 			}
 		}
 	}

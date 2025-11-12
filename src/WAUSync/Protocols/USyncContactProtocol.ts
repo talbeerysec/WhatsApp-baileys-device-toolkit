@@ -1,5 +1,5 @@
-import { USyncQueryProtocol } from '../../Types/USync'
-import { assertNodeErrorFree, BinaryNode } from '../../WABinary'
+import type { USyncQueryProtocol } from '../../Types/USync'
+import { assertNodeErrorFree, type BinaryNode } from '../../WABinary'
 import { USyncUser } from '../USyncUser'
 
 export class USyncContactProtocol implements USyncQueryProtocol {
@@ -8,7 +8,7 @@ export class USyncContactProtocol implements USyncQueryProtocol {
 	getQueryElement(): BinaryNode {
 		return {
 			tag: 'contact',
-			attrs: {},
+			attrs: {}
 		}
 	}
 
@@ -17,12 +17,12 @@ export class USyncContactProtocol implements USyncQueryProtocol {
 		return {
 			tag: 'contact',
 			attrs: {},
-			content: user.phone,
+			content: user.phone
 		}
 	}
 
 	parser(node: BinaryNode): boolean {
-		if(node.tag === 'contact') {
+		if (node.tag === 'contact') {
 			assertNodeErrorFree(node)
 			return node?.attrs?.type === 'in'
 		}

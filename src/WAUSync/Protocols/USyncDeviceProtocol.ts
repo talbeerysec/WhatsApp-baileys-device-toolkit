@@ -1,5 +1,5 @@
-import { USyncQueryProtocol } from '../../Types/USync'
-import { assertNodeErrorFree, BinaryNode, getBinaryNodeChild } from '../../WABinary'
+import type { USyncQueryProtocol } from '../../Types/USync'
+import { assertNodeErrorFree, type BinaryNode, getBinaryNodeChild } from '../../WABinary'
 //import { USyncUser } from '../USyncUser'
 
 export type KeyIndexData = {
@@ -15,7 +15,7 @@ export type DeviceListData = {
 }
 
 export type ParsedDeviceInfo = {
-    deviceList?: DeviceListData[]
+	deviceList?: DeviceListData[]
 	keyIndex?: KeyIndexData
 }
 
@@ -26,8 +26,8 @@ export class USyncDeviceProtocol implements USyncQueryProtocol {
 		return {
 			tag: 'devices',
 			attrs: {
-				version: '2',
-			},
+				version: '2'
+			}
 		}
 	}
 
@@ -42,16 +42,16 @@ export class USyncDeviceProtocol implements USyncQueryProtocol {
 		const deviceList: DeviceListData[] = []
 		let keyIndex: KeyIndexData | undefined = undefined
 
-		if(node.tag === 'devices') {
+		if (node.tag === 'devices') {
 			assertNodeErrorFree(node)
 			const deviceListNode = getBinaryNodeChild(node, 'device-list')
 			const keyIndexNode = getBinaryNodeChild(node, 'key-index-list')
 
-			if(Array.isArray(deviceListNode?.content)) {
-				for(const { tag, attrs } of deviceListNode!.content) {
-					const id = +attrs.id
-					const keyIndex = +attrs['key-index']
-					if(tag === 'device') {
+			if (Array.isArray(deviceListNode?.content)) {
+				for (const { tag, attrs } of deviceListNode.content) {
+					const id = +attrs.id!
+					const keyIndex = +attrs['key-index']!
+					if (tag === 'device') {
 						deviceList.push({
 							id,
 							keyIndex,
@@ -61,9 +61,9 @@ export class USyncDeviceProtocol implements USyncQueryProtocol {
 				}
 			}
 
-			if(keyIndexNode?.tag === 'key-index-list') {
+			if (keyIndexNode?.tag === 'key-index-list') {
 				keyIndex = {
-					timestamp: +keyIndexNode.attrs['ts'],
+					timestamp: +keyIndexNode.attrs['ts']!,
 					signedKeyIndex: keyIndexNode?.content as Uint8Array,
 					expectedTimestamp: keyIndexNode.attrs['expected_ts'] ? +keyIndexNode.attrs['expected_ts'] : undefined
 				}
