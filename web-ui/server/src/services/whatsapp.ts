@@ -8,12 +8,13 @@ import makeWASocket, {
   generateMessageIDV2,
   generateWAMessageFromContent,
   makeCacheableSignalKeyStore,
-  makeInMemoryStore,
   useMultiFileAuthState,
   WASocket,
   WAMessageKey,
   WAPresence
 } from '../../../../lib/index.js';
+// Store was removed from main exports in v6.7.21, import directly
+import { makeInMemoryStore } from '../../../../lib/Store/index.js';
 import { Boom } from '@hapi/boom';
 import NodeCache from 'node-cache';
 import P from 'pino';
