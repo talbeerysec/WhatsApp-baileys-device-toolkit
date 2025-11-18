@@ -346,15 +346,49 @@ export class WhatsAppService extends EventEmitter {
     return this.connectionStatus.state === 'open' && this.connectionStatus.isAuthenticated;
   }
 
-  getChats(): ChatInfo[] {
+  async getChats(): Promise<ChatInfo[]> {
     if (!this.store) return [];
 
-    return this.store.chats.all().slice(0, 50).map((chat: any) => {
+    const chats = this.store.chats.all().slice(0, 50);
+
+    // Fetch group metadata for all groups that don't have it
+    const groupMetadataStore = (this.store as any).groupMetadata || {};
+    const groupsToFetch = chats
+      .filter((chat: any) => chat.id && chat.id.includes('@g.us') && !groupMetadataStore[chat.id])
+      .map((chat: any) => chat.id);
+
+    if (groupsToFetch.length > 0 && this.sock) {
+      console.log(`📥 Fetching metadata for ${groupsToFetch.length} groups...`);
+      await Promise.all(
+        groupsToFetch.map(async (groupId: string) => {
+          try {
+            const metadata = await this.sock!.groupMetadata(groupId);
+            if (metadata && groupMetadataStore) {
+              groupMetadataStore[groupId] = metadata;
+              console.log(`✅ Fetched: ${metadata.subject || groupId}`);
+            }
+          } catch (error) {
+            console.log(`❌ Failed to fetch metadata for ${groupId}`);
+          }
+        })
+      );
+    }
+
+    return chats.map((chat: any) => {
       // Try to resolve the name from multiple sources
       let name = chat.name;
+      const isGroup = chat.id && chat.id.includes('@g.us');
 
-      // If no name in chat, try to find it in contacts
-      if (!name && chat.id) {
+      // For groups, lookup metadata from groupMetadata store
+      if (isGroup && !name) {
+        const groupMeta = groupMetadataStore[chat.id];
+        if (groupMeta) {
+          name = groupMeta.subject || groupMeta.name;
+        }
+      }
+
+      // If no name in chat, try to find it in contacts (for individual chats only)
+      if (!name && chat.id && !isGroup) {
         const contact = this.store?.contacts[chat.id];
         if (contact) {
           name = contact.name || contact.notify || contact.verifiedName;
@@ -363,15 +397,18 @@ export class WhatsAppService extends EventEmitter {
 
       // If still no name, format the JID nicely
       if (!name && chat.id) {
-        // Extract phone number from JID (e.g., "972547837628@s.whatsapp.net" -> "972547837628")
-        const phoneMatch = chat.id.match(/^(\d+)@/);
-        if (phoneMatch) {
-          name = `+${phoneMatch[1]}`;
-        } else if (chat.id.includes('@g.us')) {
-          // Group chat
-          name = 'Group Chat';
+        if (isGroup) {
+          // Group chat without name - extract group ID for reference
+          const groupIdMatch = chat.id.match(/^(.+)@g\.us$/);
+          name = groupIdMatch ? `Group (${groupIdMatch[1].substring(0, 10)}...)` : 'Group Chat';
         } else {
-          name = chat.id;
+          // Individual chat - extract phone number from JID (e.g., "972547837628@s.whatsapp.net" -> "+972547837628")
+          const phoneMatch = chat.id.match(/^(\d+)@/);
+          if (phoneMatch) {
+            name = `+${phoneMatch[1]}`;
+          } else {
+            name = chat.id;
+          }
         }
       }
 

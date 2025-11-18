@@ -6,10 +6,10 @@ import { ApiResponse, ChatInfo } from '../../../shared/types/api';
 const router = express.Router();
 
 // Get all chats
-router.get('/', authenticateToken, (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const whatsappService: WhatsAppService = req.app.locals.whatsappService;
-    const chats = whatsappService.getChats();
+    const chats = await whatsappService.getChats();
 
     const response: ApiResponse<ChatInfo[]> = {
       success: true,
