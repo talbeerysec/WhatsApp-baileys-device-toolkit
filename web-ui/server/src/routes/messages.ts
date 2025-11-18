@@ -1,13 +1,14 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth';
-import { 
-  validateJID, 
-  validateUser, 
-  validateDeviceId, 
-  validateMessage, 
-  validateReaction, 
+import {
+  validateJID,
+  validateUser,
+  validateDeviceId,
+  validateMessage,
+  validateReaction,
   validateMessageId,
-  handleValidationErrors 
+  validateRequiredMessageId,
+  handleValidationErrors
 } from '../middleware/validation';
 import { WhatsAppService } from '../services/whatsapp';
 import { ApiResponse, MessageResponse } from '../../../shared/types/api';
@@ -107,6 +108,47 @@ router.post('/react',
       res.status(500).json({
         success: false,
         error: error instanceof Error ? error.message : 'Failed to send reaction'
+      } as ApiResponse);
+    }
+  }
+);
+
+// Edit message
+router.post('/edit',
+  authenticateToken,
+  validateUser('user'),
+  validateDeviceId('deviceId'),
+  validateRequiredMessageId('originalMessageId'),
+  validateMessage('newText'),
+  handleValidationErrors,
+  async (req, res) => {
+    try {
+      const { user, deviceId, originalMessageId, newText, originalTimestamp, editTimestamp } = req.body;
+      const whatsappService: WhatsAppService = req.app.locals.whatsappService;
+
+      const messageId = await whatsappService.editMessage(
+        user,
+        deviceId,
+        originalMessageId,
+        newText,
+        originalTimestamp,
+        editTimestamp
+      );
+
+      const response: ApiResponse<MessageResponse> = {
+        success: true,
+        data: {
+          messageId,
+          success: true
+        }
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error('Edit message error:', error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to edit message'
       } as ApiResponse);
     }
   }

@@ -60,10 +60,17 @@ export const validateReaction = (field: string) =>
     .isLength({ min: 0, max: 10 })
     .withMessage('Reaction must be 0-10 characters');
 
-// Message ID validation
+// Message ID validation (optional)
 export const validateMessageId = (field: string) =>
   body(field)
     .optional()
     .isString()
     .isLength({ min: 1, max: 50 })
     .withMessage('Invalid message ID format');
+
+// Message ID validation (required)
+export const validateRequiredMessageId = (field: string) =>
+  body(field)
+    .isString()
+    .isLength({ min: 1, max: 50 })
+    .withMessage('Message ID is required and must be valid format');

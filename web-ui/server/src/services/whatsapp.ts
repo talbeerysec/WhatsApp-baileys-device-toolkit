@@ -348,17 +348,44 @@ export class WhatsAppService extends EventEmitter {
 
   getChats(): ChatInfo[] {
     if (!this.store) return [];
-    
-    return this.store.chats.all().slice(0, 50).map((chat: any) => ({
-      id: chat.id,
-      name: chat.name || 'Unknown',
-      unreadCount: chat.unreadCount || 0,
-      lastMessage: chat.lastMessage ? {
-        text: chat.lastMessage.text || 'Media',
-        timestamp: chat.lastMessage.messageTimestamp || Date.now(),
-        fromMe: chat.lastMessage.key?.fromMe || false
-      } : undefined
-    }));
+
+    return this.store.chats.all().slice(0, 50).map((chat: any) => {
+      // Try to resolve the name from multiple sources
+      let name = chat.name;
+
+      // If no name in chat, try to find it in contacts
+      if (!name && chat.id) {
+        const contact = this.store?.contacts[chat.id];
+        if (contact) {
+          name = contact.name || contact.notify || contact.verifiedName;
+        }
+      }
+
+      // If still no name, format the JID nicely
+      if (!name && chat.id) {
+        // Extract phone number from JID (e.g., "972547837628@s.whatsapp.net" -> "972547837628")
+        const phoneMatch = chat.id.match(/^(\d+)@/);
+        if (phoneMatch) {
+          name = `+${phoneMatch[1]}`;
+        } else if (chat.id.includes('@g.us')) {
+          // Group chat
+          name = 'Group Chat';
+        } else {
+          name = chat.id;
+        }
+      }
+
+      return {
+        id: chat.id,
+        name: name || 'Unknown',
+        unreadCount: chat.unreadCount || 0,
+        lastMessage: chat.lastMessage ? {
+          text: chat.lastMessage.text || 'Media',
+          timestamp: chat.lastMessage.messageTimestamp || Date.now(),
+          fromMe: chat.lastMessage.key?.fromMe || false
+        } : undefined
+      };
+    });
   }
 
   getContacts(): ContactInfo[] {
@@ -438,6 +465,96 @@ export class WhatsAppService extends EventEmitter {
     await this.sock.relayMessage(normalJid, waMessage.message!, relayOptions);
 
     return messageId;
+  }
+
+  async editMessage(user: string, deviceId: number, originalMessageId: string, newText: string, originalTimestamp?: number, editTimestamp?: number): Promise<string> {
+    if (!this.isConnected() || !this.sock) {
+      throw new Error('WhatsApp not connected');
+    }
+
+    const normalJid = `${user}@s.whatsapp.net`;
+    const deviceSpecificJid = `${user}:${deviceId}@s.whatsapp.net`;
+
+    console.log(`✏️ Editing message ${originalMessageId} for device ${deviceId} of user ${user}...`);
+    console.log(`   Original timestamp: ${originalTimestamp ? `${originalTimestamp} (${new Date(originalTimestamp * 1000).toISOString()})` : 'not specified'}`);
+    console.log(`   Edit timestamp: ${editTimestamp ? `${editTimestamp} (${new Date(editTimestamp * 1000).toISOString()})` : 'current'}`);
+
+    // Build the MessageKey for the original message
+    const messageKey: any = {
+      remoteJid: normalJid,
+      fromMe: true,
+      id: originalMessageId
+    };
+
+    // For group messages or when targeting specific device, include participant
+    // (participant should be the sender's JID, which is our own JID in this case)
+    // messageKey.participant = undefined; // Don't set for 1:1 chats
+
+    // Build the ProtocolMessage with MESSAGE_EDIT type
+    const editMessageContent: any = {
+      protocolMessage: {
+        key: messageKey,
+        type: 14, // MESSAGE_EDIT
+        editedMessage: {
+          conversation: newText
+        }
+      }
+    };
+
+    // Add timestampMs if we want to fake when the original message was sent
+    // This is field 15 in ProtocolMessage - timestamp in milliseconds
+    if (originalTimestamp !== undefined) {
+      editMessageContent.protocolMessage.timestampMs = originalTimestamp * 1000; // Convert to milliseconds
+      console.log(`📅 Setting original message timestampMs in protocolMessage: ${originalTimestamp * 1000}ms`);
+    }
+
+    const editMessageId = generateMessageIDV2(this.sock.user?.id);
+    const messageOptions: any = {
+      userJid: this.sock.user?.id,
+      messageId: editMessageId
+    };
+
+    // Set the timestamp for the edit message itself (when the edit is happening)
+    if (editTimestamp !== undefined) {
+      messageOptions.timestamp = new Date(editTimestamp * 1000);
+      console.log(`📅 Using custom edit timestamp: ${editTimestamp} (${new Date(editTimestamp * 1000).toISOString()})`);
+    }
+
+    // Generate the WAMessage containing the ProtocolMessage
+    const waMessage = generateWAMessageFromContent(
+      normalJid,
+      editMessageContent,
+      messageOptions
+    );
+
+    const relayOptions: any = {
+      messageId: editMessageId,
+      participant: {
+        jid: deviceSpecificJid,
+        count: 0
+      }
+    };
+
+    // Add timestamp to stanza attributes (XMPP level timestamp)
+    if (editTimestamp !== undefined) {
+      relayOptions.additionalAttributes = {
+        t: Math.floor(editTimestamp).toString() // Unix timestamp in seconds as string
+      };
+      console.log(`📅 Adding edit timestamp to stanza attributes: t=${editTimestamp}`);
+    }
+
+    console.log('📋 Edit message structure:', JSON.stringify({
+      messageKey,
+      protocolMessageType: 14,
+      editedMessage: editMessageContent.protocolMessage.editedMessage,
+      timestampMs: editMessageContent.protocolMessage.timestampMs,
+      messageOptions,
+      relayOptions
+    }, null, 2));
+
+    await this.sock.relayMessage(normalJid, waMessage.message!, relayOptions);
+
+    return editMessageId;
   }
 
   async sendReaction(user: string, messageId: string | undefined, reaction: string): Promise<string> {

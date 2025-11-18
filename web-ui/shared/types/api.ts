@@ -81,6 +81,15 @@ export interface SendToDeviceRequest {
   timestamp?: number; // Unix timestamp in seconds (optional, for research/testing)
 }
 
+export interface EditMessageRequest {
+  user: string;
+  deviceId: number;
+  originalMessageId: string;
+  newText: string;
+  originalTimestamp?: number; // Unix timestamp in seconds when original message was sent (optional, for research/testing)
+  editTimestamp?: number; // Unix timestamp in seconds for the edit (optional, for research/testing - test if 15min limit is client-side)
+}
+
 export interface ReactRequest {
   user: string;
   messageId?: string;

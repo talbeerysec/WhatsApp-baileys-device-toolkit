@@ -1,14 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
-import { 
-  ApiResponse, 
-  AuthRequest, 
-  AuthResponse, 
+import {
+  ApiResponse,
+  AuthRequest,
+  AuthResponse,
   ConnectionStatus,
   ChatInfo,
   ContactInfo,
   DeviceInfo,
   SendMessageRequest,
   SendToDeviceRequest,
+  EditMessageRequest,
   ReactRequest,
   PresenceRequest,
   SilentPingRequest,
@@ -151,11 +152,21 @@ export class ApiService {
 
   static async sendReaction(request: ReactRequest): Promise<MessageResponse> {
     const response: AxiosResponse<ApiResponse<MessageResponse>> = await api.post('/api/messages/react', request);
-    
+
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.error || 'Failed to send reaction');
     }
-    
+
+    return response.data.data;
+  }
+
+  static async editMessage(request: EditMessageRequest): Promise<MessageResponse> {
+    const response: AxiosResponse<ApiResponse<MessageResponse>> = await api.post('/api/messages/edit', request);
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.error || 'Failed to edit message');
+    }
+
     return response.data.data;
   }
 

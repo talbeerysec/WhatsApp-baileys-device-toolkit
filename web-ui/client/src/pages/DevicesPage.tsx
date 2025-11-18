@@ -71,6 +71,22 @@ const DevicesPage: React.FC = () => {
   const [profilingAll, setProfilingAll] = useState(false);
   const { socket } = useSocket();
 
+  // Message sending state
+  const [sendMessageDeviceId, setSendMessageDeviceId] = useState<number>(0);
+  const [sendMessageText, setSendMessageText] = useState('');
+  const [sendMessageTimestamp, setSendMessageTimestamp] = useState('');
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [lastSentMessageId, setLastSentMessageId] = useState('');
+  const [lastSentTimestamp, setLastSentTimestamp] = useState<number>(0);
+
+  // Message editing state
+  const [editMessageDeviceId, setEditMessageDeviceId] = useState<number>(0);
+  const [editOriginalMessageId, setEditOriginalMessageId] = useState('');
+  const [editNewText, setEditNewText] = useState('');
+  const [editOriginalTimestamp, setEditOriginalTimestamp] = useState('');
+  const [editEditTimestamp, setEditEditTimestamp] = useState('');
+  const [editingMessage, setEditingMessage] = useState(false);
+
   const handleGetDevices = async () => {
     if (!user) {
       setMessage('User phone number is required');
@@ -266,8 +282,8 @@ const DevicesPage: React.FC = () => {
           newMap.set(deviceKey, {
             ...existing,
             status,
-            lastCheck: result.type === 'reaction' ? new Date().toISOString() : existing.lastCheck,
-            responseTime: result.type === 'reaction' ? result.roundTripTime : existing.responseTime,
+            lastCheck: (result.type === 'reaction' || result.type === 'edit') ? new Date().toISOString() : existing.lastCheck,
+            responseTime: (result.type === 'reaction' || result.type === 'edit') ? result.roundTripTime : existing.responseTime,
             fingerprint: updatedFingerprint
           });
         }
@@ -302,6 +318,102 @@ const DevicesPage: React.FC = () => {
       setMessage(err instanceof Error ? err.message : 'Failed to send silent ping');
       setPingLoading('');
     }
+  };
+
+  const handleSendTextMessage = async () => {
+    if (!user || !sendMessageText) {
+      setMessage('User and message text are required');
+      return;
+    }
+
+    setSendingMessage(true);
+    setMessage('');
+
+    try {
+      const request: any = {
+        user,
+        deviceId: sendMessageDeviceId,
+        message: sendMessageText
+      };
+
+      let actualTimestamp: number;
+      if (sendMessageTimestamp) {
+        const timestamp = parseInt(sendMessageTimestamp);
+        if (!isNaN(timestamp)) {
+          request.timestamp = timestamp;
+          actualTimestamp = timestamp;
+        } else {
+          actualTimestamp = Math.floor(Date.now() / 1000);
+        }
+      } else {
+        actualTimestamp = Math.floor(Date.now() / 1000);
+      }
+
+      const result = await ApiService.sendToDevice(request);
+      setLastSentMessageId(result.messageId);
+      setLastSentTimestamp(actualTimestamp);
+      setMessage(`Message sent successfully! Message ID: ${result.messageId}`);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Failed to send message');
+    } finally {
+      setSendingMessage(false);
+    }
+  };
+
+  const handleEditMessage = async () => {
+    if (!user || !editOriginalMessageId || !editNewText) {
+      setMessage('User, original message ID, and new text are required');
+      return;
+    }
+
+    setEditingMessage(true);
+    setMessage('');
+
+    try {
+      const request: any = {
+        user,
+        deviceId: editMessageDeviceId,
+        originalMessageId: editOriginalMessageId,
+        newText: editNewText
+      };
+
+      if (editOriginalTimestamp) {
+        const timestamp = parseInt(editOriginalTimestamp);
+        if (!isNaN(timestamp)) {
+          request.originalTimestamp = timestamp;
+        }
+      }
+
+      if (editEditTimestamp) {
+        const timestamp = parseInt(editEditTimestamp);
+        if (!isNaN(timestamp)) {
+          request.editTimestamp = timestamp;
+        }
+      }
+
+      const result = await ApiService.editMessage(request);
+      setMessage(`Message edited successfully! Edit message ID: ${result.messageId}`);
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Failed to edit message');
+    } finally {
+      setEditingMessage(false);
+    }
+  };
+
+  const copyMessageId = (messageId: string) => {
+    navigator.clipboard.writeText(messageId);
+    setMessage(`Copied message ID: ${messageId}`);
+  };
+
+  const copyTimestamp = (timestamp: number) => {
+    navigator.clipboard.writeText(timestamp.toString());
+    setMessage(`Copied timestamp: ${timestamp}`);
+  };
+
+  const useLastSentForEdit = () => {
+    setEditOriginalMessageId(lastSentMessageId);
+    setEditOriginalTimestamp(lastSentTimestamp.toString());
+    setMessage('Populated edit form with last sent message details');
   };
 
   const getStatusColor = (status: SilentPingResult['status']) => {
@@ -939,6 +1051,205 @@ const DevicesPage: React.FC = () => {
                     ))}
                   </List>
                 </Collapse>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+
+        {/* Send Text Message Section */}
+        {devices.length > 0 && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Send Text Message to Device
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Target Device"
+                      value={sendMessageDeviceId}
+                      onChange={(e) => setSendMessageDeviceId(Number(e.target.value))}
+                      SelectProps={{ native: true }}
+                    >
+                      {devices.map((device) => (
+                        <option key={device.device || 0} value={device.device || 0}>
+                          Device {device.device || 0} {device.device === 0 ? '(Primary)' : '(Secondary)'}
+                        </option>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      label="Message Text"
+                      value={sendMessageText}
+                      onChange={(e) => setSendMessageText(e.target.value)}
+                      placeholder="Enter message text to send..."
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Timestamp (optional, Unix seconds)"
+                      value={sendMessageTimestamp}
+                      onChange={(e) => setSendMessageTimestamp(e.target.value)}
+                      placeholder="Leave empty for current time"
+                      helperText="Unix timestamp in seconds for research/testing"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSendTextMessage}
+                      disabled={sendingMessage || !sendMessageText}
+                      fullWidth
+                    >
+                      {sendingMessage ? 'Sending...' : 'Send Message'}
+                    </Button>
+                  </Grid>
+                  {lastSentMessageId && (
+                    <Grid item xs={12}>
+                      <Alert
+                        severity="success"
+                        sx={{
+                          '& .MuiAlert-message': { width: '100%' }
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
+                            <Typography variant="body2">
+                              <strong>Message ID:</strong> {lastSentMessageId}
+                            </Typography>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => copyMessageId(lastSentMessageId)}
+                            >
+                              Copy ID
+                            </Button>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1 }}>
+                            <Typography variant="body2">
+                              <strong>Timestamp:</strong> {lastSentTimestamp} ({new Date(lastSentTimestamp * 1000).toLocaleString()})
+                            </Typography>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() => copyTimestamp(lastSentTimestamp)}
+                            >
+                              Copy Timestamp
+                            </Button>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                            <Button
+                              size="small"
+                              variant="contained"
+                              color="secondary"
+                              onClick={useLastSentForEdit}
+                            >
+                              Use for Edit Below
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Alert>
+                    </Grid>
+                  )}
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
+
+        {/* Edit Message Section (Research Mode) */}
+        {devices.length > 0 && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Edit Message (Research Mode)
+                </Typography>
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  <Typography variant="body2">
+                    <strong>Research Feature:</strong> Test if WhatsApp's 15-minute edit window can be bypassed by manipulating timestamps.
+                    Normal edits are only allowed within 15 minutes of sending.
+                  </Typography>
+                </Alert>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Target Device"
+                      value={editMessageDeviceId}
+                      onChange={(e) => setEditMessageDeviceId(Number(e.target.value))}
+                      SelectProps={{ native: true }}
+                    >
+                      {devices.map((device) => (
+                        <option key={device.device || 0} value={device.device || 0}>
+                          Device {device.device || 0} {device.device === 0 ? '(Primary)' : '(Secondary)'}
+                        </option>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Original Message ID"
+                      value={editOriginalMessageId}
+                      onChange={(e) => setEditOriginalMessageId(e.target.value)}
+                      placeholder="Message ID to edit"
+                      helperText="Copy from sent message above or ping results"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={3}
+                      label="New Text"
+                      value={editNewText}
+                      onChange={(e) => setEditNewText(e.target.value)}
+                      placeholder="Enter new message text..."
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Original Timestamp (optional, Unix seconds)"
+                      value={editOriginalTimestamp}
+                      onChange={(e) => setEditOriginalTimestamp(e.target.value)}
+                      placeholder="Leave empty for current"
+                      helperText="When original message was sent (research)"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Edit Timestamp (optional, Unix seconds)"
+                      value={editEditTimestamp}
+                      onChange={(e) => setEditEditTimestamp(e.target.value)}
+                      placeholder="Leave empty for current"
+                      helperText="When edit is performed (test 15min limit)"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleEditMessage}
+                      disabled={editingMessage || !editOriginalMessageId || !editNewText}
+                      fullWidth
+                    >
+                      {editingMessage ? 'Editing...' : 'Edit Message'}
+                    </Button>
+                  </Grid>
+                </Grid>
               </CardContent>
             </Card>
           </Grid>
