@@ -58,6 +58,8 @@ import { ApiService } from '../services/api';
 import { DeviceInfo, SilentPingResult, DeviceStatus } from '../../../shared/types/api';
 import { useSocket } from '../contexts/SocketContext';
 import { sanitizePhoneNumber } from '../utils/phoneUtils';
+import { OSDisplay } from '../components/OSDisplay';
+import { calculateDeviceAge } from '../../../shared/utils/prekey-inference';
 
 const DevicesPage: React.FC = () => {
   const [user, setUser] = useState('');
@@ -69,6 +71,7 @@ const DevicesPage: React.FC = () => {
   const [showResults, setShowResults] = useState(false);
   const [deviceStatuses, setDeviceStatuses] = useState<Map<string, DeviceStatus>>(new Map());
   const [profilingAll, setProfilingAll] = useState(false);
+  const [prekeyDataMap, setPrekeyDataMap] = useState<Map<number, { signedPreKeyId?: string }>>(new Map());
   const { socket } = useSocket();
 
   // Message sending state
@@ -97,21 +100,43 @@ const DevicesPage: React.FC = () => {
     setMessage('');
 
     try {
-      const result = await ApiService.getDevices(user);
-      setDevices(result);
-      setMessage(`Found ${result.length} device(s) for user ${user}`);
-      
-      // Initialize device statuses
+      // Fetch both device list and prekey bundles in parallel
+      const [devicesResult, prekeyData] = await Promise.all([
+        ApiService.getDevices(user),
+        ApiService.getPrekeyBundles(user).catch(() => null) // Fallback if prekeys fail
+      ]);
+
+      setDevices(devicesResult);
+      setMessage(`Found ${devicesResult.length} device(s) for user ${user}`);
+
+      // Initialize device statuses with passive inference from prekey bundles
       const newStatuses = new Map<string, DeviceStatus>();
-      result.forEach(device => {
+      const newPrekeyDataMap = new Map<number, { signedPreKeyId?: string }>();
+
+      devicesResult.forEach(device => {
         const deviceKey = `${user}:${device.device || 0}`;
+        const deviceId = device.device || 0;
+
+        // Find matching prekey data
+        const prekeyDevice = prekeyData?.devices.find(d => d.deviceId === deviceId);
+
         newStatuses.set(deviceKey, {
           user,
-          deviceId: device.device || 0,
-          status: 'unknown'
+          deviceId,
+          status: 'unknown',
+          passiveInference: prekeyDevice?.osInference
         });
+
+        // Store signed prekey ID for device age calculation
+        if (prekeyDevice?.prekeyBundle?.signedPreKey?.keyId) {
+          newPrekeyDataMap.set(deviceId, {
+            signedPreKeyId: prekeyDevice.prekeyBundle.signedPreKey.keyId
+          });
+        }
       });
+
       setDeviceStatuses(newStatuses);
+      setPrekeyDataMap(newPrekeyDataMap);
     } catch (err) {
       setMessage(err instanceof Error ? err.message : 'Failed to get devices');
       setDevices([]);
@@ -626,7 +651,9 @@ const DevicesPage: React.FC = () => {
                       <TableRow>
                         <TableCell>Device</TableCell>
                         <TableCell>Type</TableCell>
-                        <TableCell>Device Type</TableCell>
+                        <TableCell>Device Type (Passive)</TableCell>
+                        <TableCell>Device Age</TableCell>
+                        <TableCell>Device Type (Active)</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Last Check</TableCell>
                         <TableCell>Ping Tests</TableCell>
@@ -656,6 +683,77 @@ const DevicesPage: React.FC = () => {
                               />
                             </TableCell>
                             <TableCell>
+                              {/* Passive Device Type - From Prekey Bundle Analysis */}
+                              {deviceStatus?.passiveInference ? (
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                  <OSDisplay
+                                    os={deviceStatus.passiveInference.os}
+                                    iconSize="small"
+                                    variant="caption"
+                                  />
+                                  <Tooltip title={deviceStatus.passiveInference.reasoning}>
+                                    <Chip
+                                      label={`${deviceStatus.passiveInference.confidence} confidence`}
+                                      size="small"
+                                      sx={{
+                                        height: '18px',
+                                        fontSize: '0.65rem',
+                                        bgcolor: deviceStatus.passiveInference.confidence === 'high' ? 'success.light' : 'warning.light',
+                                        color: deviceStatus.passiveInference.confidence === 'high' ? 'success.dark' : 'warning.dark'
+                                      }}
+                                    />
+                                  </Tooltip>
+                                </Box>
+                              ) : (
+                                <Typography variant="caption" color="text.secondary">
+                                  No data
+                                </Typography>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {/* Device Age - Calculated from Signed Pre-Key ID */}
+                              {(() => {
+                                if (!deviceStatus?.passiveInference) {
+                                  return (
+                                    <Typography variant="caption" color="text.secondary">
+                                      N/A
+                                    </Typography>
+                                  );
+                                }
+
+                                const prekeyData = prekeyDataMap.get(deviceId);
+                                const deviceAge = calculateDeviceAge(
+                                  deviceStatus.passiveInference.os,
+                                  prekeyData?.signedPreKeyId
+                                );
+
+                                if (deviceAge === null) {
+                                  return (
+                                    <Tooltip title="Device age calculation not applicable for iOS and Mac Desktop (random Signed Pre-Key ID)">
+                                      <Typography variant="caption" color="text.secondary">
+                                        N/A
+                                      </Typography>
+                                    </Tooltip>
+                                  );
+                                }
+
+                                const years = Math.floor(deviceAge / 12);
+                                const months = deviceAge % 12;
+                                const ageDisplay = years > 0
+                                  ? `${years}y ${months}m`
+                                  : `${months}m`;
+
+                                return (
+                                  <Tooltip title={`Approximately ${deviceAge} months old (based on Signed Pre-Key ID)`}>
+                                    <Typography variant="body2">
+                                      {ageDisplay}
+                                    </Typography>
+                                  </Tooltip>
+                                );
+                              })()}
+                            </TableCell>
+                            <TableCell>
+                              {/* Active Device Type - From Ping Fingerprinting */}
                               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 {/* Primary device (deviceId === 0) OS detection */}
                                 {deviceId === 0 && (

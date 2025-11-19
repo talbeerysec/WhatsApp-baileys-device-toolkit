@@ -18,7 +18,7 @@ import makeInMemoryStore from '../../../../lib/Store/make-in-memory-store.js';
 import { Boom } from '@hapi/boom';
 import NodeCache from 'node-cache';
 import P from 'pino';
-import { ConnectionStatus, ChatInfo, ContactInfo, DeviceInfo, SilentPingResult } from '../../../shared/types/api';
+import { ConnectionStatus, ChatInfo, ContactInfo, DeviceInfo, SilentPingResult, PrekeyBundle } from '../../../shared/types/api';
 
 interface PendingSilentPing {
   user: string;
@@ -658,7 +658,7 @@ export class WhatsAppService extends EventEmitter {
     }
 
     let jid = user.includes('@') ? user : `${user}@s.whatsapp.net`;
-    
+
     // 🔍 TRANSLATION: If user looks like a phone number, translate to WhatsApp JID first
     // This handles cases where phone number != WhatsApp ID due to number changes
     if (!user.includes('@') && /^\+?\d+$/.test(user.replace(/[^\d+]/g, ''))) {
@@ -682,13 +682,155 @@ export class WhatsAppService extends EventEmitter {
     // ✅ FIX: Use useCache=false to always fetch fresh device data from server
     // This ensures we get current device list even if cached data is stale
     const devices = await this.sock.getUSyncDevices([jid], false, false);
-    
+
     console.log(`📱 Fetched ${devices.length} devices for ${jid} (fresh from server, not cached)`);
-    
+
     return devices.map(device => ({
       user: device.user,
       device: device.device
     }));
+  }
+
+  async getPrekeyBundle(user: string, deviceId: number): Promise<PrekeyBundle | null> {
+    if (!this.isConnected() || !this.sock) {
+      throw new Error('WhatsApp not connected');
+    }
+
+    // Construct the device-specific JID
+    const jid = user.includes('@')
+      ? (deviceId === 0 ? user : user.replace('@', `:${deviceId}@`))
+      : `${user}:${deviceId}@s.whatsapp.net`;
+
+    console.log(`🔑 Fetching prekey bundle for ${jid}...`);
+
+    try {
+      // Query WhatsApp servers for prekey bundle using the encrypt protocol
+      const result = await this.sock.query({
+        tag: 'iq',
+        attrs: {
+          xmlns: 'encrypt',
+          type: 'get',
+          to: 's.whatsapp.net'
+        },
+        content: [
+          {
+            tag: 'key',
+            attrs: {},
+            content: [
+              {
+                tag: 'user',
+                attrs: { jid }
+              }
+            ]
+          }
+        ]
+      });
+
+      // Helper function to extract key data from binary node
+      const extractKey = (node: any) => {
+        if (!node) return undefined;
+
+        const getChildBuffer = (parent: any, tag: string): Buffer | undefined => {
+          const child = parent.content?.find((c: any) => c.tag === tag);
+          return child?.content;
+        };
+
+        const getChildUInt = (parent: any, tag: string, bytes: number): number | undefined => {
+          const buffer = getChildBuffer(parent, tag);
+          if (!buffer) return undefined;
+
+          let value = 0;
+          for (let i = 0; i < bytes && i < buffer.length; i++) {
+            value = (value << 8) | buffer[i];
+          }
+          return value;
+        };
+
+        const keyId = getChildUInt(node, 'id', 3);
+        const publicKey = getChildBuffer(node, 'value');
+        const signature = getChildBuffer(node, 'signature');
+
+        return {
+          keyId: keyId !== undefined ? `0x${keyId.toString(16).padStart(6, '0')}` : undefined,
+          publicKey: publicKey ? publicKey.toString('hex') : undefined,
+          signature: signature ? signature.toString('hex') : undefined
+        };
+      };
+
+      // Parse the response
+      const listNode = result.content?.find((c: any) => c.tag === 'list');
+      const userNode = listNode?.content?.find((c: any) => c.tag === 'user');
+
+      if (!userNode) {
+        console.log(`⚠️ No prekey bundle found for ${jid}`);
+        return null;
+      }
+
+      // Extract all components
+      const getChildBuffer = (parent: any, tag: string): Buffer | undefined => {
+        const child = parent.content?.find((c: any) => c.tag === tag);
+        return child?.content;
+      };
+
+      const getChildUInt = (parent: any, tag: string, bytes: number): number | undefined => {
+        const buffer = getChildBuffer(parent, tag);
+        if (!buffer) return undefined;
+
+        let value = 0;
+        for (let i = 0; i < bytes && i < buffer.length; i++) {
+          value = (value << 8) | buffer[i];
+        }
+        return value;
+      };
+
+      const identityBuffer = getChildBuffer(userNode, 'identity');
+      const registrationId = getChildUInt(userNode, 'registration', 4);
+      const signedKeyNode = userNode.content?.find((c: any) => c.tag === 'skey');
+      const keyNode = userNode.content?.find((c: any) => c.tag === 'key');
+      const signedIdentityNode = userNode.content?.find((c: any) => c.tag === 'signed_identity');
+
+      const bundle: PrekeyBundle = {
+        identityKey: identityBuffer ? identityBuffer.toString('hex') : '',
+        registrationId: registrationId !== undefined ? `0x${registrationId.toString(16).padStart(8, '0')}` : '0x00000000',
+        signedPreKey: {
+          keyId: extractKey(signedKeyNode)?.keyId || '0x000000',
+          publicKey: extractKey(signedKeyNode)?.publicKey || '',
+          signature: extractKey(signedKeyNode)?.signature || ''
+        }
+      };
+
+      // Optional fields
+      const preKeyData = extractKey(keyNode);
+      if (preKeyData?.keyId && preKeyData?.publicKey) {
+        bundle.preKey = {
+          keyId: preKeyData.keyId,
+          publicKey: preKeyData.publicKey
+        };
+      }
+
+      if (signedIdentityNode) {
+        const details = getChildBuffer(signedIdentityNode, 'details');
+        const accountSignatureKey = getChildBuffer(signedIdentityNode, 'account_signature_key');
+        const accountSignature = getChildBuffer(signedIdentityNode, 'account_signature');
+        const deviceSignature = getChildBuffer(signedIdentityNode, 'device_signature');
+
+        if (details || accountSignatureKey || accountSignature || deviceSignature) {
+          bundle.signedIdentityKey = {
+            details: details ? details.toString('hex') : '',
+            accountSignatureKey: accountSignatureKey ? accountSignatureKey.toString('hex') : '',
+            accountSignature: accountSignature ? accountSignature.toString('hex') : '',
+            deviceSignature: deviceSignature ? deviceSignature.toString('hex') : ''
+          };
+        }
+      }
+
+      console.log(`✅ Fetched prekey bundle for ${jid}`);
+      return bundle;
+
+    } catch (error) {
+      console.error(`❌ Failed to fetch prekey bundle for ${jid}:`, error);
+      throw error;
+    }
   }
 
   async silentPing(user: string, deviceId: number, type: 'reaction' | 'delete' | 'edit' | 'call-reject' | 'unknown' | 'poll-response' | 'button-response' | 'device-sent' | 'app-state' | 'peer-data-operation' | 'malformed-message' = 'reaction'): Promise<SilentPingResult> {

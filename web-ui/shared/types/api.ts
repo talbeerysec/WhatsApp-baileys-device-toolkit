@@ -65,6 +65,11 @@ export interface DeviceStatus {
     detectedSecondaryType?: 'desktop' | 'browser' | 'unknown';
     lastFingerprint?: string; // ISO timestamp
   };
+  passiveInference?: {
+    os: 'android' | 'ios' | 'mac-desktop' | 'windows-desktop' | 'web' | 'unknown';
+    confidence: 'high' | 'medium' | 'low';
+    reasoning: string;
+  };
 }
 
 export interface SendMessageRequest {
@@ -127,4 +132,44 @@ export interface CorruptMessageRequest {
 export interface MessageResponse {
   messageId: string;
   success: boolean;
+}
+
+export interface PrekeyBundle {
+  identityKey: string; // Hex encoded public identity key
+  signedPreKey: {
+    keyId: string; // Hex format (0x-prefixed, zero-padded)
+    publicKey: string; // Hex encoded
+    signature: string; // Hex encoded
+  };
+  signedIdentityKey?: {
+    details: string; // Hex encoded
+    accountSignatureKey: string; // Hex encoded
+    accountSignature: string; // Hex encoded
+    deviceSignature: string; // Hex encoded
+  };
+  preKey?: {
+    keyId: string; // Hex format (0x-prefixed, zero-padded)
+    publicKey: string; // Hex encoded
+  };
+  registrationId: string; // Hex format (0x-prefixed, zero-padded)
+  advSecretKey?: string; // Hex encoded
+}
+
+export interface DevicePrekeyData {
+  user: string;
+  deviceId: number;
+  prekeyBundle?: PrekeyBundle;
+  error?: string;
+  fetchedAt?: string; // ISO timestamp
+  osInference?: {
+    os: 'android' | 'ios' | 'mac-desktop' | 'windows-desktop' | 'web' | 'unknown';
+    confidence: 'high' | 'medium' | 'low';
+    reasoning: string;
+  };
+}
+
+export interface PrekeyData {
+  phoneNumber: string;
+  devices: DevicePrekeyData[];
+  fetchedAt: string; // ISO timestamp
 }

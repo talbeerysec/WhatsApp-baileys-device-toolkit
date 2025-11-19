@@ -14,7 +14,9 @@ import {
   PresenceRequest,
   SilentPingRequest,
   CorruptMessageRequest,
-  MessageResponse
+  MessageResponse,
+  PrekeyData,
+  DevicePrekeyData
 } from '../../../shared/types/api';
 
 const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || '';
@@ -113,12 +115,32 @@ export class ApiService {
   // Devices
   static async getDevices(user: string): Promise<DeviceInfo[]> {
     const response: AxiosResponse<ApiResponse<DeviceInfo[]>> = await api.get(`/api/devices/${user}`);
-    
+
     if (!response.data.success) {
       throw new Error(response.data.error || 'Failed to get devices');
     }
-    
+
     return response.data.data || [];
+  }
+
+  static async getPrekeyBundles(user: string): Promise<PrekeyData> {
+    const response: AxiosResponse<ApiResponse<PrekeyData>> = await api.get(`/api/devices/${user}/prekeys`);
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.error || 'Failed to get prekey bundles');
+    }
+
+    return response.data.data;
+  }
+
+  static async getPrekeyBundle(user: string, deviceId: number): Promise<DevicePrekeyData> {
+    const response: AxiosResponse<ApiResponse<DevicePrekeyData>> = await api.get(`/api/devices/${user}/prekeys/${deviceId}`);
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.error || 'Failed to get prekey bundle');
+    }
+
+    return response.data.data;
   }
 
   static async silentPing(request: SilentPingRequest): Promise<void> {

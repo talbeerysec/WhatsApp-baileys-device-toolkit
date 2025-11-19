@@ -26,7 +26,8 @@ import {
   Visibility as PresenceIcon,
   Code as CodeIcon,
   ExitToApp as LogoutIcon,
-  Refresh as RefreshIcon
+  Refresh as RefreshIcon,
+  VpnKey as PrekeyIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -40,6 +41,7 @@ import DevicesPage from './DevicesPage';
 import PresencePage from './PresencePage';
 import DeveloperPage from './DeveloperPage';
 import HomePage from './HomePage';
+import PrekeyPage from './PrekeyPage';
 
 const drawerWidth = 240;
 
@@ -56,6 +58,7 @@ const menuItems: MenuItem[] = [
   { text: 'Chats', icon: <ChatIcon />, path: '/chats', description: 'View and manage chats' },
   { text: 'Contacts', icon: <ContactsIcon />, path: '/contacts', description: 'Contact management' },
   { text: 'Devices', icon: <DevicesIcon />, path: '/devices', description: 'Device management' },
+  { text: 'Prekey Bundles', icon: <PrekeyIcon />, path: '/prekeys', description: 'View device prekey bundles' },
   { text: 'Presence', icon: <PresenceIcon />, path: '/presence', description: 'Presence control' },
   { text: 'Developer', icon: <CodeIcon />, path: '/developer', description: 'Advanced tools' },
 ];
@@ -210,6 +213,7 @@ const Dashboard: React.FC = () => {
           <Route path="/chats" element={<ChatsPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
           <Route path="/devices" element={<DevicesPage />} />
+          <Route path="/prekeys" element={<PrekeyPage />} />
           <Route path="/presence" element={<PresencePage />} />
           <Route path="/developer" element={<DeveloperPage />} />
         </Routes>
