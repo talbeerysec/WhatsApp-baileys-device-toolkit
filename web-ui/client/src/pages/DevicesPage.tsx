@@ -60,6 +60,7 @@ import { useSocket } from '../contexts/SocketContext';
 import { sanitizePhoneNumber } from '../utils/phoneUtils';
 import { OSDisplay } from '../components/OSDisplay';
 import { calculateDeviceAge } from '../../../shared/utils/prekey-inference';
+import { useLocation } from 'react-router-dom';
 
 const DevicesPage: React.FC = () => {
   const [user, setUser] = useState('');
@@ -73,6 +74,15 @@ const DevicesPage: React.FC = () => {
   const [profilingAll, setProfilingAll] = useState(false);
   const [prekeyDataMap, setPrekeyDataMap] = useState<Map<number, { signedPreKeyId?: string }>>(new Map());
   const { socket } = useSocket();
+  const location = useLocation();
+
+  // Handle pre-filled phone number from navigation (e.g., from Contacts page)
+  useEffect(() => {
+    const state = location.state as { phoneNumber?: string } | null;
+    if (state?.phoneNumber) {
+      setUser(state.phoneNumber);
+    }
+  }, [location.state]);
 
   // Message sending state
   const [sendMessageDeviceId, setSendMessageDeviceId] = useState<number>(0);
@@ -144,6 +154,14 @@ const DevicesPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  // Auto-trigger device query when user is set from navigation
+  useEffect(() => {
+    const state = location.state as { phoneNumber?: string } | null;
+    if (state?.phoneNumber && user === state.phoneNumber && devices.length === 0 && !loading) {
+      handleGetDevices();
+    }
+  }, [user, location.state]);
 
   const checkDeviceStatus = async (deviceId: number) => {
     const deviceKey = `${user}:${deviceId}`;
