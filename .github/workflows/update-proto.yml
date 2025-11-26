@@ -30,7 +30,7 @@ jobs:
       - name: Install packages
         run: |
           yarn install --immutable
-          yarn --cwd proto-extract install --immutable
+          npm --prefix proto-extract ci
 
       - name: Update WAProto.proto
         id: wa_proto_info
