@@ -747,7 +747,7 @@ const DevicesPage: React.FC = () => {
 
                                 if (deviceAge === null) {
                                   return (
-                                    <Tooltip title="Device age calculation not applicable for iOS and Mac Desktop (random Signed Pre-Key ID)">
+                                    <Tooltip title="Device age calculation not applicable for iOS, Mac Desktop, and Android variants with random Signed Pre-Key IDs (> 0xFFFF)">
                                       <Typography variant="caption" color="text.secondary">
                                         N/A
                                       </Typography>

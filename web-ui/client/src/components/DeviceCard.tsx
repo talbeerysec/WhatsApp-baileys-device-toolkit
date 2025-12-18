@@ -110,14 +110,14 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
                 label="Signed Pre-Key ID"
                 value={prekeyBundle.signedPreKey.keyId}
                 monospace
-                tooltip="Android: starts at 0x000000, increments monthly. iOS: random 3-byte value"
+                tooltip="Android: starts at 0x000000, increments monthly. iOS: random 3-byte value (> 0xFFFF). Both high (> 0xFFFF) may indicate Android variants."
               />
               {prekeyBundle.preKey && (
                 <InfoField
                   label="One-Time Pre-Key ID"
                   value={prekeyBundle.preKey.keyId}
                   monospace
-                  tooltip="iOS: starts at 0x000001, increments sequentially. Android: variable"
+                  tooltip="iOS: starts at 0x000001, increments sequentially. Android: variable. Both high (> 0xFFFF) may indicate Android variants."
                 />
               )}
               {!prekeyBundle.preKey && (

@@ -23,10 +23,12 @@ export function parseHexId(hexId: string | undefined): number {
  * Infers device OS from prekey bundle ID patterns
  *
  * Algorithm for primary devices (deviceId == 0):
- * - Android: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID > 0xFFFF
+ * - Android: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (high confidence)
+ * - Android: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence, field observations)
  * - iOS: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
  *
  * Algorithm for secondary devices (deviceId > 0):
+ * - Android: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence, field observations)
  * - Mac Desktop: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
  * - Windows Desktop: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID > 0x3FFF
  * - Web: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID <= 0x3FFF
@@ -37,6 +39,7 @@ export function parseHexId(hexId: string | undefined): number {
  * - Mac Desktop: Similar pattern to iOS
  * - Windows Desktop: Registration ID not masked (> 0x3FFF)
  * - Web: Registration ID masked with 0x3FFF
+ * - Field observations: Both high IDs (> 0xFFFF) indicate Android variants
  *
  * @param deviceId Device identifier (0 for primary, 1+ for companions)
  * @param signedPreKeyId Signed Pre-Key ID (hex format)
@@ -106,6 +109,13 @@ export function inferDeviceOS(
         os: 'ios',
         confidence: 'high',
         reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD}`
+      };
+    } else if (signedPKNum > THRESHOLD && oneTimePKNum > THRESHOLD) {
+      // Both IDs are high - field observations suggest Android
+      return {
+        os: 'android',
+        confidence: 'medium',
+        reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD} - Android (field observations)`
       };
     } else {
       return {
@@ -186,6 +196,15 @@ export function inferDeviceOS(
     }
   }
 
+  // High Signed PK + High One-Time PK: Field observations suggest Android secondary device
+  if (signedPKNum > THRESHOLD && oneTimePKNum > THRESHOLD) {
+    return {
+      os: 'android',
+      confidence: 'medium',
+      reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD} - Android secondary device (field observations)`
+    };
+  }
+
   // Fallback for secondary devices with unexpected patterns
   return {
     os: 'unknown',
@@ -197,10 +216,12 @@ export function inferDeviceOS(
 /**
  * Calculates approximate device age in months from Signed Pre-Key ID
  *
- * For Android, Windows Desktop, and Web devices, the Signed Pre-Key ID roughly
- * corresponds to the device's age in months (starts at 0x000000 and increments monthly).
+ * For Android, Windows Desktop, and Web devices with low Signed Pre-Key IDs,
+ * the ID roughly corresponds to the device's age in months (starts at 0x000000
+ * and increments monthly).
  *
  * For iOS and Mac Desktop, the Signed Pre-Key ID is random and does not indicate age.
+ * For Android variants with high Signed Pre-Key IDs (> 0xFFFF), age cannot be determined.
  *
  * @param os Inferred OS type
  * @param signedPreKeyId Signed Pre-Key ID (hex format)
@@ -213,7 +234,13 @@ export function calculateDeviceAge(os: InferredOS, signedPreKeyId: string | unde
   }
 
   const signedPKNum = parseHexId(signedPreKeyId);
+  const THRESHOLD = 0xFFFF;
 
-  // Signed Pre-Key ID roughly corresponds to age in months
+  // Android devices with high Signed Pre-Key IDs don't follow sequential pattern
+  if (os === 'android' && signedPKNum > THRESHOLD) {
+    return null;
+  }
+
+  // Signed Pre-Key ID roughly corresponds to age in months for sequential devices
   return signedPKNum;
 }
