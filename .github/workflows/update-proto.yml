@@ -35,7 +35,7 @@ jobs:
       - name: Update WAProto.proto
         id: wa_proto_info
         run: |
-          yarn --cwd proto-extract start > wa-logs.txt
+          npm --prefix proto-extract start > wa-logs.txt
           WA_VERSION=$(cat wa-logs.txt | perl -n -e'/Current version\: (.+)/ && print $1')
           WA_JS_URL=$(cat wa-logs.txt | perl -n -e'/Found source JS URL\: (.+)/ && print $1')
           echo "wa_version=$WA_VERSION" >> $GITHUB_OUTPUT
