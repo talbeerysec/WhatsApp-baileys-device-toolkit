@@ -18,7 +18,7 @@ import makeInMemoryStore from '../../../../lib/Store/make-in-memory-store.js';
 import { Boom } from '@hapi/boom';
 import NodeCache from 'node-cache';
 import P from 'pino';
-import { ConnectionStatus, ChatInfo, ContactInfo, DeviceInfo, SilentPingResult, PrekeyBundle } from '../../../shared/types/api';
+import { ConnectionStatus, ChatInfo, ContactInfo, DeviceInfo, SilentPingResult, PrekeyBundle, UserProfile } from '../../../shared/types/api';
 
 interface PendingSilentPing {
   user: string;
@@ -427,13 +427,94 @@ export class WhatsAppService extends EventEmitter {
 
   getContacts(): ContactInfo[] {
     if (!this.store) return [];
-    
+
     return Object.values(this.store.contacts).slice(0, 3000).map((contact: any) => ({
       id: contact.id,
       name: contact.name,
       notify: contact.notify,
       isBlocked: contact.isBlocked || false
     }));
+  }
+
+  async getUserProfile(user: string): Promise<UserProfile | null> {
+    if (!this.isConnected() || !this.sock) {
+      throw new Error('WhatsApp not connected');
+    }
+
+    // Convert phone number to JID
+    const onWhatsAppResult = await this.sock.onWhatsApp(user);
+    if (!onWhatsAppResult || onWhatsAppResult.length === 0) {
+      return null;
+    }
+
+    const jid = onWhatsAppResult[0].jid;
+
+    // Get contact info from store
+    const contact = this.store?.contacts?.[jid];
+
+    // Fetch profile picture URL
+    let profilePictureUrl: string | null | undefined = undefined;
+    try {
+      profilePictureUrl = await this.sock.profilePictureUrl(jid, 'preview');
+    } catch (error: any) {
+      // Handle 404 (no profile picture) or other errors gracefully
+      const errorCode = error?.data || error?.output?.statusCode || error?.statusCode;
+      if (errorCode === 404 || error?.message?.includes('item-not-found')) {
+        console.log(`No profile picture for ${jid} (user has default avatar)`);
+      } else {
+        console.log(`Could not fetch profile picture for ${jid}:`, error?.message || error);
+      }
+      profilePictureUrl = null; // null means default profile picture
+    }
+
+    // Fetch status/about message
+    let about: string | undefined = undefined;
+    try {
+      const statusResult = await this.sock.fetchStatus(jid);
+      console.log('Status fetch result:', JSON.stringify(statusResult, null, 2));
+      // fetchStatus returns an array of results with user data
+      if (statusResult && Array.isArray(statusResult) && statusResult.length > 0) {
+        // The result list contains items with status property
+        const userStatus = statusResult.find((item: any) => item?.id === jid || item?.jid === jid);
+        if (userStatus && userStatus.status) {
+          // Extract the actual status string from the status object
+          const statusObj = userStatus.status;
+          if (typeof statusObj === 'string') {
+            about = statusObj;
+          } else if (statusObj && typeof statusObj.status === 'string' && statusObj.status.length > 0) {
+            about = statusObj.status;
+          }
+        } else if (statusResult[0]?.status) {
+          // Fallback to first result if no match found
+          const statusObj = statusResult[0].status;
+          if (typeof statusObj === 'string') {
+            about = statusObj;
+          } else if (statusObj && typeof statusObj.status === 'string' && statusObj.status.length > 0) {
+            about = statusObj.status;
+          }
+        }
+      }
+    } catch (error) {
+      console.log(`Could not fetch status for ${jid}:`, error);
+    }
+
+    // Fallback to contact store status if not fetched
+    if (!about) {
+      about = contact?.status;
+    }
+
+    const userProfile = {
+      jid,
+      phoneNumber: user,
+      contactName: contact?.name,        // Name you saved in contacts
+      displayName: contact?.notify,      // User's WhatsApp display name
+      profilePictureUrl,
+      verifiedName: contact?.verifiedName,
+      about: about || undefined          // Status/about message
+    };
+
+    console.log('📋 Returning user profile:', JSON.stringify(userProfile, null, 2));
+    return userProfile;
   }
 
   async sendMessage(jid: string, message: string, timestamp?: number): Promise<string> {

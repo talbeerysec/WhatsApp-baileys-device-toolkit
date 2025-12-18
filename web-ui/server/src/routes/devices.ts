@@ -2,10 +2,63 @@ import express from 'express';
 import { authenticateToken } from '../middleware/auth';
 import { validateUser, validateDeviceId, handleValidationErrors } from '../middleware/validation';
 import { WhatsAppService } from '../services/whatsapp';
-import { ApiResponse, DeviceInfo, PrekeyData, DevicePrekeyData } from '../../../shared/types/api';
+import { ApiResponse, DeviceInfo, PrekeyData, DevicePrekeyData, UserProfile } from '../../../shared/types/api';
 import { inferDeviceOS } from '../../../shared/utils/prekey-inference';
 
 const router = express.Router();
+
+// Get user profile information
+router.get('/:user/profile',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { user } = req.params;
+
+      // Validate user parameter
+      if (!/^[0-9]+$/.test(user)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid user format (should be phone number)'
+        } as ApiResponse);
+      }
+
+      const whatsappService: WhatsAppService = req.app.locals.whatsappService;
+
+      let profile;
+      try {
+        profile = await whatsappService.getUserProfile(user);
+      } catch (profileError: any) {
+        console.error('Error fetching user profile:', profileError);
+        // If profile fetch fails completely, return 500
+        return res.status(500).json({
+          success: false,
+          error: profileError?.message || 'Failed to fetch user profile'
+        } as ApiResponse);
+      }
+
+      if (!profile) {
+        return res.status(404).json({
+          success: false,
+          error: 'User not found on WhatsApp'
+        } as ApiResponse);
+      }
+
+      const response: ApiResponse<UserProfile> = {
+        success: true,
+        data: profile
+      };
+
+      console.log('✅ Sending user profile response:', JSON.stringify(response, null, 2));
+      res.json(response);
+    } catch (error: any) {
+      console.error('Get user profile error:', error);
+      res.status(500).json({
+        success: false,
+        error: error?.message || 'Failed to get user profile'
+      } as ApiResponse);
+    }
+  }
+);
 
 // Get devices for a user
 router.get('/:user',

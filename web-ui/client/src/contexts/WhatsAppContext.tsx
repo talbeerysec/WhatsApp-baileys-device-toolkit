@@ -37,7 +37,9 @@ export const WhatsAppProvider: React.FC<WhatsAppProviderProps> = ({ children }) 
   const [contacts, setContacts] = useState<ContactInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const refreshData = async () => {
+  const refreshData = async (retryCount = 0) => {
+    const maxRetries = 3;
+
     try {
       setIsLoading(true);
       const [statusData, chatsData, contactsData] = await Promise.all([
@@ -45,19 +47,31 @@ export const WhatsAppProvider: React.FC<WhatsAppProviderProps> = ({ children }) 
         ApiService.getChats(),
         ApiService.getContacts()
       ]);
-      
+
       setConnectionStatus(statusData);
       setChats(chatsData);
       setContacts(contactsData);
     } catch (error) {
       console.error('Failed to refresh data:', error);
+
+      // Retry if this is the first attempt and we haven't exceeded max retries
+      if (retryCount < maxRetries) {
+        console.log(`Retrying data fetch (attempt ${retryCount + 1}/${maxRetries})...`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return refreshData(retryCount + 1);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    refreshData();
+    // Small delay before initial fetch to let server initialize
+    const timer = setTimeout(() => {
+      refreshData();
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const updateConnectionStatus = useCallback((status: ConnectionStatus) => {

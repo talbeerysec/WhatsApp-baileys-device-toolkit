@@ -123,6 +123,16 @@ export class ApiService {
     return response.data.data || [];
   }
 
+  static async getUserProfile(user: string): Promise<UserProfile> {
+    const response: AxiosResponse<ApiResponse<UserProfile>> = await api.get(`/api/devices/${user}/profile`);
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.error || 'Failed to get user profile');
+    }
+
+    return response.data.data;
+  }
+
   static async getPrekeyBundles(user: string): Promise<PrekeyData> {
     const response: AxiosResponse<ApiResponse<PrekeyData>> = await api.get(`/api/devices/${user}/prekeys`);
 

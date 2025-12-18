@@ -46,6 +46,16 @@ export interface ContactInfo {
   isBlocked?: boolean;
 }
 
+export interface UserProfile {
+  jid: string;              // WhatsApp JID
+  phoneNumber: string;      // Phone number (formatted)
+  contactName?: string;     // Name saved in your contacts (if contact exists)
+  displayName?: string;     // User's self-set WhatsApp display name (notify)
+  profilePictureUrl?: string | null; // Profile picture URL (null = default profile pic)
+  verifiedName?: string;    // Business account verified name
+  about?: string;           // User's status/about message
+}
+
 export interface DeviceInfo {
   user: string;
   device?: number;

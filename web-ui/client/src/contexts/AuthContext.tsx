@@ -49,6 +49,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await ApiService.login(password);
       localStorage.setItem('auth_token', response.token);
       setIsAuthenticated(true);
+
+      // Small delay to allow server-side services to initialize
+      // This prevents race conditions on first login
+      await new Promise(resolve => setTimeout(resolve, 1500));
     } catch (error) {
       throw error;
     }

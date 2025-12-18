@@ -25,10 +25,10 @@ import {
   Paper,
   Tooltip
 } from '@mui/material';
-import { 
-  Search as SearchIcon, 
-  Wifi as PingIcon, 
-  ExpandMore as ExpandMoreIcon, 
+import {
+  Search as SearchIcon,
+  Wifi as PingIcon,
+  ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
   CheckCircle as OnlineIcon,
   Cancel as OfflineIcon,
@@ -52,10 +52,12 @@ import {
   DeviceHub as DeviceSentIcon,
   BugReport as AppStateIcon,
   PedalBike as PeerDataIcon,
-  ErrorOutline as MalformedMessageIcon
+  ErrorOutline as MalformedMessageIcon,
+  Person as PersonIcon,
+  Block as BlockIcon
 } from '@mui/icons-material';
 import { ApiService } from '../services/api';
-import { DeviceInfo, SilentPingResult, DeviceStatus } from '../../../shared/types/api';
+import { DeviceInfo, SilentPingResult, DeviceStatus, UserProfile } from '../../../shared/types/api';
 import { useSocket } from '../contexts/SocketContext';
 import { sanitizePhoneNumber } from '../utils/phoneUtils';
 import { OSDisplay } from '../components/OSDisplay';
@@ -73,6 +75,8 @@ const DevicesPage: React.FC = () => {
   const [deviceStatuses, setDeviceStatuses] = useState<Map<string, DeviceStatus>>(new Map());
   const [profilingAll, setProfilingAll] = useState(false);
   const [prekeyDataMap, setPrekeyDataMap] = useState<Map<number, { signedPreKeyId?: string }>>(new Map());
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
   const { socket } = useSocket();
   const location = useLocation();
 
@@ -106,32 +110,41 @@ const DevicesPage: React.FC = () => {
       return;
     }
 
+    const sanitizedUser = sanitizePhoneNumber(user);
     setLoading(true);
+    setProfileLoading(true);
     setMessage('');
+    setDevices([]);
+    setUserProfile(null);
 
     try {
-      // Fetch both device list and prekey bundles in parallel
-      const [devicesResult, prekeyData] = await Promise.all([
-        ApiService.getDevices(user),
-        ApiService.getPrekeyBundles(user).catch(() => null) // Fallback if prekeys fail
+      // Fetch device list, prekey bundles, and user profile in parallel
+      const [devicesResult, prekeyData, profileResult] = await Promise.all([
+        ApiService.getDevices(sanitizedUser),
+        ApiService.getPrekeyBundles(sanitizedUser).catch(() => null), // Fallback if prekeys fail
+        ApiService.getUserProfile(sanitizedUser).catch(err => {
+          console.error('Failed to fetch profile:', err);
+          return null; // Continue even if profile fetch fails
+        })
       ]);
 
       setDevices(devicesResult);
-      setMessage(`Found ${devicesResult.length} device(s) for user ${user}`);
+      setUserProfile(profileResult);
+      setMessage(`Found ${devicesResult.length} device(s) for user ${sanitizedUser}`);
 
       // Initialize device statuses with passive inference from prekey bundles
       const newStatuses = new Map<string, DeviceStatus>();
       const newPrekeyDataMap = new Map<number, { signedPreKeyId?: string }>();
 
       devicesResult.forEach(device => {
-        const deviceKey = `${user}:${device.device || 0}`;
+        const deviceKey = `${sanitizedUser}:${device.device || 0}`;
         const deviceId = device.device || 0;
 
         // Find matching prekey data
         const prekeyDevice = prekeyData?.devices.find(d => d.deviceId === deviceId);
 
         newStatuses.set(deviceKey, {
-          user,
+          user: sanitizedUser,
           deviceId,
           status: 'unknown',
           passiveInference: prekeyDevice?.osInference
@@ -150,8 +163,10 @@ const DevicesPage: React.FC = () => {
     } catch (err) {
       setMessage(err instanceof Error ? err.message : 'Failed to get devices');
       setDevices([]);
+      setUserProfile(null);
     } finally {
       setLoading(false);
+      setProfileLoading(false);
     }
   };
 
@@ -655,6 +670,137 @@ const DevicesPage: React.FC = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        {userProfile && (
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  {/* Profile Picture */}
+                  <Tooltip
+                    title={
+                      userProfile.profilePictureUrl
+                        ? 'Profile picture loaded'
+                        : userProfile.profilePictureUrl === null
+                          ? 'No profile picture set (default avatar)'
+                          : 'Profile picture not available'
+                    }
+                  >
+                    <Box
+                      sx={{
+                        width: 64,
+                        height: 64,
+                        borderRadius: '50%',
+                        overflow: 'hidden',
+                        bgcolor: userProfile.profilePictureUrl === null ? 'grey.300' : 'grey.200',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        position: 'relative',
+                        border: userProfile.profilePictureUrl === null ? '2px dashed' : 'none',
+                        borderColor: 'grey.400'
+                      }}
+                    >
+                      {userProfile.profilePictureUrl ? (
+                        <img
+                          src={userProfile.profilePictureUrl}
+                          alt={userProfile.displayName || userProfile.phoneNumber}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                      ) : null}
+
+                      {/* Show icon if no profile picture URL or if image failed to load */}
+                      {!userProfile.profilePictureUrl && (
+                        <PersonIcon
+                          sx={{
+                            fontSize: 40,
+                            color: 'text.secondary',
+                            opacity: 0.6
+                          }}
+                        />
+                      )}
+
+                      {/* Small indicator badge in bottom-right corner */}
+                      {userProfile.profilePictureUrl === null && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            bottom: 2,
+                            right: 2,
+                            width: 20,
+                            height: 20,
+                            borderRadius: '50%',
+                            bgcolor: 'background.paper',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: 1
+                          }}
+                        >
+                          <BlockIcon sx={{ fontSize: 14, color: 'warning.main' }} />
+                        </Box>
+                      )}
+                    </Box>
+                  </Tooltip>
+
+                  {/* User Info */}
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="h6">
+                      {userProfile.displayName || userProfile.contactName || userProfile.phoneNumber}
+                    </Typography>
+
+                    {/* Show contact name if different from display name */}
+                    {userProfile.contactName && userProfile.displayName && userProfile.contactName !== userProfile.displayName && (
+                      <Typography variant="body2" color="text.secondary">
+                        Contact: {userProfile.contactName}
+                      </Typography>
+                    )}
+
+                    {/* Show phone number if not already displayed */}
+                    {userProfile.displayName && userProfile.phoneNumber !== userProfile.displayName && (
+                      <Typography variant="body2" color="text.secondary">
+                        {userProfile.phoneNumber}
+                      </Typography>
+                    )}
+
+                    {/* Show about/status message */}
+                    {userProfile.about && (
+                      <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', mt: 0.5 }}>
+                        "{userProfile.about}"
+                      </Typography>
+                    )}
+
+                    {/* Show verified business name badge */}
+                    {userProfile.verifiedName && (
+                      <Chip
+                        label={`✓ ${userProfile.verifiedName}`}
+                        size="small"
+                        color="primary"
+                        sx={{ mt: 0.5 }}
+                      />
+                    )}
+                  </Box>
+
+                  {/* Device Count */}
+                  <Box sx={{ textAlign: 'right' }}>
+                    <Typography variant="h6" color="primary">
+                      {devices.length}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {devices.length === 1 ? 'Device' : 'Devices'}
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
 
         {devices.length > 0 && (
           <Grid item xs={12}>
