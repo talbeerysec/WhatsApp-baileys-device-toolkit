@@ -24,11 +24,10 @@ export function parseHexId(hexId: string | undefined): number {
  *
  * Algorithm for primary devices (deviceId == 0):
  * - Android: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (high confidence)
- * - Android: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence, field observations)
+ * - Android: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence, field observations - mobile only)
  * - iOS: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
  *
  * Algorithm for secondary devices (deviceId > 0):
- * - Android: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence, field observations)
  * - Mac Desktop: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
  * - Windows Desktop: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID > 0x3FFF
  * - Web: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID <= 0x3FFF
@@ -39,7 +38,7 @@ export function parseHexId(hexId: string | undefined): number {
  * - Mac Desktop: Similar pattern to iOS
  * - Windows Desktop: Registration ID not masked (> 0x3FFF)
  * - Web: Registration ID masked with 0x3FFF
- * - Field observations: Both high IDs (> 0xFFFF) indicate Android variants
+ * - Field observations: Both high IDs (> 0xFFFF) indicate Android variants on mobile devices only
  *
  * @param deviceId Device identifier (0 for primary, 1+ for companions)
  * @param signedPreKeyId Signed Pre-Key ID (hex format)
@@ -194,15 +193,6 @@ export function inferDeviceOS(
         reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK}`
       };
     }
-  }
-
-  // High Signed PK + High One-Time PK: Field observations suggest Android secondary device
-  if (signedPKNum > THRESHOLD && oneTimePKNum > THRESHOLD) {
-    return {
-      os: 'android',
-      confidence: 'medium',
-      reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD} - Android secondary device (field observations)`
-    };
   }
 
   // Fallback for secondary devices with unexpected patterns
