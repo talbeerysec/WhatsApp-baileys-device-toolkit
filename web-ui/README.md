@@ -335,6 +335,30 @@ server {
 - Verify WebSocket support
 - Check firewall settings
 
+**5. Contacts Showing Phone Numbers Instead of Names**
+
+This is **expected behavior** due to WhatsApp protocol changes:
+
+- **Individual contacts** sync WITHOUT names during history sync
+- **Groups** sync WITH names during history sync
+- Initial sync typically shows only ~18-20% of contacts with names
+- Contact names populate **gradually** as contacts send you messages
+
+**What you'll see:**
+```
+Total contacts: 578
+With names: 106 (18%)
+  - Groups: ~124 (have names)
+  - Individuals: ~395 (show as phone numbers initially)
+```
+
+**How names populate:**
+- When a contact sends you a message, their `pushName` is captured
+- The UI automatically updates via `contacts.update` events
+- Over time, active contacts will show names based on messaging activity
+
+**This is NOT a bug** - it's how WhatsApp's protocol works. Names for individual contacts are no longer sent during initial history sync.
+
 ### Debug Mode
 
 Enable debug logging:
@@ -356,6 +380,27 @@ If default ports are in use:
 
 ## Recent Improvements
 
+### v1.2.0 - December 2025 (Docker & Contact Sync)
+- **Docker Support**: Complete Docker deployment with multi-stage builds
+  - Development and production configurations
+  - Health checks and proper signal handling with tini
+  - Non-root user security hardening
+  - Volume mounts for persistent auth storage
+- **Full History Sync**: Enabled `syncFullHistory: true` in WhatsApp configuration
+  - Populates contacts and chats from WhatsApp on authentication
+  - Comprehensive logging of history sync events
+  - Statistics tracking for contacts with/without names
+- **Contact Filtering**: Improved contact list management
+  - Filters out groups (`@g.us`) from individual contacts
+  - Excludes broadcasts and linked devices
+  - Only shows individual phone number contacts (`@s.whatsapp.net`)
+- **Enhanced Contact Name Resolution**: Multi-source name fallback
+  - Tries contact.name, contact.notify, contact.verifiedName
+  - Falls back to formatted phone number extraction
+  - Automatic updates via `contacts.update` events
+- **Status Broadcast Filtering**: Removed `status@broadcast` from chats list
+- **Improved Logging**: Detailed history sync debugging and statistics
+
 ### v1.1.0 - Enhanced QR Code & Stability
 - **QR Code in Web Interface**: QR codes now display directly in the web browser instead of terminal
 - **Automatic QR Delivery**: New clients receive latest QR code immediately upon connection
@@ -366,6 +411,9 @@ If default ports are in use:
 - **Relative Path Support**: More portable auth directory configuration
 
 ### Key Technical Improvements
+- **Docker Architecture**: Multi-stage builds with separate client and server Dockerfiles
+- **TypeScript Runtime**: Using tsx to run TypeScript directly in production (avoids compilation issues)
+- **History Sync Logging**: Comprehensive logging of syncType, contacts, chats, and messages
 - **QR Code Storage**: Latest QR codes stored in memory for new client connections
 - **Enhanced Error Handling**: Better detection of connection replacement (WhatsApp Desktop conflicts)
 - **Improved Reconnection**: Faster QR regeneration on timeout (2-second restart vs 5-second)

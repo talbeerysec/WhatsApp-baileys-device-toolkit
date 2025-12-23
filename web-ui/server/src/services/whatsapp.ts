@@ -586,16 +586,16 @@ export class WhatsAppService extends EventEmitter {
           const statusObj = userStatus.status;
           if (typeof statusObj === 'string') {
             about = statusObj;
-          } else if (statusObj && typeof statusObj.status === 'string' && statusObj.status.length > 0) {
-            about = statusObj.status;
+          } else if (statusObj && typeof statusObj === 'object' && 'status' in statusObj && typeof (statusObj as any).status === 'string' && (statusObj as any).status.length > 0) {
+            about = (statusObj as any).status;
           }
         } else if (statusResult[0]?.status) {
           // Fallback to first result if no match found
           const statusObj = statusResult[0].status;
           if (typeof statusObj === 'string') {
             about = statusObj;
-          } else if (statusObj && typeof statusObj.status === 'string' && statusObj.status.length > 0) {
-            about = statusObj.status;
+          } else if (statusObj && typeof statusObj === 'object' && 'status' in statusObj && typeof (statusObj as any).status === 'string' && (statusObj as any).status.length > 0) {
+            about = (statusObj as any).status;
           }
         }
       }
@@ -1450,15 +1450,26 @@ export class WhatsAppService extends EventEmitter {
 
     try {
       if (fs.existsSync(authPath)) {
-        console.log('DEBUG: Auth directory exists, removing...');
-        fs.rmSync(authPath, { recursive: true, force: true });
-        console.log('🗑️ Auth directory cleared');
+        console.log('DEBUG: Auth directory exists, clearing contents...');
+        // Delete contents of directory instead of directory itself (Docker volume mount compatibility)
+        const files = fs.readdirSync(authPath);
+        for (const file of files) {
+          const filePath = path.join(authPath, file);
+          const stat = fs.statSync(filePath);
+          if (stat.isDirectory()) {
+            fs.rmSync(filePath, { recursive: true, force: true });
+          } else {
+            fs.unlinkSync(filePath);
+          }
+        }
+        console.log(`🗑️ Cleared ${files.length} items from auth directory`);
       } else {
         console.log('DEBUG: Auth directory does not exist');
       }
     } catch (error) {
       console.error('Failed to clear auth directory:', error);
-      throw error; // Re-throw so we can see it in the caller
+      // Don't throw - continue with reinitialize even if cleanup partially failed
+      console.log('⚠️ Continuing with reinitialization despite cleanup error...');
     }
 
     // Clear the latest QR code

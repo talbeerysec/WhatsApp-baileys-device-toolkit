@@ -164,6 +164,36 @@ Some features require additional packages:
 - **iOS Device Detection Fix**: Fixed race condition in delete ping response handling
 - **Improved Stability**: Enhanced error handling and session management
 
+### December 2025 Enhancements
+- **Docker Support**: Complete Docker setup with multi-stage builds for development and production
+- **Full History Sync**: Enabled `syncFullHistory` to populate contacts and chats from WhatsApp
+- **Contact Filtering**: Automatic filtering to exclude groups, broadcasts, and linked devices from contacts
+- **Web UI Improvements**: Enhanced authentication flow with retry logic and connection delays
+- **Comprehensive Documentation**: Added detailed guides for Docker deployment, protocol analysis, and device management
+
+## ⚠️ Known Limitations
+
+### Contact Names During Initial Sync
+
+WhatsApp's protocol behavior regarding contact synchronization:
+
+- **Individual contacts** (phone numbers) are synced **WITHOUT names** during history sync
+- **Group chats** are synced **WITH names** during history sync
+- Initial sync typically shows ~18-20% of contacts with names (mostly groups and recently active contacts)
+- Individual contact names populate **gradually** as contacts send you messages (via `pushName` field in messages)
+- This is **expected WhatsApp protocol behavior**, not a bug in Baileys
+
+**Example after initial authentication:**
+```
+Total contacts synced: 578
+Contacts with names: 106 (18%)
+  - Groups: ~124 (with names)
+  - Individuals: ~395 (mostly showing as phone numbers initially)
+  - Other types: ~59
+```
+
+Contact names will automatically update through `contacts.update` events as people message you. Over time, more names will populate based on messaging activity.
+
 ## 🤝 Contributing & License
 
 ### Contributing
