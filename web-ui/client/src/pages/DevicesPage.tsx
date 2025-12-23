@@ -852,6 +852,7 @@ const DevicesPage: React.FC = () => {
                                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                   <OSDisplay
                                     os={deviceStatus.passiveInference.os}
+                                    formFactor={deviceStatus.passiveInference.formFactor}
                                     iconSize="small"
                                     variant="caption"
                                   />

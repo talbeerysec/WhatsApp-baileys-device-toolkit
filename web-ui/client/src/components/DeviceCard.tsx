@@ -32,25 +32,38 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
   const { deviceId, prekeyBundle, error, fetchedAt, osInference } = deviceData;
   const isPrimary = deviceId === 0;
 
-  // Helper to render OS icon and chip
+  // Helper to render OS icon and chip with form factor
   const renderOSIndicator = () => {
     if (!osInference || osInference.os === 'unknown') return null;
 
     const osConfig = {
       android: { icon: <AndroidIcon />, label: 'Android', color: '#3DDC84' },
-      ios: { icon: <AppleIcon />, label: 'iOS', color: '#007AFF' },
-      'mac-desktop': { icon: <LaptopIcon />, label: 'Mac Desktop', color: '#555555' },
-      'windows-desktop': { icon: <WindowsIcon />, label: 'Windows Desktop', color: '#0078D4' },
+      apple: { icon: <AppleIcon />, label: 'Apple', color: '#555555' },
+      windows: { icon: <WindowsIcon />, label: 'Windows', color: '#0078D4' },
       web: { icon: <WebIcon />, label: 'Web', color: '#4285F4' }
     };
+
+    const formFactorIcon = osInference.formFactor === 'mobile'
+      ? <DeviceIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
+      : <LaptopIcon sx={{ fontSize: '1rem', mr: 0.5 }} />;
 
     const config = osConfig[osInference.os as keyof typeof osConfig];
     if (!config) return null;
 
+    // Combine form factor + OS (e.g., "📱 Android" or "💻 Apple")
+    const label = osInference.formFactor === 'mobile'
+      ? config.label
+      : config.label;
+
     return (
       <Chip
-        icon={config.icon}
-        label={config.label}
+        icon={
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {formFactorIcon}
+            {config.icon}
+          </Box>
+        }
+        label={label}
         size="small"
         sx={{
           ml: 1,
@@ -140,26 +153,32 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
                       OS Inference
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                      {/* Form Factor Icon */}
+                      {osInference.formFactor === 'mobile' && (
+                        <DeviceIcon sx={{ fontSize: '1.2rem', color: 'text.secondary' }} />
+                      )}
+                      {osInference.formFactor === 'desktop' && (
+                        <LaptopIcon sx={{ fontSize: '1.2rem', color: 'text.secondary' }} />
+                      )}
+
+                      {/* OS Icon */}
                       {osInference.os === 'android' && (
                         <AndroidIcon sx={{ fontSize: '1.2rem', color: '#3DDC84' }} />
                       )}
-                      {osInference.os === 'ios' && (
-                        <AppleIcon sx={{ fontSize: '1.2rem', color: '#007AFF' }} />
+                      {osInference.os === 'apple' && (
+                        <AppleIcon sx={{ fontSize: '1.2rem', color: '#555555' }} />
                       )}
-                      {osInference.os === 'mac-desktop' && (
-                        <LaptopIcon sx={{ fontSize: '1.2rem', color: '#555555' }} />
-                      )}
-                      {osInference.os === 'windows-desktop' && (
+                      {osInference.os === 'windows' && (
                         <WindowsIcon sx={{ fontSize: '1.2rem', color: '#0078D4' }} />
                       )}
                       {osInference.os === 'web' && (
                         <WebIcon sx={{ fontSize: '1.2rem', color: '#4285F4' }} />
                       )}
+
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {osInference.os === 'android' && 'Android'}
-                        {osInference.os === 'ios' && 'iOS'}
-                        {osInference.os === 'mac-desktop' && 'Mac Desktop'}
-                        {osInference.os === 'windows-desktop' && 'Windows Desktop'}
+                        {osInference.os === 'android' && `Android ${osInference.formFactor === 'mobile' ? 'Mobile' : 'Desktop'}`}
+                        {osInference.os === 'apple' && `Apple ${osInference.formFactor === 'mobile' ? 'iOS' : 'Mac'}`}
+                        {osInference.os === 'windows' && 'Windows Desktop'}
                         {osInference.os === 'web' && 'Web'}
                       </Typography>
                       <Chip
