@@ -579,6 +579,52 @@ services:
 
 Or increase Docker daemon memory limit.
 
+#### 6. Module Not Found: "make-in-memory-store.js"
+
+**Symptoms**: Server fails to start with error:
+```
+Error: Cannot find module '../../../../lib/Store/make-in-memory-store.js'
+```
+
+**Cause**: Building Docker image from wrong directory (e.g., from `web-ui/` instead of project root)
+
+**Solution**:
+
+**ALWAYS build Docker images from the project root directory:**
+
+```bash
+# ✅ CORRECT - Build from project root
+cd /path/to/WhatsApp-baileys-device-toolkit
+docker build -t baileys-web-server -f web-ui/Dockerfile.server --target production .
+
+# ❌ INCORRECT - Building from web-ui/ directory will fail
+cd /path/to/WhatsApp-baileys-device-toolkit/web-ui
+docker build -t baileys-web-server -f Dockerfile.server --target production .
+```
+
+**Why this happens**:
+- The server code imports `makeInMemoryStore` from the parent project's `lib/Store/` directory
+- The Dockerfile copies the parent's `lib/` directory at line 91
+- Building from `web-ui/` means the parent `lib/Store/` is not accessible in the build context
+
+**Verification**:
+After building, verify the Store module is present in the image:
+
+```bash
+docker run --rm baileys-web-server ls -la /app/lib/Store/
+```
+
+You should see:
+- `make-in-memory-store.js`
+- `make-in-memory-store.d.ts`
+- Other store-related files
+
+**Using docker-compose**:
+The `docker-compose.yml` file already has the correct build context set to `.` (project root), so this issue won't occur when using:
+```bash
+docker-compose --profile web build
+```
+
 ### Debug Mode
 
 Enable verbose logging:

@@ -359,6 +359,48 @@ With names: 106 (18%)
 
 **This is NOT a bug** - it's how WhatsApp's protocol works. Names for individual contacts are no longer sent during initial history sync.
 
+**6. Docker Build Fails with "Cannot find module make-in-memory-store.js"**
+
+This error occurs when building the Docker image from the wrong directory:
+
+**Problem:**
+```
+Error: Cannot find module '../../../../lib/Store/make-in-memory-store.js'
+```
+
+**Solution:**
+- **ALWAYS build Docker images from the project root directory**, not from `web-ui/`
+- The Dockerfile expects the parent `lib/Store/` directory to be available
+
+**Correct build command:**
+```bash
+# From project root (WhatsApp-baileys-device-toolkit/)
+docker build -t baileys-web-server -f web-ui/Dockerfile.server --target production .
+```
+
+**Incorrect (will fail):**
+```bash
+# From web-ui/ directory - this will NOT work
+docker build -t baileys-web-server -f Dockerfile.server --target production .
+```
+
+**Why this happens:**
+- The server code imports `makeInMemoryStore` from `../../../../lib/Store/make-in-memory-store.js`
+- This path resolves to the parent project's `lib/Store/` directory
+- Building from `web-ui/` directory means the parent `lib/Store/` is not accessible
+- The Dockerfile at line 91 copies `/app/lib` which must include the Store subdirectory
+
+**Verification:**
+After building, verify the Store module is present:
+```bash
+docker run --rm your-image-name ls -la /app/lib/Store/
+```
+
+You should see:
+- `make-in-memory-store.js`
+- `make-in-memory-store.d.ts`
+- Other store-related files
+
 ### Debug Mode
 
 Enable debug logging:
