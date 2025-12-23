@@ -23,7 +23,7 @@ RUN npm ci
 # ===================================
 # Stage 3: Builder
 # ===================================
-FROM dependencies AS builder
+FROM base AS builder
 
 WORKDIR /app
 
@@ -34,6 +34,9 @@ COPY web-ui/shared/ ./web-ui/shared/
 COPY web-ui/client/ ./web-ui/client/
 
 WORKDIR /app/web-ui/client
+
+# Install dependencies in builder stage
+RUN npm ci
 
 # Build arguments for API URL configuration
 ARG VITE_API_URL=http://localhost:3001

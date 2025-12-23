@@ -1,9 +1,11 @@
 // Utility functions for inferring device OS from prekey bundle patterns
 
-export type InferredOS = 'android' | 'ios' | 'mac-desktop' | 'windows-desktop' | 'web' | 'unknown';
+export type DeviceOS = 'android' | 'apple' | 'windows' | 'web' | 'unknown';
+export type DeviceFormFactor = 'mobile' | 'desktop';
 
 export interface OSInference {
-  os: InferredOS;
+  os: DeviceOS;
+  formFactor: DeviceFormFactor;
   confidence: 'high' | 'medium' | 'low';
   reasoning: string;
 }
@@ -20,33 +22,38 @@ export function parseHexId(hexId: string | undefined): number {
 }
 
 /**
- * Infers device OS from prekey bundle ID patterns
+ * Infers device OS and form factor from prekey bundle ID patterns
  *
- * Algorithm for primary devices (deviceId == 0):
- * - Android: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (high confidence)
- * - Android: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence, field observations - mobile only)
- * - iOS: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
+ * Unified Detection Algorithm:
  *
- * Algorithm for secondary devices (deviceId > 0):
- * - Android Companion: Registration ID > 0xFFFF AND Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence)
- * - Mac Desktop: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
- * - Windows Desktop: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID > 0x3FFF
- * - Web: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID <= 0x3FFF
+ * 1. Android (Both Mobile & Desktop):
+ *    - Pattern: Low Signed Pre-Key ID (< 0xFFFF) AND High One-Time Pre-Key ID (> 0xFFFF) [HIGH confidence]
+ *    - Pattern: High Signed Pre-Key ID (> 0xFFFF) AND High One-Time Pre-Key ID (> 0xFFFF) [MEDIUM confidence]
+ *    - Pattern (Desktop only): High Registration ID (> 0xFFFF) AND High Signed + One-Time Pre-Key IDs [MEDIUM confidence]
+ *    - Form Factor: deviceId == 0 → Mobile, deviceId > 0 → Desktop
  *
- * Based on research showing:
+ * 2. Apple (iOS Mobile & Mac Desktop):
+ *    - Pattern: High Signed Pre-Key ID (> 0xFFFF) AND Low One-Time Pre-Key ID (< 0xFFFF) [HIGH confidence]
+ *    - Form Factor: deviceId == 0 → Mobile (iOS), deviceId > 0 → Desktop (Mac)
+ *
+ * 3. Windows Desktop (Secondary devices only, deviceId > 0):
+ *    - Pattern: Low Signed Pre-Key ID (< 0xFFFF) AND Low One-Time Pre-Key ID (< 0xFFFF) AND High Registration ID (> 0x3FFF)
+ *
+ * 4. Web (Secondary devices only, deviceId > 0):
+ *    - Pattern: Low Signed Pre-Key ID (< 0xFFFF) AND Low One-Time Pre-Key ID (< 0xFFFF) AND Low Registration ID (<= 0x3FFF)
+ *
+ * Key Insights:
  * - Android: Signed Pre-Key ID starts at 0x000000, increments monthly
- * - Android Companion: All IDs (Registration, Signed Pre-Key, One-Time Pre-Key) are high (> 0xFFFF)
- * - iOS: Signed Pre-Key ID is random (high value), One-Time Pre-Key ID starts at 0x000001
- * - Mac Desktop: Similar pattern to iOS
- * - Windows Desktop: Registration ID not masked (> 0x3FFF)
+ * - Apple: Signed Pre-Key ID is random (high value), One-Time Pre-Key ID starts at 0x000001
+ * - Windows: Registration ID not masked (> 0x3FFF)
  * - Web: Registration ID masked with 0x3FFF
- * - Field observations: Both high IDs (> 0xFFFF) indicate Android variants on mobile devices only
+ * - Android variants: Both high IDs (> 0xFFFF) indicate Android on companion devices
  *
- * @param deviceId Device identifier (0 for primary, 1+ for companions)
+ * @param deviceId Device identifier (0 for primary/mobile, 1+ for secondary/companion/desktop)
  * @param signedPreKeyId Signed Pre-Key ID (hex format)
  * @param oneTimePreKeyId One-Time Pre-Key ID (hex format, optional if pool depleted)
  * @param registrationId Registration ID (hex format, required for secondary device disambiguation)
- * @returns OS inference result with confidence and reasoning
+ * @returns OS inference result with OS, form factor, confidence and reasoning
  */
 export function inferDeviceOS(
   deviceId: number,
@@ -64,137 +71,130 @@ export function inferDeviceOS(
   const THRESHOLD = 0xFFFF;
   const REG_ID_MASK = 0x3FFF;
 
+  // Determine form factor based on device ID
+  const formFactor: DeviceFormFactor = deviceId === 0 ? 'mobile' : 'desktop';
+  const deviceType = formFactor === 'mobile' ? 'Mobile' : 'Desktop';
+
   // Check if we have valid IDs
   if (!signedPreKeyId) {
     return {
       os: 'unknown',
+      formFactor,
       confidence: 'low',
       reasoning: 'Missing Signed Pre-Key ID'
     };
   }
 
-  // === PRIMARY DEVICE (deviceId == 0) ===
-  if (deviceId === 0) {
-    // If one-time pre-key is missing (pool depleted), use only signed pre-key
-    if (!oneTimePreKeyId) {
-      if (signedPKNum < THRESHOLD) {
+  // === UNIFIED ANDROID & APPLE DETECTION (works for both mobile and desktop) ===
+
+  // If one-time pre-key is missing (pool depleted), use only signed pre-key
+  if (!oneTimePreKeyId) {
+    if (signedPKNum < THRESHOLD) {
+      return {
+        os: 'android',
+        formFactor,
+        confidence: 'medium',
+        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} suggests Android ${deviceType}. One-Time Pre-Key unavailable (pool depleted).`
+      };
+    } else if (signedPKNum > THRESHOLD) {
+      // For desktop with high signed PK, check if Registration ID is also high (Android Desktop variant)
+      if (formFactor === 'desktop' && registrationId && registrationIdNum > THRESHOLD) {
         return {
           os: 'android',
+          formFactor,
           confidence: 'medium',
-          reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} suggests Android. One-Time Pre-Key unavailable (pool depleted).`
-        };
-      } else if (signedPKNum > THRESHOLD) {
-        return {
-          os: 'ios',
-          confidence: 'medium',
-          reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} suggests iOS. One-Time Pre-Key unavailable (pool depleted).`
-        };
-      } else {
-        return {
-          os: 'unknown',
-          confidence: 'low',
-          reasoning: 'Ambiguous Signed Pre-Key ID value. One-Time Pre-Key unavailable.'
+          reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${THRESHOLD} suggests Android Desktop. One-Time Pre-Key unavailable (pool depleted).`
         };
       }
-    }
 
-    // Apply inference algorithm with both IDs available
-    if (signedPKNum < THRESHOLD && oneTimePKNum > THRESHOLD) {
       return {
-        os: 'android',
-        confidence: 'high',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD}`
-      };
-    } else if (signedPKNum > THRESHOLD && oneTimePKNum < THRESHOLD) {
-      return {
-        os: 'ios',
-        confidence: 'high',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD}`
-      };
-    } else if (signedPKNum > THRESHOLD && oneTimePKNum > THRESHOLD) {
-      // Both IDs are high - field observations suggest Android
-      return {
-        os: 'android',
+        os: 'apple',
+        formFactor,
         confidence: 'medium',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD} - Android (field observations)`
+        reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} suggests Apple ${deviceType}. One-Time Pre-Key unavailable (pool depleted).`
       };
     } else {
+      // For desktop with low signed PK and no one-time PK, check Windows/Web
+      if (formFactor === 'desktop') {
+        if (!registrationId) {
+          return {
+            os: 'unknown',
+            formFactor,
+            confidence: 'low',
+            reasoning: 'Signed Pre-Key ID suggests Windows Desktop or Web, but Registration ID unavailable for disambiguation.'
+          };
+        }
+
+        if (registrationIdNum > REG_ID_MASK) {
+          return {
+            os: 'windows',
+            formFactor,
+            confidence: 'medium',
+            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${REG_ID_MASK} suggests Windows Desktop. One-Time Pre-Key unavailable (pool depleted).`
+          };
+        } else {
+          return {
+            os: 'web',
+            formFactor,
+            confidence: 'medium',
+            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} suggests Web. One-Time Pre-Key unavailable (pool depleted).`
+          };
+        }
+      }
+
       return {
         os: 'unknown',
+        formFactor,
         confidence: 'low',
-        reasoning: `Pattern does not match known Android or iOS signatures (Signed: ${signedPKNum}, One-Time: ${oneTimePKNum})`
+        reasoning: 'Ambiguous Signed Pre-Key ID value. One-Time Pre-Key unavailable.'
       };
     }
   }
 
-  // === SECONDARY DEVICE (deviceId > 0) ===
+  // === PATTERN DETECTION WITH BOTH SIGNED AND ONE-TIME PRE-KEYS ===
 
-  // If one-time pre-key is missing (pool depleted)
-  if (!oneTimePreKeyId) {
-    if (signedPKNum > THRESHOLD) {
-      // Check if Registration ID is also high (Android companion device pattern)
-      if (registrationId && registrationIdNum > THRESHOLD) {
-        return {
-          os: 'android',
-          confidence: 'medium',
-          reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${THRESHOLD} suggests Android companion device. One-Time Pre-Key unavailable (pool depleted).`
-        };
-      }
-
-      return {
-        os: 'mac-desktop',
-        confidence: 'medium',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} suggests Mac Desktop. One-Time Pre-Key unavailable (pool depleted).`
-      };
-    } else if (signedPKNum < THRESHOLD) {
-      // Cannot distinguish between Windows and Web without registration ID
-      if (!registrationId) {
-        return {
-          os: 'unknown',
-          confidence: 'low',
-          reasoning: 'Signed Pre-Key ID suggests Windows Desktop or Web, but Registration ID unavailable for disambiguation.'
-        };
-      }
-
-      if (registrationIdNum > REG_ID_MASK) {
-        return {
-          os: 'windows-desktop',
-          confidence: 'medium',
-          reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${REG_ID_MASK} suggests Windows Desktop. One-Time Pre-Key unavailable (pool depleted).`
-        };
-      } else {
-        return {
-          os: 'web',
-          confidence: 'medium',
-          reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} suggests Web. One-Time Pre-Key unavailable (pool depleted).`
-        };
-      }
-    }
-  }
-
-  // Android Companion: High Registration ID + High Signed PK + High One-Time PK
-  if (registrationId && registrationIdNum > THRESHOLD && signedPKNum > THRESHOLD && oneTimePKNum > THRESHOLD) {
+  // Android: Low Signed PK + High One-Time PK (HIGH confidence for both mobile & desktop)
+  if (signedPKNum < THRESHOLD && oneTimePKNum > THRESHOLD) {
     return {
       os: 'android',
-      confidence: 'medium',
-      reasoning: `Registration ID (${registrationIdNum}) > ${THRESHOLD} AND Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD} - Android companion device`
+      formFactor,
+      confidence: 'high',
+      reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD}`
     };
   }
 
-  // Mac Desktop: High Signed PK + Low One-Time PK
+  // Apple: High Signed PK + Low One-Time PK (HIGH confidence for both mobile & desktop)
   if (signedPKNum > THRESHOLD && oneTimePKNum < THRESHOLD) {
     return {
-      os: 'mac-desktop',
+      os: 'apple',
+      formFactor,
       confidence: 'high',
       reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD}`
     };
   }
 
-  // Low Signed PK + Low One-Time PK: Need to check Registration ID
-  if (signedPKNum < THRESHOLD && oneTimePKNum < THRESHOLD) {
+  // Android variant: Both IDs high (MEDIUM confidence)
+  // For desktop, also check if Registration ID is high for extra confirmation
+  if (signedPKNum > THRESHOLD && oneTimePKNum > THRESHOLD) {
+    const isDesktopWithHighRegId = formFactor === 'desktop' && registrationId && registrationIdNum > THRESHOLD;
+    const confidence = isDesktopWithHighRegId ? 'medium' : 'medium';
+    const regIdNote = isDesktopWithHighRegId ? ` AND Registration ID (${registrationIdNum}) > ${THRESHOLD}` : '';
+
+    return {
+      os: 'android',
+      formFactor,
+      confidence,
+      reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD}${regIdNote} - Android ${deviceType} variant (field observations)`
+    };
+  }
+
+  // === DESKTOP-ONLY: WINDOWS & WEB DETECTION ===
+
+  if (formFactor === 'desktop' && signedPKNum < THRESHOLD && oneTimePKNum < THRESHOLD) {
     if (!registrationId) {
       return {
         os: 'unknown',
+        formFactor,
         confidence: 'low',
         reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD}, but Registration ID unavailable for Windows/Web disambiguation.`
       };
@@ -202,24 +202,27 @@ export function inferDeviceOS(
 
     if (registrationIdNum > REG_ID_MASK) {
       return {
-        os: 'windows-desktop',
+        os: 'windows',
+        formFactor,
         confidence: 'high',
         reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${REG_ID_MASK}`
       };
     } else {
       return {
         os: 'web',
+        formFactor,
         confidence: 'high',
         reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK}`
       };
     }
   }
 
-  // Fallback for secondary devices with unexpected patterns
+  // Fallback for unrecognized patterns
   return {
     os: 'unknown',
+    formFactor,
     confidence: 'low',
-    reasoning: `Pattern does not match known signatures for secondary devices (Signed: ${signedPKNum}, One-Time: ${oneTimePKNum}, Registration: ${registrationIdNum})`
+    reasoning: `Pattern does not match known signatures (Signed: ${signedPKNum}, One-Time: ${oneTimePKNum}, Registration: ${registrationIdNum})`
   };
 }
 
@@ -230,16 +233,16 @@ export function inferDeviceOS(
  * the ID roughly corresponds to the device's age in months (starts at 0x000000
  * and increments monthly).
  *
- * For iOS and Mac Desktop, the Signed Pre-Key ID is random and does not indicate age.
+ * For Apple devices (iOS/Mac), the Signed Pre-Key ID is random and does not indicate age.
  * For Android variants with high Signed Pre-Key IDs (> 0xFFFF), age cannot be determined.
  *
  * @param os Inferred OS type
  * @param signedPreKeyId Signed Pre-Key ID (hex format)
  * @returns Device age in months, or null if not applicable
  */
-export function calculateDeviceAge(os: InferredOS, signedPreKeyId: string | undefined): number | null {
+export function calculateDeviceAge(os: DeviceOS, signedPreKeyId: string | undefined): number | null {
   // Only applicable for devices with sequential Signed Pre-Key IDs
-  if (os === 'ios' || os === 'mac-desktop' || os === 'unknown') {
+  if (os === 'apple' || os === 'unknown') {
     return null;
   }
 
