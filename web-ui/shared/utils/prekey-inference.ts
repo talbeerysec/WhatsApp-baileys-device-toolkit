@@ -28,12 +28,14 @@ export function parseHexId(hexId: string | undefined): number {
  * - iOS: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
  *
  * Algorithm for secondary devices (deviceId > 0):
+ * - Android Companion: Registration ID > 0xFFFF AND Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID > 0xFFFF (medium confidence)
  * - Mac Desktop: Signed Pre-Key ID > 0xFFFF AND One-Time Pre-Key ID < 0xFFFF
  * - Windows Desktop: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID > 0x3FFF
  * - Web: Signed Pre-Key ID < 0xFFFF AND One-Time Pre-Key ID < 0xFFFF AND Registration ID <= 0x3FFF
  *
  * Based on research showing:
  * - Android: Signed Pre-Key ID starts at 0x000000, increments monthly
+ * - Android Companion: All IDs (Registration, Signed Pre-Key, One-Time Pre-Key) are high (> 0xFFFF)
  * - iOS: Signed Pre-Key ID is random (high value), One-Time Pre-Key ID starts at 0x000001
  * - Mac Desktop: Similar pattern to iOS
  * - Windows Desktop: Registration ID not masked (> 0x3FFF)
@@ -130,6 +132,15 @@ export function inferDeviceOS(
   // If one-time pre-key is missing (pool depleted)
   if (!oneTimePreKeyId) {
     if (signedPKNum > THRESHOLD) {
+      // Check if Registration ID is also high (Android companion device pattern)
+      if (registrationId && registrationIdNum > THRESHOLD) {
+        return {
+          os: 'android',
+          confidence: 'medium',
+          reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${THRESHOLD} suggests Android companion device. One-Time Pre-Key unavailable (pool depleted).`
+        };
+      }
+
       return {
         os: 'mac-desktop',
         confidence: 'medium',
@@ -159,6 +170,15 @@ export function inferDeviceOS(
         };
       }
     }
+  }
+
+  // Android Companion: High Registration ID + High Signed PK + High One-Time PK
+  if (registrationId && registrationIdNum > THRESHOLD && signedPKNum > THRESHOLD && oneTimePKNum > THRESHOLD) {
+    return {
+      os: 'android',
+      confidence: 'medium',
+      reasoning: `Registration ID (${registrationIdNum}) > ${THRESHOLD} AND Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) > ${THRESHOLD} - Android companion device`
+    };
   }
 
   // Mac Desktop: High Signed PK + Low One-Time PK

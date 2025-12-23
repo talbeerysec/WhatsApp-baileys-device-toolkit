@@ -57,7 +57,7 @@ import {
   Block as BlockIcon
 } from '@mui/icons-material';
 import { ApiService } from '../services/api';
-import { DeviceInfo, SilentPingResult, DeviceStatus, UserProfile } from '../../../shared/types/api';
+import { DeviceInfo, SilentPingResult, DeviceStatus, UserProfile, DevicePrekeyData } from '../../../shared/types/api';
 import { useSocket } from '../contexts/SocketContext';
 import { sanitizePhoneNumber } from '../utils/phoneUtils';
 import { OSDisplay } from '../components/OSDisplay';
@@ -136,12 +136,12 @@ const DevicesPage: React.FC = () => {
       const newStatuses = new Map<string, DeviceStatus>();
       const newPrekeyDataMap = new Map<number, { signedPreKeyId?: string }>();
 
-      devicesResult.forEach(device => {
+      devicesResult.forEach((device: DeviceInfo) => {
         const deviceKey = `${sanitizedUser}:${device.device || 0}`;
         const deviceId = device.device || 0;
 
         // Find matching prekey data
-        const prekeyDevice = prekeyData?.devices.find(d => d.deviceId === deviceId);
+        const prekeyDevice = prekeyData?.devices.find((d: DevicePrekeyData) => d.deviceId === deviceId);
 
         newStatuses.set(deviceKey, {
           user: sanitizedUser,

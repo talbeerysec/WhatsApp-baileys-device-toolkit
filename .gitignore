@@ -7,6 +7,7 @@ desktop.ini
 # Environment & Config
 .env
 !web-ui/server/.env
+!.env.docker
 .env.local
 .env.production
 .env.development
@@ -89,3 +90,10 @@ web-ui/*/baileys_auth_info*/
 web-ui/*/dist/
 web-ui/*/node_modules/
 web-ui/*/*.log
+
+# Docker specific ignores
+.env
+docker/nginx/certs/*
+!docker/nginx/certs/.gitkeep
+backups/*.tar.gz
+*.tar.gz.bak

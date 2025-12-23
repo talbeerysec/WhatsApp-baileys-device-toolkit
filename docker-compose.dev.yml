@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # ===========================================
+  # Baileys CLI - Development with Hot Reload
+  # ===========================================
+  baileys-cli-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    image: baileys-toolkit:dev
+    container_name: baileys-cli-dev
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+    volumes:
+      # Mount source for hot reload
+      - ./src:/app/src
+      - ./Example:/app/Example
+      - ./WAProto:/app/WAProto
+      # Persistent data
+      - baileys-auth-dev:/app/baileys_auth_info
+      - baileys-media-dev:/app/Media
+      # Node modules (don't mount from host)
+      - baileys-node-modules:/app/node_modules
+    stdin_open: true
+    tty: true
+    networks:
+      - baileys-backend-dev
+    profiles:
+      - cli
+
+  # ===========================================
+  # Web UI Backend Server - Development
+  # ===========================================
+  web-server-dev:
+    build:
+      context: ./web-ui
+      dockerfile: Dockerfile.server
+      target: development
+    image: baileys-web-server:dev
+    container_name: baileys-web-server-dev
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+      - "9229:9229"  # Node.js debugging port
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - JWT_SECRET=dev-secret-change-in-production
+      - ADMIN_PASSWORD=admin123
+      - CORS_ORIGIN=http://localhost:5173
+      - LOG_LEVEL=debug
+    volumes:
+      # Mount source for hot reload
+      - ./web-ui/server/src:/app/server/src
+      # Persistent data
+      - baileys-auth-dev:/app/baileys_auth_info
+      - baileys-logs-dev:/app/logs
+      # Node modules
+      - web-server-node-modules:/app/server/node_modules
+    networks:
+      - baileys-frontend-dev
+      - baileys-backend-dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    profiles:
+      - web
+
+  # ===========================================
+  # Web UI Frontend Client - Development (Vite HMR)
+  # ===========================================
+  web-client-dev:
+    build:
+      context: ./web-ui
+      dockerfile: Dockerfile.client
+      target: development
+    image: baileys-web-client:dev
+    container_name: baileys-web-client-dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3001
+      - VITE_WS_URL=ws://localhost:3001
+    volumes:
+      # Mount source for hot reload
+      - ./web-ui/client/src:/app/client/src
+      - ./web-ui/client/public:/app/client/public
+      - ./web-ui/client/index.html:/app/client/index.html
+      - ./web-ui/client/vite.config.ts:/app/client/vite.config.ts
+      # Node modules
+      - web-client-node-modules:/app/client/node_modules
+    networks:
+      - baileys-frontend-dev
+    depends_on:
+      - web-server-dev
+    profiles:
+      - web
+
+# ===========================================
+# Networks
+# ===========================================
+networks:
+  baileys-frontend-dev:
+    driver: bridge
+    name: baileys-frontend-dev
+
+  baileys-backend-dev:
+    driver: bridge
+    name: baileys-backend-dev
+
+# ===========================================
+# Volumes
+# ===========================================
+volumes:
+  # Authentication state - development
+  baileys-auth-dev:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${AUTH_PATH:-./baileys_auth_info}
+
+  # Media files - development
+  baileys-media-dev:
+    driver: local
+
+  # Application logs - development
+  baileys-logs-dev:
+    driver: local
+
+  # Node modules volumes (anonymous, not mounted from host)
+  baileys-node-modules:
+    driver: local
+
+  web-server-node-modules:
+    driver: local
+
+  web-client-node-modules:
+    driver: local

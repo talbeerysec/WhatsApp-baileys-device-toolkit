@@ -1,0 +1,104 @@
+# Dockerfile for Baileys Web UI Client (React + Vite Frontend)
+
+# ===================================
+# Stage 1: Base
+# ===================================
+FROM node:22-alpine AS base
+
+WORKDIR /app
+
+# ===================================
+# Stage 2: Dependencies
+# ===================================
+FROM base AS dependencies
+
+# Copy client package files
+COPY web-ui/client/package*.json ./client/
+
+WORKDIR /app/client
+
+# Install dependencies
+RUN npm ci
+
+# ===================================
+# Stage 3: Builder
+# ===================================
+FROM dependencies AS builder
+
+WORKDIR /app
+
+# Copy shared types first
+COPY web-ui/shared/ ./web-ui/shared/
+
+# Copy client source
+COPY web-ui/client/ ./web-ui/client/
+
+WORKDIR /app/web-ui/client
+
+# Build arguments for API URL configuration
+ARG VITE_API_URL=http://localhost:3001
+ARG VITE_WS_URL=ws://localhost:3001
+
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_WS_URL=$VITE_WS_URL
+
+# Build the application
+RUN npm run build
+
+# ===================================
+# Stage 4: Production (Nginx)
+# ===================================
+FROM nginx:alpine AS production
+
+# Copy custom nginx config
+COPY web-ui/client/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built assets from builder
+COPY --from=builder /app/web-ui/client/dist /usr/share/nginx/html
+
+# Add healthcheck
+RUN apk add --no-cache curl
+
+# Create nginx user
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    touch /var/run/nginx.pid && \
+    chown -R nginx:nginx /var/run/nginx.pid
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
+
+# ===================================
+# Stage 5: Development (Vite Dev Server)
+# ===================================
+FROM dependencies AS development
+
+# Install development tools
+RUN apk add --no-cache bash vim
+
+WORKDIR /app
+
+# Copy shared types
+COPY web-ui/shared/ ./web-ui/shared/
+
+# Copy all client files
+COPY web-ui/client/ ./web-ui/client/
+
+WORKDIR /app/web-ui/client
+
+# Expose Vite dev server port
+EXPOSE 5173
+
+# Environment variables
+ENV NODE_ENV=development
+
+# Start Vite dev server
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

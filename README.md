@@ -25,6 +25,29 @@ This is a specialized fork of [Baileys](https://github.com/WhiskeySockets/Bailey
 
 ## 📦 Installation
 
+### Option 1: Docker (Recommended)
+
+The easiest way to get started is with Docker:
+
+```bash
+# Clone the repository
+git clone https://github.com/talbeerysec/WhatsApp-baileys-device-toolkit.git
+cd WhatsApp-baileys-device-toolkit
+
+# Configure environment
+cp .env.docker .env
+# Edit .env and set your JWT_SECRET and ADMIN_PASSWORD
+
+# Start with Docker Compose
+docker-compose --profile web up -d
+
+# Access the web UI at http://localhost
+```
+
+See [DOCKER.md](DOCKER.md) for complete Docker documentation.
+
+### Option 2: Manual Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/talbeerysec/WhatsApp-baileys-device-toolkit.git
@@ -39,7 +62,30 @@ yarn build:all
 
 ## 🎯 Quick Start
 
-### CLI Example with Device Features
+### 🐳 Docker Quick Start (Recommended)
+
+#### CLI Mode (Interactive)
+```bash
+# Run the interactive CLI
+docker-compose --profile cli run --rm baileys-cli
+```
+
+#### Web UI Mode (Full Stack)
+```bash
+# Start all services
+docker-compose --profile web up -d
+
+# View logs
+docker-compose logs -f
+
+# Access at http://localhost
+```
+
+See [DOCKER.md](DOCKER.md) for complete Docker documentation including troubleshooting, production deployment, and advanced configuration.
+
+### 💻 Manual Quick Start
+
+#### CLI Example with Device Features
 Do check out & run [Example/example.ts](Example/example.ts) to see enhanced device management capabilities.
 The script includes advanced silent ping functionality and device-specific operations.
 
@@ -59,7 +105,7 @@ silentping4 <user> <deviceId>    # Call-reject ping
 # ... and 7 more ping types for comprehensive testing
 ```
 
-### Web UI Interface 🌐
+#### Web UI Interface 🌐
 Launch the modern web interface for easier device management:
 
 ```bash
@@ -86,16 +132,23 @@ See [web-ui/README.md](web-ui/README.md) for complete documentation.
 
 ## 📋 Requirements
 
-### Core Library
+### Docker Deployment (Recommended)
+- **Docker** 20.10+ ([Install Docker](https://docs.docker.com/get-docker/))
+- **Docker Compose** 2.0+ (included with Docker Desktop)
+- **2GB RAM** minimum
+- **10GB disk space** for images and data
+
+### Manual Installation
+#### Core Library
 - **Node.js** (v22 or higher)
 - **npm** or **yarn**
 
-### Web UI Interface
+#### Web UI Interface
 - **Node.js** (v22 or higher)
 - **npm** or **yarn**
 - **Modern web browser** with WebSocket support
 
-### Optional Dependencies
+#### Optional Dependencies
 Some features require additional packages:
 - `sharp` or `jimp` - Image processing for media messages
 - `qrcode-terminal` - QR code display in terminal

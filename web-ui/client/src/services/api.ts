@@ -16,7 +16,8 @@ import {
   CorruptMessageRequest,
   MessageResponse,
   PrekeyData,
-  DevicePrekeyData
+  DevicePrekeyData,
+  UserProfile
 } from '../../../shared/types/api';
 
 const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || '';

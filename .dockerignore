@@ -1,0 +1,91 @@
+# Dependencies
+# node_modules - temporarily allowed for web-server build
+web-ui/node_modules
+web-ui/client/node_modules
+web-ui/server/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build outputs
+# lib - temporarily commented out for web-server build
+dist
+web-ui/client/dist
+web-ui/server/dist
+*.tsbuildinfo
+.tsbuildinfo
+
+# Git
+.git
+.github
+.gitignore
+.gitattributes
+
+# IDE and editors
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation (not needed in image)
+docs
+*.md
+!DOCKER.md
+CHANGELOG.md
+ANALYSIS_SUMMARY.txt
+CODE_EXAMPLES.md
+DEVICE_IMPLEMENTATION.md
+DOCUMENTATION_INDEX.md
+EXPERIMENT_CUSTOM_TIMESTAMP.md
+FILE_LOCATIONS.md
+PLANNED_CHANGES.md
+QUICK_REFERENCE.md
+RESEARCH_MESSAGE_EDIT_TIMESTAMPS.md
+WHATSAPP_TYPES_REFERENCE.md
+
+# Tests
+src/Tests
+**/*.test.ts
+**/*.spec.ts
+jest.config.ts
+coverage
+
+# Media and auth (should be mounted as volumes)
+Media
+baileys_auth_info
+proto-extract
+
+# Environment files (use docker secrets/env vars)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Misc
+*.log
+*.pid
+*.seed
+*.pid.lock
+.npm
+.eslintcache
+.cache
+tmp
+temp
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# CI/CD
+.circleci
+.travis.yml
+
+# Package locks (we'll use them selectively)
+# Keep package-lock.json and yarn.lock for reproducible builds

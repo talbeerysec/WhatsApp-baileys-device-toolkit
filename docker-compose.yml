@@ -1,0 +1,155 @@
+version: '3.8'
+
+services:
+  # ===========================================
+  # Baileys CLI - Interactive Command Line Interface
+  # ===========================================
+  baileys-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: baileys-toolkit:latest
+    container_name: baileys-cli
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+    volumes:
+      # Persistent authentication state
+      - baileys-auth:/app/baileys_auth_info
+      # Media files
+      - baileys-media:/app/Media
+    stdin_open: true
+    tty: true
+    networks:
+      - baileys-backend
+    profiles:
+      - cli
+
+  # ===========================================
+  # Web UI Backend Server (Express.js + Socket.io)
+  # ===========================================
+  web-server:
+    build:
+      context: .
+      dockerfile: web-ui/Dockerfile.server
+      target: production
+    image: baileys-web-server:latest
+    container_name: baileys-web-server
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - JWT_SECRET=${JWT_SECRET:-change-this-secret-in-production}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    volumes:
+      # Shared authentication state with CLI
+      - baileys-auth:/app/baileys_auth_info
+      # Server logs
+      - baileys-logs:/app/logs
+    networks:
+      - baileys-frontend
+      - baileys-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    profiles:
+      - web
+
+  # ===========================================
+  # Web UI Frontend Client (React + Vite)
+  # ===========================================
+  web-client:
+    build:
+      context: .
+      dockerfile: web-ui/Dockerfile.client
+      target: production
+      args:
+        - VITE_API_URL=http://localhost:3001
+        - VITE_WS_URL=ws://localhost:3001
+    image: baileys-web-client:latest
+    container_name: baileys-web-client
+    restart: unless-stopped
+    networks:
+      - baileys-frontend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - web-server
+    profiles:
+      - web
+
+  # ===========================================
+  # Nginx Reverse Proxy
+  # ===========================================
+  nginx:
+    image: nginx:alpine
+    container_name: baileys-nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # For SSL certificates (optional)
+      - ./docker/nginx/certs:/etc/nginx/certs:ro
+    networks:
+      - baileys-frontend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - web-client
+      - web-server
+    profiles:
+      - web
+
+# ===========================================
+# Networks
+# ===========================================
+networks:
+  baileys-frontend:
+    driver: bridge
+    name: baileys-frontend
+
+  baileys-backend:
+    driver: bridge
+    # Allow internet access for WhatsApp connection
+    # internal: true
+    name: baileys-backend
+
+# ===========================================
+# Volumes
+# ===========================================
+volumes:
+  # Authentication state - CRITICAL: Must persist across restarts
+  baileys-auth:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${AUTH_PATH:-./baileys_auth_info}
+
+  # Media files
+  baileys-media:
+    driver: local
+
+  # Application logs
+  baileys-logs:
+    driver: local

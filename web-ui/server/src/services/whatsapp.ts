@@ -45,9 +45,9 @@ export class WhatsAppService extends EventEmitter {
   constructor() {
     super();
     
-    // Setup logger (minimal for web server)
-    this.logger = P({ 
-      level: 'warn',
+    // Setup logger (debug level to see contact sync events)
+    this.logger = P({
+      level: 'debug',
       timestamp: () => `,\"time\":\"${new Date().toJSON()}\"`
     });
     
@@ -55,9 +55,9 @@ export class WhatsAppService extends EventEmitter {
     
     // Setup store for message/chat persistence
     this.store = makeInMemoryStore({ logger: this.logger });
-    
-    // Try to read existing store
-    const storePath = path.join(__dirname, '../../../../../baileys_store_multi.json');
+
+    // Try to read existing store (use env var or fallback to writable directory)
+    const storePath = process.env.STORE_PATH || path.join(process.cwd(), 'baileys_store_multi.json');
     try {
       this.store.readFromFile(storePath);
     } catch (error) {
@@ -137,14 +137,23 @@ export class WhatsAppService extends EventEmitter {
         generateHighQualityLinkPreview: true,
         getMessage: this.getMessage.bind(this),
         qrTimeout: 60000, // 60 seconds QR timeout instead of default 20 seconds
-        connectTimeoutMs: 60000 // 60 seconds connection timeout
+        connectTimeoutMs: 60000, // 60 seconds connection timeout
+        syncFullHistory: true // Request full history including contacts from WhatsApp
+        // NOTE: Don't set shouldSyncHistoryMessage - let makeWASocket auto-generate it based on syncFullHistory
       });
 
       // Bind store to socket events
+      console.log('🔗 Binding store to socket events...');
       this.store?.bind(this.sock.ev);
+      console.log('✅ Store bound successfully');
 
       // Setup event handlers
       this.sock.ev.process(async (events) => {
+        // Log all events being received (for debugging)
+        const eventKeys = Object.keys(events);
+        if (eventKeys.length > 0) {
+          console.log('📥 Events received:', eventKeys.join(', '));
+        }
         // Connection updates
         if (events['connection.update']) {
           const update = events['connection.update'];
@@ -173,6 +182,48 @@ export class WhatsAppService extends EventEmitter {
 
         // Handle contacts update
         if (events['contacts.update']) {
+          console.log('📇 Contacts update sample:', events['contacts.update'].slice(0, 3));
+        }
+
+        // Handle contacts upsert
+        if (events['contacts.upsert']) {
+          console.log('📇 Contacts upsert sample:', events['contacts.upsert'].slice(0, 3));
+        }
+
+        // Handle messaging history set (initial sync)
+        if (events['messaging-history.set']) {
+          const { chats, contacts, messages, isLatest, syncType } = events['messaging-history.set'];
+          console.log('📚 Messaging history sync:', {
+            syncType,
+            chats: chats?.length || 0,
+            contacts: contacts?.length || 0,
+            messages: messages?.length || 0,
+            isLatest
+          });
+          if (contacts && contacts.length > 0) {
+            console.log('📇 Sample contacts from history (first 3):', JSON.stringify(contacts.slice(0, 3), null, 2));
+            // Count how many contacts have names
+            const withNames = contacts.filter((c: any) => c.name || c.notify || c.verifiedName).length;
+            console.log(`📇 Contacts with names: ${withNames}/${contacts.length}`);
+          }
+          if (chats && chats.length > 0) {
+            console.log('💬 Sample chats from history (first 2):', JSON.stringify(chats.slice(0, 2).map((c: any) => ({
+              id: c.id,
+              name: c.name,
+              hasName: !!c.name
+            })), null, 2));
+          }
+        }
+
+        // Handle contacts upsert (new contacts added)
+        if (events['contacts.upsert']) {
+          console.log('📇 Contacts upsert:', events['contacts.upsert'].length, 'contacts');
+          this.emit('contacts.update', events['contacts.upsert']);
+        }
+
+        // Handle contacts update
+        if (events['contacts.update']) {
+          console.log('📇 Contacts update:', events['contacts.update'].length, 'contacts');
           this.emit('contacts.update', events['contacts.update']);
         }
       });
@@ -252,6 +303,7 @@ export class WhatsAppService extends EventEmitter {
     } else if (connection === 'open') {
       console.log('✅ WhatsApp connection established successfully');
       console.log(`👤 Logged in as: ${this.sock?.user?.name} (${this.sock?.user?.id})`);
+
       this.latestQRCode = undefined; // Clear QR code when connected
       this.updateConnectionStatus('open', true, {
         id: this.sock?.user?.id || '',
@@ -349,7 +401,15 @@ export class WhatsAppService extends EventEmitter {
   async getChats(): Promise<ChatInfo[]> {
     if (!this.store) return [];
 
-    const chats = this.store.chats.all().slice(0, 50);
+    // Filter out status@broadcast and only include chats with messages
+    const chats = this.store.chats.all()
+      .filter((chat: any) => {
+        // Exclude status broadcasts
+        if (chat.id === 'status@broadcast') return false;
+        // Only include chats that have messages or are recent
+        return chat.conversationTimestamp || chat.unreadCount > 0;
+      })
+      .slice(0, 50);
 
     // Fetch group metadata for all groups that don't have it
     const groupMetadataStore = (this.store as any).groupMetadata || {};
@@ -428,12 +488,57 @@ export class WhatsAppService extends EventEmitter {
   getContacts(): ContactInfo[] {
     if (!this.store) return [];
 
-    return Object.values(this.store.contacts).slice(0, 3000).map((contact: any) => ({
-      id: contact.id,
-      name: contact.name,
-      notify: contact.notify,
-      isBlocked: contact.isBlocked || false
-    }));
+    // Get contacts from BOTH store.contacts AND store.chats
+    // Because WhatsApp no longer sends all contacts via history sync
+    const contactMap = new Map<string, any>();
+
+    // First, add all contacts from store.contacts
+    Object.values(this.store.contacts).forEach((contact: any) => {
+      if (contact.id && contact.id.endsWith('@s.whatsapp.net')) {
+        contactMap.set(contact.id, contact);
+      }
+    });
+
+    // Then, add contacts from chats (to catch contacts not in store.contacts)
+    const chats = this.store.chats.all();
+    chats.forEach((chat: any) => {
+      if (chat.id && chat.id.endsWith('@s.whatsapp.net') && !contactMap.has(chat.id)) {
+        // Create a contact entry from chat
+        contactMap.set(chat.id, { id: chat.id, jid: chat.id });
+      }
+    });
+
+    // Now map all contacts to ContactInfo with name resolution
+    return Array.from(contactMap.values())
+      .slice(0, 3000)
+      .map((contact: any) => {
+        // IMPORTANT: WhatsApp doesn't send contact names during history sync anymore!
+        // Names only appear when:
+        // 1. Contact sends you a message (pushName in message)
+        // 2. Via contacts.update events when you receive messages
+        // 3. Fetching via onWhatsApp API (rate-limited)
+
+        // Try to get name from contact store (populated by contacts.update events)
+        let name = contact.name || contact.notify || contact.verifiedName;
+
+        // If still no name, extract phone number from JID and format it nicely
+        if (!name) {
+          const phoneMatch = contact.id.match(/^(\d+)@/);
+          if (phoneMatch) {
+            // Format phone number nicely (e.g., "972547837628")
+            name = phoneMatch[1];
+          } else {
+            name = contact.id.split('@')[0];
+          }
+        }
+
+        return {
+          id: contact.id,
+          name: name,
+          notify: contact.notify,
+          isBlocked: contact.isBlocked || false
+        };
+      });
   }
 
   async getUserProfile(user: string): Promise<UserProfile | null> {

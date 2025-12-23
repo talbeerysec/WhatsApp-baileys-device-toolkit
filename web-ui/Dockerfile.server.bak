@@ -1,0 +1,151 @@
+# Dockerfile for Baileys Web UI Server (Express.js Backend)
+
+# ===================================
+# Stage 1: Base
+# ===================================
+FROM node:22-alpine AS base
+
+# Install system dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    curl
+
+# Enable Corepack for npm (Node 22 includes it)
+RUN corepack enable
+
+WORKDIR /app/server
+
+# ===================================
+# Stage 2: Dependencies
+# ===================================
+FROM base AS dependencies
+
+# Copy server package files
+COPY web-ui/server/package*.json ./
+
+# Install all dependencies
+RUN npm ci
+
+# ===================================
+# Stage 3: Server Builder
+# ===================================
+FROM dependencies AS builder
+
+WORKDIR /app
+
+# Copy pre-built Baileys library (lib is now allowed in dockerignore)
+COPY lib ./lib/
+COPY WAProto ./WAProto/
+COPY package.json ./package.json
+
+# Copy shared types
+COPY web-ui/shared/ ./web-ui/shared/
+
+# Copy server files
+COPY web-ui/server/package*.json ./web-ui/server/
+COPY web-ui/server/src ./web-ui/server/src
+COPY web-ui/server/tsconfig.json ./web-ui/server/
+
+
+WORKDIR /app/web-ui/server
+
+# Install server dependencies (separate from Baileys dependencies)
+RUN npm ci
+
+# Build TypeScript
+RUN npm run build
+
+# ===================================
+# Stage 4: Production
+# ===================================
+FROM node:22-alpine AS production
+
+# Install runtime dependencies only
+RUN apk add --no-cache \
+    curl \
+    tini
+
+# Enable Corepack for npm
+RUN corepack enable
+
+# Create non-root user
+RUN addgroup -g 1001 -S baileys && \
+    adduser -S -D -H -u 1001 -h /app -s /sbin/nologin -G baileys -g baileys baileys
+
+WORKDIR /app/web-ui/server
+
+# Copy package files and install production dependencies
+COPY web-ui/server/package*.json ./
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Copy built application
+COPY --from=builder /app/web-ui/server/dist ./dist
+
+# Copy parent Baileys library for runtime
+COPY --from=builder /app/lib /app/lib
+COPY --from=builder /app/WAProto /app/WAProto
+COPY --from=builder /app/package.json /app/package.json
+
+# Copy shared types for runtime
+COPY --from=builder /app/web-ui/shared /app/web-ui/shared
+
+# Create necessary directories
+RUN mkdir -p /app/web-ui/baileys_auth_info && \
+    chown -R baileys:baileys /app
+
+# Switch to non-root user
+USER baileys
+
+# Environment variables
+ENV NODE_ENV=production \
+    PORT=3001
+
+# Expose port
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:3001/api/status || exit 1
+
+# Use tini for proper signal handling
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start server
+CMD ["node", "dist/app.js"]
+
+# ===================================
+# Stage 5: Development
+# ===================================
+FROM dependencies AS development
+
+# Install development tools
+RUN apk add --no-cache bash vim
+
+WORKDIR /app
+
+# Copy Baileys library
+COPY lib ./lib/
+COPY WAProto ./WAProto/
+COPY package.json ./package.json
+
+# Copy shared types
+COPY web-ui/shared/ ./web-ui/shared/
+
+# Copy all server source files
+COPY web-ui/server/ ./web-ui/server/
+
+WORKDIR /app/web-ui/server
+
+# Environment
+ENV NODE_ENV=development \
+    PORT=3001
+
+# Expose ports
+EXPOSE 3001 9229
+
+# Development with watch mode
+CMD ["npm", "run", "dev"]
