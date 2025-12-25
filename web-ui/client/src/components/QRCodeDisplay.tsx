@@ -15,6 +15,7 @@ import { useWhatsApp } from '../contexts/WhatsAppContext';
 const QRCodeDisplay: React.FC = () => {
   const [qrCode, setQrCode] = useState<string>('');
   const [showQR, setShowQR] = useState(false);
+  const [waitingForQR, setWaitingForQR] = useState(false);
   const { socket } = useSocket();
   const { connectionStatus } = useWhatsApp();
 
@@ -25,10 +26,21 @@ const QRCodeDisplay: React.FC = () => {
       console.log('📱 QR Code received, generating image...');
       setQrCode(qr);
       setShowQR(true);
+      setWaitingForQR(false);
+    });
+
+    socket.on('qr-needed', (needed: boolean) => {
+      console.log('📱 QR authentication needed:', needed);
+      if (needed) {
+        setShowQR(true);
+        setWaitingForQR(true);
+        setQrCode(''); // Clear old QR while waiting for new one
+      }
     });
 
     return () => {
       socket.off('qr');
+      socket.off('qr-needed');
     };
   }, [socket]);
 
@@ -37,16 +49,20 @@ const QRCodeDisplay: React.FC = () => {
     if (connectionStatus.state === 'open') {
       setShowQR(false);
       setQrCode('');
+      setWaitingForQR(false);
     }
-    // Show QR when connection is closed and no authentication
+    // Show QR dialog when connection is closed and no authentication
     else if (connectionStatus.state === 'close' && !connectionStatus.isAuthenticated) {
-      // QR will be shown when socket emits 'qr' event
+      // QR will be shown when socket emits 'qr' or 'qr-needed' event
+      setWaitingForQR(true);
+      setShowQR(true);
     }
   }, [connectionStatus.state, connectionStatus.isAuthenticated]);
 
   const handleClose = () => {
     setShowQR(false);
     setQrCode('');
+    setWaitingForQR(false);
   };
 
   const generateQRCodeURL = (text: string) => {
@@ -105,31 +121,66 @@ const QRCodeDisplay: React.FC = () => {
           </Paper>
           
           {qrCode ? (
-            <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-              <img 
+            <Paper elevation={3} sx={{ p: 3, borderRadius: 2, position: 'relative' }}>
+              <img
                 src={generateQRCodeURL(qrCode)}
                 alt="WhatsApp QR Code"
-                style={{ 
-                  width: 280, 
+                style={{
+                  width: 280,
                   height: 280,
                   display: 'block'
                 }}
                 onError={(e) => {
                   console.error('Failed to load QR code image');
                 }}
+                key={qrCode} // Force re-render with animation when QR changes
               />
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 8,
+                  right: 8,
+                  bgcolor: 'success.main',
+                  color: 'white',
+                  px: 1.5,
+                  py: 0.5,
+                  borderRadius: 1,
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold',
+                  animation: 'pulse 2s ease-in-out',
+                  '@keyframes pulse': {
+                    '0%, 100%': { opacity: 1 },
+                    '50%': { opacity: 0.7 }
+                  }
+                }}
+              >
+                LIVE
+              </Box>
             </Paper>
-          ) : (
-            <Box 
-              display="flex" 
-              flexDirection="column" 
-              alignItems="center" 
+          ) : waitingForQR ? (
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
               gap={2}
               sx={{ py: 4 }}
             >
               <CircularProgress size={40} />
               <Typography variant="body2" color="text.secondary">
-                Generating QR code...
+                {connectionStatus.errorMessage || 'Generating QR code...'}
+              </Typography>
+            </Box>
+          ) : (
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              gap={2}
+              sx={{ py: 4 }}
+            >
+              <CircularProgress size={40} />
+              <Typography variant="body2" color="text.secondary">
+                Initializing...
               </Typography>
             </Box>
           )}

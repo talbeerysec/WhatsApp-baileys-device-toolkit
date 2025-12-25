@@ -39,8 +39,10 @@ WORKDIR /app/web-ui/client
 RUN npm ci
 
 # Build arguments for API URL configuration
-ARG VITE_API_URL=http://localhost:3001
-ARG VITE_WS_URL=ws://localhost:3001
+# IMPORTANT: Use empty string for production to enable relative URLs
+# This allows nginx reverse proxy to handle API routing
+ARG VITE_API_URL=""
+ARG VITE_WS_URL=""
 
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_WS_URL=$VITE_WS_URL

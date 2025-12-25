@@ -6,23 +6,24 @@ import { SocketProvider } from './contexts/SocketContext';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import './utils/persistentLogger'; // Initialize persistent logger globally
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route 
-          path="/*" 
+        <Route
+          path="/*"
           element={
             <ProtectedRoute>
-              <WhatsAppProvider>
-                <SocketProvider>
+              <SocketProvider>
+                <WhatsAppProvider>
                   <Dashboard />
-                </SocketProvider>
-              </WhatsAppProvider>
+                </WhatsAppProvider>
+              </SocketProvider>
             </ProtectedRoute>
-          } 
+          }
         />
       </Routes>
     </AuthProvider>

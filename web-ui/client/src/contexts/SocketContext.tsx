@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { useWhatsApp } from './WhatsAppContext';
 
 interface SocketContextType {
   socket: Socket | null;
@@ -21,10 +20,11 @@ interface SocketProviderProps {
 }
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
-  const { updateConnectionStatus, updateChats, updateContacts } = useWhatsApp();
   const [socket, setSocket] = React.useState<Socket | null>(null);
+  console.log('🔄 SocketProvider rendering, socket:', socket ? 'exists' : 'null');
 
   useEffect(() => {
+    console.log('🔌 SocketProvider effect triggered');
     const token = localStorage.getItem('auth_token');
     if (!token) {
       console.log('🔐 No auth token found, skipping socket connection');
@@ -32,7 +32,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     }
 
     console.log('🔌 Creating new socket connection...');
-    const socketInstance = io((import.meta as any).env?.VITE_API_URL || 'http://localhost:3001', {
+    // Use empty string for production (nginx proxy) or explicit URL for development
+    // Empty string tells Socket.io to connect to same origin
+    const socketUrl = (import.meta as any).env?.VITE_API_URL || '';
+    const socketInstance = io(socketUrl, {
       auth: {
         token
       },
@@ -41,38 +44,13 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       timeout: 20000, // 20 second timeout
     });
 
-    // Set up event handlers before connecting
+    // Set up basic event handlers
     socketInstance.on('connect', () => {
       console.log('✅ Connected to server with ID:', socketInstance.id);
     });
 
     socketInstance.on('disconnect', (reason) => {
       console.log('🔌 Disconnected from server:', reason);
-    });
-
-    socketInstance.on('connection.status', (status) => {
-      console.log('📱 Connection status update:', status);
-      updateConnectionStatus(status);
-    });
-
-    socketInstance.on('chats.update', (chats) => {
-      console.log('💬 Chats updated:', chats.length);
-      updateChats(chats);
-    });
-
-    socketInstance.on('contacts.update', (contacts) => {
-      console.log('👥 Contacts updated:', contacts.length);
-      updateContacts(contacts);
-    });
-
-    socketInstance.on('messages.upsert', (upsert) => {
-      console.log('📨 New messages:', upsert);
-      // Trigger chats refresh when new messages arrive
-      socketInstance.emit('request.chats');
-    });
-
-    socketInstance.on('qr', (qr) => {
-      console.log('📱 QR code received, length:', qr ? qr.length : 0);
     });
 
     socketInstance.on('connect_error', (error) => {

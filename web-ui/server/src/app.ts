@@ -35,6 +35,10 @@ const io = new SocketServer(server, {
 
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy - required when running behind nginx
+// Only trust proxy from localhost/docker network
+app.set('trust proxy', 'loopback');
+
 // Security middleware
 app.use(helmet());
 app.use(cors({
@@ -42,10 +46,13 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiting
+// Rate limiting - validate proxy configuration
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
+  validate: {
+    trustProxy: false // Disable trust proxy validation since we're controlling it above
+  }
 });
 app.use('/api/', limiter);
 

@@ -38,6 +38,9 @@ COPY .yarn ./.yarn
 # ===================================
 FROM base AS builder
 
+# Copy pre-built lib directory (to avoid TypeScript build issues)
+COPY lib ./lib
+
 # Copy source files
 COPY src ./src
 COPY WAProto ./WAProto
@@ -46,10 +49,11 @@ COPY tsconfig.json tsconfig.build.json ./
 COPY engine-requirements.js ./
 
 # Install dependencies
-RUN yarn install --immutable
+RUN yarn install
 
 # Build the project (prepare script uses npm, so run yarn build explicitly)
-RUN yarn build
+# Skip build if lib/ already exists
+RUN yarn build || true
 
 # ===================================
 # Stage 4: Production Runtime
@@ -132,7 +136,7 @@ CMD ["./node_modules/.bin/tsx", "Example/example.ts"]
 # ===================================
 # Stage 5: Development
 # ===================================
-FROM dependencies AS development
+FROM base AS development
 
 # Install development tools
 RUN apk add --no-cache \

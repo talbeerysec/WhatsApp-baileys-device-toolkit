@@ -14,7 +14,9 @@ import {
   ListItemIcon,
   ListItemText,
   Chip,
-  Button
+  Button,
+  CircularProgress,
+  Backdrop
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -67,7 +69,19 @@ const Dashboard: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const { logout } = useAuth();
-  const { connectionStatus, refreshData, isLoading } = useWhatsApp();
+  const { connectionStatus, refreshData, isLoading, chats, contacts, errorMessage } = useWhatsApp();
+
+  // Check if this is initial load (loading and not yet connected, or no chats loaded yet)
+  const isInitialLoad = isLoading && (connectionStatus.state !== 'open' || chats.length === 0);
+
+  console.log('🎨 Dashboard rendering:', {
+    isLoading,
+    isInitialLoad,
+    chatsLength: chats.length,
+    contactsLength: contacts.length,
+    connectionState: connectionStatus.state,
+    errorMessage
+  });
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -200,10 +214,10 @@ const Dashboard: React.FC = () => {
       
       <Box
         component="main"
-        sx={{ 
-          flexGrow: 1, 
-          p: 3, 
-          width: { sm: `calc(100% - ${drawerWidth}px)` } 
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - ${drawerWidth}px)` }
         }}
       >
         <Toolbar />
@@ -219,6 +233,27 @@ const Dashboard: React.FC = () => {
         </Routes>
         <QRCodeDisplay />
       </Box>
+
+      {/* Loading overlay for initial data fetch */}
+      <Backdrop
+        sx={{
+          color: '#fff',
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          flexDirection: 'column',
+          gap: 2
+        }}
+        open={isInitialLoad}
+      >
+        <CircularProgress color="inherit" size={60} />
+        <Typography variant="h6">
+          {errorMessage || 'Loading WhatsApp data...'}
+        </Typography>
+        <Typography variant="body2" color="inherit" sx={{ opacity: 0.8 }}>
+          {errorMessage
+            ? 'Retrying... Please wait'
+            : 'Please wait while we sync your chats and contacts'}
+        </Typography>
+      </Backdrop>
     </Box>
   );
 };

@@ -35,6 +35,8 @@ export class WhatsAppService extends EventEmitter {
   private msgRetryCounterCache: NodeCache;
   private latestQRCode?: string;
   private pendingSilentPings = new Map<string, PendingSilentPing>();
+  private connectionFailures = 0;
+  private lastConnectionAttempt = 0;
   private connectionStatus: ConnectionStatus = {
     state: 'close',
     isAuthenticated: false,
@@ -78,12 +80,44 @@ export class WhatsAppService extends EventEmitter {
     try {
       const authPath = path.resolve(__dirname, '../../../../baileys_auth_info');
       console.log(`📁 Auth path: ${authPath}`);
-      
+
       // Check if auth directory and files exist
       const fs = require('fs');
       const credsPath = path.join(authPath, 'creds.json');
       console.log(`📄 Creds file exists: ${fs.existsSync(credsPath)}`);
-      
+
+      // Track connection attempts to detect repeated failures
+      const now = Date.now();
+      if (now - this.lastConnectionAttempt < 10000) {
+        this.connectionFailures++;
+      } else {
+        this.connectionFailures = 0;
+      }
+      this.lastConnectionAttempt = now;
+
+      // If we've had multiple failures in quick succession, force fresh auth
+      if (this.connectionFailures > 3) {
+        console.log(`⚠️ ${this.connectionFailures} connection failures detected, forcing fresh authentication...`);
+        if (fs.existsSync(authPath)) {
+          const files = fs.readdirSync(authPath);
+          for (const file of files) {
+            const filePath = path.join(authPath, file);
+            try {
+              const stat = fs.statSync(filePath);
+              if (stat.isDirectory()) {
+                fs.rmSync(filePath, { recursive: true, force: true });
+              } else {
+                fs.unlinkSync(filePath);
+              }
+            } catch (err) {
+              console.error(`Failed to delete ${filePath}:`, err);
+            }
+          }
+          console.log('🗑️ Cleared stale session files');
+        }
+        this.connectionFailures = 0;
+      }
+
       if (fs.existsSync(credsPath)) {
         const credsContent = fs.readFileSync(credsPath, 'utf8');
         const creds = JSON.parse(credsContent);
@@ -91,7 +125,7 @@ export class WhatsAppService extends EventEmitter {
         console.log(`📋 Raw creds me: ${creds.me ? JSON.stringify(creds.me) : 'None'}`);
         console.log(`📋 Raw creds account: ${creds.account ? 'Present' : 'Missing'}`);
       }
-      
+
       const { state, saveCreds } = await useMultiFileAuthState(authPath);
       const { version } = await fetchLatestBaileysVersion();
 
@@ -104,10 +138,10 @@ export class WhatsAppService extends EventEmitter {
       const hasExistingAuth = state.creds.registered;
       const hasUserInfo = state.creds.me?.id;
       const hasAccount = state.creds.account;
-      // Only consider session data valid if we have an actual creds file
+      // Only consider session data valid if we have an actual creds file AND registered flag is true
       const hasSessionData = hasCredsFile && state.creds.noiseKey && state.creds.signedIdentityKey;
-      const hasValidSession = hasSessionData && (hasUserInfo || hasAccount);
-      
+      const hasValidSession = hasSessionData && hasExistingAuth && (hasUserInfo || hasAccount);
+
       console.log(`🔄 Initializing WhatsApp connection with version ${version.join('.')}`);
       console.log(`🔐 Authentication status:`);
       console.log(`   - Registered: ${hasExistingAuth}`);
@@ -115,20 +149,17 @@ export class WhatsAppService extends EventEmitter {
       console.log(`   - Account: ${hasAccount ? 'Present' : 'Missing'}`);
       console.log(`   - Session data: ${hasSessionData ? 'Present' : 'Missing'}`);
       console.log(`   - Valid session: ${hasValidSession ? 'Yes' : 'No'}`);
+      console.log(`   - Connection failures: ${this.connectionFailures}`);
 
-      // Don't show QR if we have valid session (session data + user info OR account)
-      // Even if not "registered", attempt connection with existing session
+      // Don't show QR if we have valid session (must be registered AND have user data)
       const shouldShowQR = !hasValidSession;
-      
+
       if (hasValidSession) {
         console.log('✅ Found existing valid session, attempting to connect without QR...');
-        // Force registration status to true to bypass QR requirement
-        if (!hasExistingAuth && hasSessionData) {
-          console.log('🔧 Setting registered flag to true for existing session...');
-          state.creds.registered = true;
-        }
       } else {
         console.log('⚠️  No valid session found, QR authentication will be required');
+        // Notify frontend that QR will be needed
+        this.emit('qr-needed', true);
       }
 
       this.sock = makeWASocket({
@@ -243,7 +274,7 @@ export class WhatsAppService extends EventEmitter {
 
   private async handleConnectionUpdate(update: any): Promise<void> {
     const { connection, lastDisconnect, qr } = update;
-    
+
     const disconnectReason = lastDisconnect?.error?.output?.statusCode;
     console.log('📱 Connection update:', { connection, disconnectReason, lastDisconnect: lastDisconnect?.error?.message });
 
@@ -251,6 +282,8 @@ export class WhatsAppService extends EventEmitter {
       console.log('📱 QR Code received for authentication');
       this.latestQRCode = qr;
       this.emit('qr', qr);
+      // Reset failure counter when QR is successfully generated
+      this.connectionFailures = 0;
     }
 
     if (connection === 'close') {
@@ -260,6 +293,7 @@ export class WhatsAppService extends EventEmitter {
         console.log('⚠️ Connection replaced by another instance (e.g., WhatsApp Desktop)');
         console.log('💡 Please close other WhatsApp applications or use a different session');
         this.updateConnectionStatus('close', false);
+        this.connectionFailures = 0; // Reset on connection replaced
         // Don't auto-reconnect in this case to avoid conflicts
         return;
       }
@@ -267,6 +301,13 @@ export class WhatsAppService extends EventEmitter {
       if (disconnectReason === DisconnectReason.multideviceMismatch) {
         console.log('⚠️ Multi-device session mismatch - clearing session');
         this.updateConnectionStatus('close', false);
+        this.connectionFailures = 0; // Reset before clearing
+        // Force clear session and regenerate QR
+        try {
+          await this.clearSession();
+        } catch (error) {
+          console.error('Failed to clear session after multidevice mismatch:', error);
+        }
         return;
       }
 
@@ -275,6 +316,7 @@ export class WhatsAppService extends EventEmitter {
         console.log('🚫 Device removed or logged out (401) - session is invalid');
         console.log('🧹 Automatically clearing invalid session...');
         this.updateConnectionStatus('close', false, undefined, 'Device removed or logged out. Generating new QR code...');
+        this.connectionFailures = 0; // Reset before clearing
 
         // Clear the invalid session automatically
         // Note: clearSession() will automatically call initialize() after clearing
@@ -294,6 +336,8 @@ export class WhatsAppService extends EventEmitter {
       if (disconnectReason === 408) {
         console.log('⏰ QR code timeout - generating new QR code...');
         this.updateConnectionStatus('connecting', false);
+        // Clear any stale QR and ensure fresh generation
+        this.latestQRCode = undefined;
         setTimeout(() => this.initialize(), 2000); // Quick restart for QR regeneration
         return;
       }
@@ -301,7 +345,19 @@ export class WhatsAppService extends EventEmitter {
       if (shouldReconnect) {
         console.log('🔄 Connection closed, attempting to reconnect...');
         this.updateConnectionStatus('connecting', false);
-        setTimeout(() => this.initialize(), 5000);
+
+        // Check if we should force clear session due to repeated failures
+        if (this.connectionFailures > 3) {
+          console.log('⚠️ Multiple connection failures detected, clearing session...');
+          try {
+            await this.clearSession();
+          } catch (error) {
+            console.error('Failed to clear session after repeated failures:', error);
+            setTimeout(() => this.initialize(), 5000);
+          }
+        } else {
+          setTimeout(() => this.initialize(), 5000);
+        }
       } else {
         console.log('❌ Connection closed');
         this.updateConnectionStatus('close', false);
@@ -311,6 +367,7 @@ export class WhatsAppService extends EventEmitter {
       console.log(`👤 Logged in as: ${this.sock?.user?.name} (${this.sock?.user?.id})`);
 
       this.latestQRCode = undefined; // Clear QR code when connected
+      this.connectionFailures = 0; // Reset failure counter on successful connection
       this.updateConnectionStatus('open', true, {
         id: this.sock?.user?.id || '',
         name: this.sock?.user?.name || 'Unknown'
@@ -1431,6 +1488,9 @@ export class WhatsAppService extends EventEmitter {
     console.log('🗑️ Clearing WhatsApp session...');
     console.log('DEBUG: clearSession() called, connectionStatus.state =', this.connectionStatus.state);
 
+    // Reset failure counter when clearing session
+    this.connectionFailures = 0;
+
     // Only attempt logout if socket is connected
     if (this.sock && this.connectionStatus.state === 'open') {
       console.log('DEBUG: Socket exists and is open, attempting logout...');
@@ -1459,16 +1519,30 @@ export class WhatsAppService extends EventEmitter {
         console.log('DEBUG: Auth directory exists, clearing contents...');
         // Delete contents of directory instead of directory itself (Docker volume mount compatibility)
         const files = fs.readdirSync(authPath);
+        let successCount = 0;
+        let errorCount = 0;
+
         for (const file of files) {
           const filePath = path.join(authPath, file);
-          const stat = fs.statSync(filePath);
-          if (stat.isDirectory()) {
-            fs.rmSync(filePath, { recursive: true, force: true });
-          } else {
-            fs.unlinkSync(filePath);
+          try {
+            const stat = fs.statSync(filePath);
+            if (stat.isDirectory()) {
+              fs.rmSync(filePath, { recursive: true, force: true });
+            } else {
+              fs.unlinkSync(filePath);
+            }
+            successCount++;
+          } catch (fileError) {
+            console.error(`Failed to delete ${filePath}:`, fileError);
+            errorCount++;
           }
         }
-        console.log(`🗑️ Cleared ${files.length} items from auth directory`);
+        console.log(`🗑️ Cleared ${successCount}/${files.length} items from auth directory (${errorCount} errors)`);
+
+        // If we failed to clear critical files, throw error
+        if (errorCount > 0 && files.length === errorCount) {
+          throw new Error(`Failed to clear any auth files (${errorCount} errors)`);
+        }
       } else {
         console.log('DEBUG: Auth directory does not exist');
       }
@@ -1488,12 +1562,17 @@ export class WhatsAppService extends EventEmitter {
     console.log('DEBUG: Updating connection status...');
     this.updateConnectionStatus('close', false);
     console.log('✅ Session cleared successfully');
-    
+
+    // Notify frontend that QR will be needed
+    this.emit('qr-needed', true);
+
     // Reinitialize connection to generate new QR code
     console.log('🔄 Reinitializing connection for fresh authentication...');
     setTimeout(() => {
       this.initialize().catch(error => {
         console.error('❌ Failed to reinitialize after session clear:', error);
+        // Emit error to frontend
+        this.updateConnectionStatus('close', false, undefined, 'Failed to initialize after clearing session. Please refresh the page.');
       });
     }, 2000); // Small delay to ensure cleanup is complete
   }
