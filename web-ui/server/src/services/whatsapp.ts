@@ -162,6 +162,24 @@ export class WhatsAppService extends EventEmitter {
         this.emit('qr-needed', true);
       }
 
+      // Force full app state sync by clearing sync versions - this ensures we get ALL contacts
+      // from WhatsApp's app state, not just incremental updates
+      console.log('🔄 Clearing app state sync versions to force full contact sync...');
+      try {
+        await state.keys.set({
+          'app-state-sync-version': {
+            'critical_block': null,
+            'critical_unblock_low': null,
+            'regular_high': null,
+            'regular_low': null,
+            'regular': null
+          }
+        });
+        console.log('✅ App state sync versions cleared - will request full snapshots');
+      } catch (error) {
+        console.log('⚠️ Failed to clear app state sync versions:', error);
+      }
+
       this.sock = makeWASocket({
         version,
         logger: this.logger,
@@ -372,6 +390,27 @@ export class WhatsAppService extends EventEmitter {
         id: this.sock?.user?.id || '',
         name: this.sock?.user?.name || 'Unknown'
       });
+
+      // Manually trigger app state resync to fetch contacts
+      // This is necessary because WhatsApp only sends history sync on first connection
+      // For subsequent connections, we need to explicitly request app state data
+      console.log('🔄 Triggering manual app state resync to fetch all contacts...');
+      setTimeout(async () => {
+        try {
+          if (this.sock && (this.sock as any).resyncAppState) {
+            console.log('📥 Requesting full app state snapshots for all collections...');
+            await (this.sock as any).resyncAppState(
+              ['critical_block', 'critical_unblock_low', 'regular_high', 'regular_low', 'regular'],
+              true // isInitialSync = true to get full data
+            );
+            console.log('✅ App state resync completed successfully');
+          } else {
+            console.log('⚠️ resyncAppState not available on socket');
+          }
+        } catch (error) {
+          console.error('❌ Failed to resync app state:', error);
+        }
+      }, 3000); // Wait 3 seconds after connection to allow socket to fully initialize
     } else if (connection === 'connecting') {
       console.log('🔄 Connecting to WhatsApp using existing session...');
       this.updateConnectionStatus('connecting', false);
@@ -562,18 +601,48 @@ export class WhatsAppService extends EventEmitter {
       }
     });
 
-    // Then, add contacts from chats (to catch contacts not in store.contacts)
+    // Then, extract ALL unique phone numbers from chats (including individual and group participants)
     const chats = this.store.chats.all();
     chats.forEach((chat: any) => {
+      // Add individual chat contacts
       if (chat.id && chat.id.endsWith('@s.whatsapp.net') && !contactMap.has(chat.id)) {
-        // Create a contact entry from chat
         contactMap.set(chat.id, { id: chat.id, jid: chat.id });
       }
     });
 
+    // Extract contacts from ALL messages (including group chat participants)
+    Object.keys(this.store.messages || {}).forEach((chatJid: string) => {
+      const messages = this.store.messages[chatJid];
+      if (messages && messages.array) {
+        messages.array.forEach((msg: any) => {
+          // Extract participant from group messages
+          if (msg.key?.participant) {
+            const participantJid = msg.key.participant;
+            if (participantJid.endsWith('@s.whatsapp.net') && !contactMap.has(participantJid)) {
+              contactMap.set(participantJid, {
+                id: participantJid,
+                jid: participantJid,
+                notify: msg.pushName // Use pushName from message if available
+              });
+            }
+          }
+
+          // For individual chats, extract sender
+          if (chatJid.endsWith('@s.whatsapp.net') && !contactMap.has(chatJid)) {
+            contactMap.set(chatJid, {
+              id: chatJid,
+              jid: chatJid,
+              notify: msg.pushName
+            });
+          }
+        });
+      }
+    });
+
+    console.log(`📇 Total unique contacts extracted: ${contactMap.size} (from store.contacts, chats, and message participants)`);
+
     // Now map all contacts to ContactInfo with name resolution
     return Array.from(contactMap.values())
-      .slice(0, 3000)
       .map((contact: any) => {
         // IMPORTANT: WhatsApp doesn't send contact names during history sync anymore!
         // Names only appear when:
