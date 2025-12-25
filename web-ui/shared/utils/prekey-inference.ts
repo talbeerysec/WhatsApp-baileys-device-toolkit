@@ -90,11 +90,66 @@ export function inferDeviceOS(
   // If one-time pre-key is missing (pool depleted), use only signed pre-key
   if (!oneTimePreKeyId) {
     if (signedPKNum < THRESHOLD) {
+      // For desktop with low signed PK, check Windows/Web FIRST (before Android)
+      // Low Signed PK (especially = 1) on desktop typically means Windows or Web, not Android
+      if (formFactor === 'desktop') {
+        if (!registrationId) {
+          return {
+            os: 'unknown',
+            formFactor,
+            confidence: 'low',
+            reasoning: 'Signed Pre-Key ID suggests Windows Desktop or Web, but Registration ID unavailable for disambiguation.'
+          };
+        }
+
+        if (registrationIdNum > REG_ID_MASK) {
+          return {
+            os: 'windows',
+            formFactor,
+            confidence: 'high',
+            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${REG_ID_MASK} suggests Windows Desktop. One-Time Pre-Key unavailable (pool depleted).`
+          };
+        } else {
+          // Registration ID ≤ 0x3FFF could be either:
+          // 1. Web (masked with 0x3FFF)
+          // 2. Windows with a low random Registration ID
+          // Default to Windows as more likely
+          return {
+            os: 'windows',
+            formFactor,
+            confidence: 'low',
+            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} suggests Windows Desktop or Web (ambiguous). One-Time Pre-Key unavailable (pool depleted).`
+          };
+        }
+      }
+
+      // For mobile with low signed PK, likely Android (unless Registration ID suggests otherwise)
+      // But check if Registration ID is also present and low - might still be Android mobile
+      if (formFactor === 'mobile' || !registrationId) {
+        return {
+          os: 'android',
+          formFactor,
+          confidence: 'medium',
+          reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} suggests Android ${deviceType}. One-Time Pre-Key unavailable (pool depleted).`
+        };
+      }
+
+      // For desktop with low signed PK AND high registration ID, could still be Android Desktop variant
+      if (registrationIdNum > THRESHOLD) {
+        return {
+          os: 'android',
+          formFactor,
+          confidence: 'low',
+          reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${THRESHOLD} suggests possible Android Desktop variant. One-Time Pre-Key unavailable (pool depleted).`
+        };
+      }
+
+      // Otherwise fall back to unknown for desktop with conflicting signals
       return {
-        os: 'android',
+        os: 'unknown',
         formFactor,
-        confidence: 'medium',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} suggests Android ${deviceType}. One-Time Pre-Key unavailable (pool depleted).`
+        confidence: 'low',
+        reasoning: `Ambiguous pattern: Low Signed Pre-Key (${signedPKNum}) with low Registration ID (${registrationIdNum}) on desktop. One-Time Pre-Key unavailable.`
       };
     } else if (signedPKNum > THRESHOLD) {
       // For desktop with high signed PK, check if Registration ID is also high (Android Desktop variant)
@@ -114,34 +169,6 @@ export function inferDeviceOS(
         reasoning: `Signed Pre-Key ID (${signedPKNum}) > ${THRESHOLD} suggests Apple ${deviceType}. One-Time Pre-Key unavailable (pool depleted).`
       };
     } else {
-      // For desktop with low signed PK and no one-time PK, check Windows/Web
-      if (formFactor === 'desktop') {
-        if (!registrationId) {
-          return {
-            os: 'unknown',
-            formFactor,
-            confidence: 'low',
-            reasoning: 'Signed Pre-Key ID suggests Windows Desktop or Web, but Registration ID unavailable for disambiguation.'
-          };
-        }
-
-        if (registrationIdNum > REG_ID_MASK) {
-          return {
-            os: 'windows',
-            formFactor,
-            confidence: 'medium',
-            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${REG_ID_MASK} suggests Windows Desktop. One-Time Pre-Key unavailable (pool depleted).`
-          };
-        } else {
-          return {
-            os: 'web',
-            formFactor,
-            confidence: 'medium',
-            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} suggests Web. One-Time Pre-Key unavailable (pool depleted).`
-          };
-        }
-      }
-
       return {
         os: 'unknown',
         formFactor,
@@ -193,10 +220,10 @@ export function inferDeviceOS(
   if (formFactor === 'desktop' && signedPKNum < THRESHOLD && oneTimePKNum < THRESHOLD) {
     if (!registrationId) {
       return {
-        os: 'unknown',
+        os: 'windows',
         formFactor,
-        confidence: 'low',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD}, but Registration ID unavailable for Windows/Web disambiguation.`
+        confidence: 'medium',
+        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD}, suggests Windows Desktop or Web. Registration ID unavailable for disambiguation.`
       };
     }
 
@@ -208,11 +235,15 @@ export function inferDeviceOS(
         reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) > ${REG_ID_MASK}`
       };
     } else {
+      // Registration ID ≤ 0x3FFF could be either:
+      // 1. Web (masked with 0x3FFF)
+      // 2. Windows with a low random Registration ID
+      // Default to Windows as more likely
       return {
-        os: 'web',
+        os: 'windows',
         formFactor,
-        confidence: 'high',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK}`
+        confidence: 'low',
+        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} suggests Windows Desktop or Web (ambiguous)`
       };
     }
   }
