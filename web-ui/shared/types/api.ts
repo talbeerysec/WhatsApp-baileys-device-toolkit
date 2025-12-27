@@ -76,7 +76,7 @@ export interface DeviceStatus {
     lastFingerprint?: string; // ISO timestamp
   };
   passiveInference?: {
-    os: 'android' | 'apple' | 'windows' | 'web' | 'unknown';
+    os: 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
     formFactor: 'mobile' | 'desktop';
     confidence: 'high' | 'medium' | 'low';
     reasoning: string;
@@ -173,7 +173,7 @@ export interface DevicePrekeyData {
   error?: string;
   fetchedAt?: string; // ISO timestamp
   osInference?: {
-    os: 'android' | 'apple' | 'windows' | 'web' | 'unknown';
+    os: 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
     formFactor: 'mobile' | 'desktop';
     confidence: 'high' | 'medium' | 'low';
     reasoning: string;

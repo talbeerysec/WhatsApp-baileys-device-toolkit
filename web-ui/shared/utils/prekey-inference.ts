@@ -1,6 +1,6 @@
 // Utility functions for inferring device OS from prekey bundle patterns
 
-export type DeviceOS = 'android' | 'apple' | 'windows' | 'web' | 'unknown';
+export type DeviceOS = 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
 export type DeviceFormFactor = 'mobile' | 'desktop';
 
 export interface OSInference {
@@ -39,8 +39,9 @@ export function parseHexId(hexId: string | undefined): number {
  * 3. Windows Desktop (Secondary devices only, deviceId > 0):
  *    - Pattern: Low Signed Pre-Key ID (< 0xFFFF) AND Low One-Time Pre-Key ID (< 0xFFFF) AND High Registration ID (> 0x3FFF)
  *
- * 4. Web (Secondary devices only, deviceId > 0):
+ * 4. Web or Windows (Secondary devices only, deviceId > 0):
  *    - Pattern: Low Signed Pre-Key ID (< 0xFFFF) AND Low One-Time Pre-Key ID (< 0xFFFF) AND Low Registration ID (<= 0x3FFF)
+ *    - Ambiguous: Could be Web (masked) or Windows (low random Registration ID)
  *
  * Key Insights:
  * - Android: Signed Pre-Key ID starts at 0x000000, increments monthly
@@ -113,12 +114,12 @@ export function inferDeviceOS(
           // Registration ID ≤ 0x3FFF could be either:
           // 1. Web (masked with 0x3FFF)
           // 2. Windows with a low random Registration ID
-          // Default to Windows as more likely
+          // Return web-or-windows to show both possibilities
           return {
-            os: 'windows',
+            os: 'web-or-windows',
             formFactor,
             confidence: 'low',
-            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} suggests Windows Desktop or Web (ambiguous). One-Time Pre-Key unavailable (pool depleted).`
+            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} - Could be Web (masked) or Windows (low random Registration ID). One-Time Pre-Key unavailable (pool depleted).`
           };
         }
       }
@@ -238,12 +239,12 @@ export function inferDeviceOS(
       // Registration ID ≤ 0x3FFF could be either:
       // 1. Web (masked with 0x3FFF)
       // 2. Windows with a low random Registration ID
-      // Default to Windows as more likely
+      // Return web-or-windows to show both possibilities
       return {
-        os: 'windows',
+        os: 'web-or-windows',
         formFactor,
         confidence: 'low',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} suggests Windows Desktop or Web (ambiguous)`
+        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} - Could be Web (masked) or Windows (low random Registration ID)`
       };
     }
   }

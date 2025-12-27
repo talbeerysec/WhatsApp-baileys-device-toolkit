@@ -40,7 +40,17 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
       android: { icon: <AndroidIcon />, label: 'Android', color: '#3DDC84' },
       apple: { icon: <AppleIcon />, label: 'Apple', color: '#555555' },
       windows: { icon: <WindowsIcon />, label: 'Windows', color: '#0078D4' },
-      web: { icon: <WebIcon />, label: 'Web', color: '#4285F4' }
+      web: { icon: <WebIcon />, label: 'Web', color: '#4285F4' },
+      'web-or-windows': {
+        icon: (
+          <>
+            <WebIcon sx={{ fontSize: '0.9rem' }} />
+            <WindowsIcon sx={{ fontSize: '0.9rem' }} />
+          </>
+        ),
+        label: 'Web or Windows',
+        color: '#6B6B6B'
+      }
     };
 
     const formFactorIcon = osInference.formFactor === 'mobile'
@@ -174,12 +184,19 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
                       {osInference.os === 'web' && (
                         <WebIcon sx={{ fontSize: '1.2rem', color: '#4285F4' }} />
                       )}
+                      {osInference.os === 'web-or-windows' && (
+                        <>
+                          <WebIcon sx={{ fontSize: '1.2rem', color: '#4285F4' }} />
+                          <WindowsIcon sx={{ fontSize: '1.2rem', color: '#0078D4' }} />
+                        </>
+                      )}
 
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>
                         {osInference.os === 'android' && `Android ${osInference.formFactor === 'mobile' ? 'Mobile' : 'Desktop'}`}
                         {osInference.os === 'apple' && `Apple ${osInference.formFactor === 'mobile' ? 'iOS' : 'Mac'}`}
                         {osInference.os === 'windows' && 'Windows Desktop'}
                         {osInference.os === 'web' && 'Web'}
+                        {osInference.os === 'web-or-windows' && 'Web or Windows Desktop'}
                       </Typography>
                       <Chip
                         label={`${osInference.confidence} confidence`}

@@ -10,7 +10,7 @@ import {
 } from '@mui/icons-material';
 import { WindowsIcon } from './WindowsIcon';
 
-export type OSType = 'android' | 'apple' | 'windows' | 'web' | 'unknown';
+export type OSType = 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
 export type FormFactorType = 'mobile' | 'desktop';
 
 interface OSDisplayProps {
@@ -39,6 +39,11 @@ const OS_CONFIG: Record<OSType, {
     icon: WebIcon,
     label: 'Web',
     color: '#4285F4'
+  },
+  'web-or-windows': {
+    icon: WebIcon, // Will show both icons in the component
+    label: 'Web or Windows',
+    color: '#6B6B6B' // Neutral color between web and windows
   },
   unknown: { icon: UnknownDeviceIcon, label: 'Unknown', color: '#9E9E9E' }
 };
@@ -85,6 +90,8 @@ export const OSDisplay: React.FC<OSDisplayProps> = ({
       displayLabel = 'Windows Desktop';
     } else if (os === 'web') {
       displayLabel = 'Web';
+    } else if (os === 'web-or-windows') {
+      displayLabel = 'Web or Windows Desktop';
     } else {
       displayLabel = osConfig.label;
     }
@@ -101,11 +108,25 @@ export const OSDisplay: React.FC<OSDisplayProps> = ({
               sx={{ color: formFactorConfig?.color }}
             />
           )}
-          {/* OS Icon (Android/Apple/Windows/Web) */}
-          <OSIcon
-            fontSize={iconSize}
-            sx={{ color: osConfig.color }}
-          />
+          {/* OS Icon(s) */}
+          {os === 'web-or-windows' ? (
+            <>
+              {/* Show both Web and Windows icons for ambiguous case */}
+              <WebIcon
+                fontSize={iconSize}
+                sx={{ color: '#4285F4' }}
+              />
+              <WindowsIcon
+                fontSize={iconSize}
+                sx={{ color: '#0078D4' }}
+              />
+            </>
+          ) : (
+            <OSIcon
+              fontSize={iconSize}
+              sx={{ color: osConfig.color }}
+            />
+          )}
         </Box>
       )}
       {showLabel && (
