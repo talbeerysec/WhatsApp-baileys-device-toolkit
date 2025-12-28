@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import path from 'path';
+import fs from 'fs';
 // Import Baileys from the compiled library (ES modules)
 import makeWASocket, {
   AnyMessageContent,
@@ -326,6 +327,50 @@ export class WhatsAppService extends EventEmitter {
         } catch (error) {
           console.error('Failed to clear session after multidevice mismatch:', error);
         }
+        return;
+      }
+
+      // Handle connection closed by server (428) - often due to corrupt app state sync
+      if (disconnectReason === 428) { // DisconnectReason.connectionClosed
+        console.log('⚠️ Connection closed by server (428) - possibly corrupt app state');
+        this.connectionFailures++;
+
+        // If this happens repeatedly (>2 times), clear app state sync keys but keep creds
+        if (this.connectionFailures > 2) {
+          console.log(`🧹 Repeated connection closures (${this.connectionFailures}) - clearing app state sync keys...`);
+          this.updateConnectionStatus('close', false, undefined, 'Clearing corrupt app state. Please wait...');
+
+          try {
+            const authPath = path.join(process.cwd(), 'baileys_auth_info');
+
+            // Delete only app-state-sync-* files, preserve creds.json and keys
+            const files = fs.readdirSync(authPath);
+            let deletedCount = 0;
+            for (const file of files) {
+              if (file.startsWith('app-state-sync-')) {
+                const filePath = path.join(authPath, file);
+                fs.unlinkSync(filePath);
+                deletedCount++;
+              }
+            }
+            console.log(`🗑️ Deleted ${deletedCount} corrupt app state sync key files`);
+
+            // Reset failures and try to reconnect with fresh app state
+            this.connectionFailures = 0;
+            console.log('✅ App state cleared. Reconnecting with fresh sync...');
+            setTimeout(() => this.initialize(), 3000);
+          } catch (error) {
+            console.error('❌ Failed to clear app state sync keys:', error);
+            // Fall back to full session clear
+            await this.clearSession();
+          }
+          return;
+        }
+
+        // First few failures - just retry
+        console.log(`🔄 Connection closed (attempt ${this.connectionFailures}), retrying...`);
+        this.updateConnectionStatus('connecting', false);
+        setTimeout(() => this.initialize(), 5000);
         return;
       }
 
