@@ -115,11 +115,12 @@ export function inferDeviceOS(
           // 1. Web (masked with 0x3FFF)
           // 2. Windows with a low random Registration ID
           // Return web-or-windows to show both possibilities
+          // High confidence it's one of these two, just can't determine which
           return {
             os: 'web-or-windows',
             formFactor,
-            confidence: 'low',
-            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} - Could be Web (masked) or Windows (low random Registration ID). One-Time Pre-Key unavailable (pool depleted).`
+            confidence: 'high',
+            reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} - Definitively Web or Windows Desktop (cannot distinguish: Web masks Registration ID, Windows may have low random value). One-Time Pre-Key unavailable (pool depleted).`
           };
         }
       }
@@ -240,11 +241,12 @@ export function inferDeviceOS(
       // 1. Web (masked with 0x3FFF)
       // 2. Windows with a low random Registration ID
       // Return web-or-windows to show both possibilities
+      // High confidence it's one of these two, just can't determine which
       return {
         os: 'web-or-windows',
         formFactor,
-        confidence: 'low',
-        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} - Could be Web (masked) or Windows (low random Registration ID)`
+        confidence: 'high',
+        reasoning: `Signed Pre-Key ID (${signedPKNum}) < ${THRESHOLD} AND One-Time Pre-Key ID (${oneTimePKNum}) < ${THRESHOLD} AND Registration ID (${registrationIdNum}) <= ${REG_ID_MASK} - Definitively Web or Windows Desktop (cannot distinguish: Web masks Registration ID, Windows may have low random value)`
       };
     }
   }
