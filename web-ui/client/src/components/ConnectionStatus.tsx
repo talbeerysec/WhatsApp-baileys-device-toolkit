@@ -7,14 +7,23 @@ import {
   Box,
   Avatar,
   Button,
-  Alert
+  Alert,
+  IconButton,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  CircularProgress
 } from '@mui/material';
 import {
   CheckCircle as ConnectedIcon,
   Error as DisconnectedIcon,
   HourglassEmpty as ConnectingIcon,
   Person as PersonIcon,
-  Refresh as RefreshIcon
+  Refresh as RefreshIcon,
+  PowerSettingsNew as DisconnectIcon
 } from '@mui/icons-material';
 import { useWhatsApp } from '../contexts/WhatsAppContext';
 import { ApiService } from '../services/api';
@@ -23,6 +32,7 @@ const ConnectionStatus: React.FC = () => {
   const { connectionStatus } = useWhatsApp();
   const [isClearing, setIsClearing] = useState(false);
   const [message, setMessage] = useState<string>('');
+  const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
 
   const getStatusIcon = () => {
     switch (connectionStatus.state) {
@@ -57,10 +67,38 @@ const ConnectionStatus: React.FC = () => {
     }
   };
 
+  const handleDisconnectClick = () => {
+    setDisconnectDialogOpen(true);
+  };
+
+  const handleDisconnectConfirm = async () => {
+    setIsClearing(true);
+    setMessage('');
+    setDisconnectDialogOpen(false);
+
+    try {
+      const message = await ApiService.clearSession();
+      setMessage(message + ' - The page will reload to show the QR code.');
+
+      // Reload page after 2 seconds to show QR code
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error('Clear session error:', error);
+      setMessage('Error clearing session. Please try again.');
+      setIsClearing(false);
+    }
+  };
+
+  const handleDisconnectCancel = () => {
+    setDisconnectDialogOpen(false);
+  };
+
   const handleClearSession = async () => {
     setIsClearing(true);
     setMessage('');
-    
+
     try {
       const response = await fetch('/api/status/clear-session', {
         method: 'POST',
@@ -69,7 +107,7 @@ const ConnectionStatus: React.FC = () => {
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (response.ok) {
         setMessage('Session cleared successfully. Please scan the QR code to reconnect.');
       } else {
@@ -92,11 +130,24 @@ const ConnectionStatus: React.FC = () => {
             <Typography variant="h6" component="div">
               WhatsApp Connection
             </Typography>
-            <Chip
-              label={getStatusText()}
-              color={getStatusColor()}
-              size="small"
-            />
+            <Box display="flex" alignItems="center" gap={1}>
+              <Chip
+                label={getStatusText()}
+                color={getStatusColor()}
+                size="small"
+              />
+              <Tooltip title="Disconnect & Clear Session">
+                <IconButton
+                  size="small"
+                  color="error"
+                  onClick={handleDisconnectClick}
+                  disabled={isClearing}
+                  sx={{ ml: 0.5 }}
+                >
+                  {isClearing ? <CircularProgress size={20} /> : <DisconnectIcon fontSize="small" />}
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
         </Box>
 
@@ -147,6 +198,44 @@ const ConnectionStatus: React.FC = () => {
           </Typography>
         </Box>
       </CardContent>
+
+      {/* Disconnect Confirmation Dialog */}
+      <Dialog
+        open={disconnectDialogOpen}
+        onClose={handleDisconnectCancel}
+      >
+        <DialogTitle>Confirm Disconnect</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to disconnect and clear your WhatsApp session?
+          </DialogContentText>
+          <Box component="ul" sx={{ pl: 2, mt: 1 }}>
+            <li>
+              <Typography variant="body2">Disconnect from WhatsApp</Typography>
+            </li>
+            <li>
+              <Typography variant="body2">Clear all authentication data</Typography>
+            </li>
+            <li>
+              <Typography variant="body2">Require re-scanning QR code or pairing code</Typography>
+            </li>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDisconnectCancel} disabled={isClearing}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDisconnectConfirm}
+            color="error"
+            variant="contained"
+            disabled={isClearing}
+            startIcon={isClearing ? <CircularProgress size={20} /> : <DisconnectIcon />}
+          >
+            {isClearing ? 'Disconnecting...' : 'Disconnect'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };

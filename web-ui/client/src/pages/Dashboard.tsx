@@ -29,7 +29,8 @@ import {
   Code as CodeIcon,
   ExitToApp as LogoutIcon,
   Refresh as RefreshIcon,
-  VpnKey as PrekeyIcon
+  VpnKey as PrekeyIcon,
+  Settings as SettingsIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -44,6 +45,7 @@ import PresencePage from './PresencePage';
 import DeveloperPage from './DeveloperPage';
 import HomePage from './HomePage';
 import PrekeyPage from './PrekeyPage';
+import SettingsPage from './SettingsPage';
 
 const drawerWidth = 240;
 
@@ -63,6 +65,7 @@ const menuItems: MenuItem[] = [
   { text: 'Prekey Bundles', icon: <PrekeyIcon />, path: '/prekeys', description: 'View device prekey bundles' },
   { text: 'Presence', icon: <PresenceIcon />, path: '/presence', description: 'Presence control' },
   { text: 'Developer', icon: <CodeIcon />, path: '/developer', description: 'Advanced tools' },
+  { text: 'Settings', icon: <SettingsIcon />, path: '/settings', description: 'Client configuration' },
 ];
 
 const Dashboard: React.FC = () => {
@@ -230,6 +233,7 @@ const Dashboard: React.FC = () => {
           <Route path="/prekeys" element={<PrekeyPage />} />
           <Route path="/presence" element={<PresencePage />} />
           <Route path="/developer" element={<DeveloperPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Routes>
         <QRCodeDisplay />
       </Box>

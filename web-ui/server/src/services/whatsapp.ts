@@ -4,6 +4,7 @@ import fs from 'fs';
 // Import Baileys from the compiled library (ES modules)
 import makeWASocket, {
   AnyMessageContent,
+  Browsers,
   DisconnectReason,
   fetchLatestBaileysVersion,
   generateMessageIDV2,
@@ -12,7 +13,8 @@ import makeWASocket, {
   useMultiFileAuthState,
   WASocket,
   WAMessageKey,
-  WAPresence
+  WAPresence,
+  WABrowserDescription
 } from '../../../../lib/index.js';
 // Store was removed from main exports in v6.7.21, import directly (skip index to avoid cache-manager dep)
 import makeInMemoryStore from '../../../../lib/Store/make-in-memory-store.js';
@@ -27,6 +29,47 @@ interface PendingSilentPing {
   timestamp: number;
   timeoutId: NodeJS.Timeout;
   type: 'reaction' | 'delete' | 'edit' | 'call-reject' | 'unknown' | 'poll-response' | 'button-response' | 'device-sent' | 'app-state' | 'peer-data-operation' | 'malformed-message';
+}
+
+/**
+ * Get browser configuration from environment variables, config file, or defaults
+ * Priority: config file > environment variables > Baileys defaults
+ */
+function getBrowserConfig(): WABrowserDescription {
+  const configPath = path.resolve(__dirname, '../../../../baileys_auth_info', 'browser-config.json');
+
+  // Try to load from config file first
+  try {
+    if (fs.existsSync(configPath)) {
+      const configFile = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+      if (configFile.platform && configFile.browser) {
+        const version = configFile.version || '1.0.0';
+
+        // If platform is a preset name, use the preset
+        if (configFile.platform in Browsers && typeof Browsers[configFile.platform as keyof typeof Browsers] === 'function') {
+          return (Browsers[configFile.platform as keyof typeof Browsers] as (browser: string) => WABrowserDescription)(configFile.browser);
+        }
+
+        // Otherwise use custom values
+        return [configFile.platform, configFile.browser, version];
+      }
+    }
+  } catch (error) {
+    console.log('Failed to read browser config file, using environment or defaults:', error);
+  }
+
+  // Fall back to environment variables
+  const platform = process.env.WHATSAPP_CLIENT_PLATFORM || '@TalBeerySec WhatsApp security research client';
+  const browser = process.env.WHATSAPP_CLIENT_BROWSER || 'blabla';
+  const version = process.env.WHATSAPP_CLIENT_VERSION || '1.0.0';
+
+  // Use preset if available
+  if (platform in Browsers && typeof Browsers[platform as keyof typeof Browsers] === 'function') {
+    return (Browsers[platform as keyof typeof Browsers] as (browser: string) => WABrowserDescription)(browser);
+  }
+
+  // Use custom values
+  return [platform, browser, version];
 }
 
 export class WhatsAppService extends EventEmitter {
@@ -181,8 +224,12 @@ export class WhatsAppService extends EventEmitter {
         console.log('⚠️ Failed to clear app state sync versions:', error);
       }
 
+      const browserConfig = getBrowserConfig();
+      console.log(`📱 Using browser config: ${browserConfig[1]} (${browserConfig[0]}) v${browserConfig[2]}`);
+
       this.sock = makeWASocket({
         version,
+        browser: browserConfig,
         logger: this.logger,
         printQRInTerminal: false, // Always disable terminal QR - we'll show in web UI
         auth: {
@@ -1637,6 +1684,12 @@ export class WhatsAppService extends EventEmitter {
         let errorCount = 0;
 
         for (const file of files) {
+          // Skip browser-config.json - we want to preserve user's browser settings
+          if (file === 'browser-config.json') {
+            console.log('DEBUG: Skipping browser-config.json (preserving user settings)');
+            continue;
+          }
+
           const filePath = path.join(authPath, file);
           try {
             const stat = fs.statSync(filePath);

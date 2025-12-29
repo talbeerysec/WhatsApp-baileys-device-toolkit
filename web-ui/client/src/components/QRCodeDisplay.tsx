@@ -23,15 +23,21 @@ const QRCodeDisplay: React.FC = () => {
     if (!socket) return;
 
     socket.on('qr', (qr: string) => {
-      console.log('📱 QR Code received, generating image...');
-      setQrCode(qr);
-      setShowQR(true);
-      setWaitingForQR(false);
+      // Only show QR if not already connected
+      if (connectionStatus.state !== 'open') {
+        console.log('📱 QR Code received, generating image...');
+        setQrCode(qr);
+        setShowQR(true);
+        setWaitingForQR(false);
+      } else {
+        console.log('📱 QR Code received but already connected, ignoring...');
+      }
     });
 
     socket.on('qr-needed', (needed: boolean) => {
-      console.log('📱 QR authentication needed:', needed);
-      if (needed) {
+      console.log('📱 QR authentication needed:', needed, 'Connection state:', connectionStatus.state);
+      // Only show QR if not already connected
+      if (needed && connectionStatus.state !== 'open') {
         setShowQR(true);
         setWaitingForQR(true);
         setQrCode(''); // Clear old QR while waiting for new one
@@ -42,7 +48,7 @@ const QRCodeDisplay: React.FC = () => {
       socket.off('qr');
       socket.off('qr-needed');
     };
-  }, [socket]);
+  }, [socket, connectionStatus.state]);
 
   useEffect(() => {
     // Hide QR when connected

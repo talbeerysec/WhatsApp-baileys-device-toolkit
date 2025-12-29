@@ -17,7 +17,9 @@ import {
   MessageResponse,
   PrekeyData,
   DevicePrekeyData,
-  UserProfile
+  UserProfile,
+  ClientBrowserConfig,
+  UpdateBrowserConfigRequest
 } from '../../../shared/types/api';
 
 const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || '';
@@ -83,12 +85,22 @@ export class ApiService {
   // Status
   static async getConnectionStatus(): Promise<ConnectionStatus> {
     const response: AxiosResponse<ApiResponse<ConnectionStatus>> = await api.get('/api/status');
-    
+
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.error || 'Failed to get status');
     }
-    
+
     return response.data.data;
+  }
+
+  static async clearSession(): Promise<string> {
+    const response: AxiosResponse<ApiResponse> = await api.post('/api/status/clear-session');
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Failed to clear session');
+    }
+
+    return response.data.message || 'Session cleared successfully';
   }
 
   // Chats
@@ -223,10 +235,31 @@ export class ApiService {
   // Developer tools (admin only)
   static async sendCorruptedMessage(request: CorruptMessageRequest): Promise<void> {
     const response: AxiosResponse<ApiResponse> = await api.post('/api/dev/corrupt-message', request);
-    
+
     if (!response.data.success) {
       throw new Error(response.data.error || 'Failed to send corrupted message');
     }
+  }
+
+  // Settings
+  static async getBrowserConfig(): Promise<ClientBrowserConfig> {
+    const response: AxiosResponse<ApiResponse<ClientBrowserConfig>> = await api.get('/api/settings/browser');
+
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.error || 'Failed to get browser configuration');
+    }
+
+    return response.data.data;
+  }
+
+  static async updateBrowserConfig(config: UpdateBrowserConfigRequest): Promise<string> {
+    const response: AxiosResponse<ApiResponse> = await api.put('/api/settings/browser', config);
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Failed to update browser configuration');
+    }
+
+    return response.data.message || 'Configuration updated successfully';
   }
 }
 

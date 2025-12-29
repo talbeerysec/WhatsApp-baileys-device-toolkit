@@ -19,6 +19,7 @@ import contactsRoutes from './routes/contacts';
 import devicesRoutes from './routes/devices';
 import presenceRoutes from './routes/presence';
 import devRoutes from './routes/dev';
+import settingsRoutes from './routes/settings';
 
 // Import services
 import { WhatsAppService } from './services/whatsapp';
@@ -77,6 +78,7 @@ app.use('/api/contacts', contactsRoutes);
 app.use('/api/devices', devicesRoutes);
 app.use('/api/presence', presenceRoutes);
 app.use('/api/dev', devRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

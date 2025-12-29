@@ -5,7 +5,6 @@ import {
   CardContent,
   Typography,
   Box,
-  Paper,
   List,
   ListItem,
   ListItemText,

@@ -185,3 +185,16 @@ export interface PrekeyData {
   devices: DevicePrekeyData[];
   fetchedAt: string; // ISO timestamp
 }
+
+export interface ClientBrowserConfig {
+  platform: string;
+  browser: string;
+  version: string;
+  availablePresets: string[];
+}
+
+export interface UpdateBrowserConfigRequest {
+  platform: string;
+  browser: string;
+  version?: string;
+}
