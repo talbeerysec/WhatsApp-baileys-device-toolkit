@@ -75,7 +75,10 @@ const Dashboard: React.FC = () => {
   const { connectionStatus, refreshData, isLoading, chats, contacts, errorMessage } = useWhatsApp();
 
   // Check if this is initial load (loading and not yet connected, or no chats loaded yet)
-  const isInitialLoad = isLoading && (connectionStatus.state !== 'open' || chats.length === 0);
+  // BUT: Don't show blocking loader if connection is closed/errored - user needs access to disconnect button
+  const isInitialLoad = isLoading &&
+                        connectionStatus.state !== 'close' &&
+                        (connectionStatus.state !== 'open' || chats.length === 0);
 
   console.log('🎨 Dashboard rendering:', {
     isLoading,

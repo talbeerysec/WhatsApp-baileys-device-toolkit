@@ -286,11 +286,46 @@ export class WhatsAppService extends EventEmitter {
         // Handle contacts update
         if (events['contacts.update']) {
           console.log('📇 Contacts update sample:', events['contacts.update'].slice(0, 3));
+
+          // Manually update store.contacts because Baileys store sometimes rejects updates for "non-existent" contacts
+          events['contacts.update'].forEach((contact: any) => {
+            if (this.store && contact.id) {
+              // Get existing contact or create new entry
+              const existing = this.store.contacts[contact.id] || { id: contact.id };
+
+              // Merge the update
+              this.store.contacts[contact.id] = {
+                ...existing,
+                ...contact,
+                // Preserve important fields
+                id: contact.id,
+                name: contact.name || existing.name,
+                notify: contact.notify || existing.notify,
+                verifiedName: contact.verifiedName || existing.verifiedName
+              };
+
+              console.log(`✅ Updated contact in store: ${contact.id} (${contact.name || contact.notify || 'No name'})`);
+            }
+          });
+
+          // Emit to socket service for broadcasting to clients
+          this.emit('contacts.update', events['contacts.update']);
         }
 
         // Handle contacts upsert
         if (events['contacts.upsert']) {
           console.log('📇 Contacts upsert sample:', events['contacts.upsert'].slice(0, 3));
+
+          // Manually ensure contacts are added to store
+          events['contacts.upsert'].forEach((contact: any) => {
+            if (this.store && contact.id) {
+              this.store.contacts[contact.id] = {
+                ...(this.store.contacts[contact.id] || {}),
+                ...contact
+              };
+              console.log(`✅ Upserted contact in store: ${contact.id} (${contact.name || contact.notify || 'No name'})`);
+            }
+          });
         }
 
         // Handle messaging history set (initial sync)
