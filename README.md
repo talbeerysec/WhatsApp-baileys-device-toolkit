@@ -119,7 +119,9 @@ npm run install:all
 npm run dev
 ```
 
-Then open http://localhost:5173 in your browser.
+Then open http://localhost:5173 in your browser (frontend dev server with API at port 3001).
+
+> **Note**: For Docker deployment, access the web UI at http://localhost (port 80 via Nginx). See [DOCKER.md](DOCKER.md) for details.
 
 **Web UI Features:**
 - 🔐 Secure authentication with QR code display in browser
@@ -127,6 +129,7 @@ Then open http://localhost:5173 in your browser.
 - 💬 Send messages with device-specific targeting
 - 🎛️ Real-time ping operations with visual feedback
 - 🔧 Developer tools for protocol analysis
+- ⚙️ Browser configuration settings for client identification
 
 See [web-ui/README.md](web-ui/README.md) for complete documentation.
 
@@ -155,9 +158,36 @@ Some features require additional packages:
 - `link-preview-js` - Link preview generation
 - `ffmpeg` - Video thumbnail generation (system install)
 
+## 🌐 Port Configuration
+
+| Deployment | Web UI Access | API Server | Notes |
+|------------|---------------|------------|-------|
+| **Docker** | http://localhost (port 80) | Internal (3001) | Nginx reverse proxy handles routing |
+| **Manual/Dev** | http://localhost:5173 | http://localhost:3001 | Vite dev server + Express backend |
+
+For Docker, ports can be customized via environment variables:
+```bash
+HTTP_PORT=8080    # Change from default 80
+HTTPS_PORT=8443   # Change from default 443
+```
+
 ## 📝 Recent Updates
 
-### v6.7.21 (Latest)
+### January 2026 Enhancements
+- **Browser Configuration Settings**: New settings page to customize client identification shown in WhatsApp's linked devices screen
+  - Preset and custom platform options
+  - Real-time preview of client display name
+  - Persisted configuration in `baileys_auth_info/browser-config.json`
+- **Improved Device Detection**: Added "Web or Windows" OS type for ambiguous desktop device detection
+  - Visual dual-icon display when device type cannot be definitively determined
+  - Enhanced confidence levels for device fingerprinting
+- **Full Contact Sync**: Comprehensive contact fetching via app state resync
+  - Extracts contacts from multiple sources (app state, chats, messages)
+  - Improved name resolution from `pushName` fields
+- **Error 428 Recovery**: Automatic recovery for connection closures
+- **Contact Name Persistence**: Fixed issues with contact names not updating in UI
+
+### v6.7.21
 - **Upgraded to Baileys v6.7.21**: Merged 185+ commits from upstream with bug fixes
 - **Fixed Device Linking**: Resolved 401 timeout issues during QR code authentication
 - **ES Module Support**: Updated build system for better compatibility
