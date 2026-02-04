@@ -19,7 +19,8 @@ import {
   HelpOutline as UnknownIcon,
   Laptop as LaptopIcon,
   DesktopWindows as WindowsIcon,
-  Language as WebIcon
+  Language as WebIcon,
+  SmartToy as BaileysIcon
 } from '@mui/icons-material';
 import { InfoField } from './InfoField';
 import { DevicePrekeyData } from '../../../shared/types/api';
@@ -50,6 +51,17 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
         ),
         label: 'Web or Windows',
         color: '#6B6B6B'
+      },
+      baileys: {
+        icon: (
+          <>
+            <BaileysIcon sx={{ fontSize: '0.9rem' }} />
+            <WebIcon sx={{ fontSize: '0.9rem', opacity: 0.5 }} />
+            <WindowsIcon sx={{ fontSize: '0.9rem', opacity: 0.5 }} />
+          </>
+        ),
+        label: 'Baileys/Clawd',
+        color: '#9C27B0'
       }
     };
 
@@ -190,6 +202,13 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
                           <WindowsIcon sx={{ fontSize: '1.2rem', color: '#0078D4' }} />
                         </>
                       )}
+                      {osInference.os === 'baileys' && (
+                        <>
+                          <BaileysIcon sx={{ fontSize: '1.2rem', color: '#9C27B0' }} />
+                          <WebIcon sx={{ fontSize: '1.2rem', color: '#4285F4', opacity: 0.5 }} />
+                          <WindowsIcon sx={{ fontSize: '1.2rem', color: '#0078D4', opacity: 0.5 }} />
+                        </>
+                      )}
 
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>
                         {osInference.os === 'android' && `Android ${osInference.formFactor === 'mobile' ? 'Mobile' : 'Desktop'}`}
@@ -197,6 +216,7 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({ deviceData }) => {
                         {osInference.os === 'windows' && 'Windows Desktop'}
                         {osInference.os === 'web' && 'Web'}
                         {osInference.os === 'web-or-windows' && 'Web or Windows Desktop'}
+                        {osInference.os === 'baileys' && 'Baileys/Clawd'}
                       </Typography>
                       <Chip
                         label={`${osInference.confidence} confidence`}

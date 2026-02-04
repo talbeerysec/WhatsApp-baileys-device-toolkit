@@ -279,8 +279,8 @@ const DevicesPage: React.FC = () => {
           let status: DeviceStatus['status'] = existing.status;
           let updatedFingerprint = existing.fingerprint || {};
 
-          // Update overall status for edit pings
-          if (result.type === 'edit') {
+          // Update overall status for edit and reaction pings
+          if (result.type === 'edit' || result.type === 'reaction') {
             if (result.status === 'delivered' || result.status === 'read') {
               status = 'online';
             } else if (result.status === 'timeout' || result.status === 'failed') {
@@ -291,12 +291,14 @@ const DevicesPage: React.FC = () => {
           }
 
           // Track fingerprinting results
-          if (result.type === 'edit') {
+          if (result.type === 'reaction') {
             updatedFingerprint.reactionPing = result.status === 'delivered' || result.status === 'read'
               ? 'success'
               : result.status === 'timeout' || result.status === 'failed'
                 ? 'timeout'
                 : 'pending';
+          } else if (result.type === 'edit') {
+            // Edit pings are tracked separately for status checking
           } else if (result.type === 'delete') {
             updatedFingerprint.deletePing = result.status === 'delivered' || result.status === 'read'
               ? 'success'
@@ -337,12 +339,23 @@ const DevicesPage: React.FC = () => {
             updatedFingerprint.lastFingerprint = new Date().toISOString();
           }
 
+          // Detect Baileys/clawd: web-or-windows device that responds to reaction ping
+          // WhatsApp fixed reaction ping - official clients no longer respond
+          // If a web-or-windows device responds to reaction ping, it's likely Baileys/clawd
+          let isBaileys = existing.isBaileys;
+          if (result.type === 'reaction' &&
+              (result.status === 'delivered' || result.status === 'read') &&
+              existing.passiveInference?.os === 'web-or-windows') {
+            isBaileys = true;
+          }
+
           newMap.set(deviceKey, {
             ...existing,
             status,
             lastCheck: (result.type === 'reaction' || result.type === 'edit') ? new Date().toISOString() : existing.lastCheck,
             responseTime: (result.type === 'reaction' || result.type === 'edit') ? result.roundTripTime : existing.responseTime,
-            fingerprint: updatedFingerprint
+            fingerprint: updatedFingerprint,
+            isBaileys
           });
         }
         return newMap;
@@ -848,23 +861,26 @@ const DevicesPage: React.FC = () => {
                             </TableCell>
                             <TableCell>
                               {/* Passive Device Type - From Prekey Bundle Analysis */}
+                              {/* Show 'baileys' if detected via reaction ping on web-or-windows device */}
                               {deviceStatus?.passiveInference ? (
                                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                   <OSDisplay
-                                    os={deviceStatus.passiveInference.os}
+                                    os={deviceStatus.isBaileys ? 'baileys' : deviceStatus.passiveInference.os}
                                     formFactor={deviceStatus.passiveInference.formFactor}
                                     iconSize="small"
                                     variant="caption"
                                   />
-                                  <Tooltip title={deviceStatus.passiveInference.reasoning}>
+                                  <Tooltip title={deviceStatus.isBaileys
+                                    ? 'Detected as Baileys/Clawd: web-or-windows device responded to reaction ping (official WhatsApp no longer responds)'
+                                    : deviceStatus.passiveInference.reasoning}>
                                     <Chip
-                                      label={`${deviceStatus.passiveInference.confidence} confidence`}
+                                      label={deviceStatus.isBaileys ? 'Baileys detected' : `${deviceStatus.passiveInference.confidence} confidence`}
                                       size="small"
                                       sx={{
                                         height: '18px',
                                         fontSize: '0.65rem',
-                                        bgcolor: deviceStatus.passiveInference.confidence === 'high' ? 'success.light' : 'warning.light',
-                                        color: deviceStatus.passiveInference.confidence === 'high' ? 'success.dark' : 'warning.dark'
+                                        bgcolor: deviceStatus.isBaileys ? '#9C27B020' : deviceStatus.passiveInference.confidence === 'high' ? 'success.light' : 'warning.light',
+                                        color: deviceStatus.isBaileys ? '#9C27B0' : deviceStatus.passiveInference.confidence === 'high' ? 'success.dark' : 'warning.dark'
                                       }}
                                     />
                                   </Tooltip>

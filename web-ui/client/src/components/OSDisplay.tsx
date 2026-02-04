@@ -6,11 +6,12 @@ import {
   PhoneAndroid as MobileIcon,
   Laptop as LaptopIcon,
   Language as WebIcon,
-  DeviceUnknown as UnknownDeviceIcon
+  DeviceUnknown as UnknownDeviceIcon,
+  SmartToy as BaileysIcon
 } from '@mui/icons-material';
 import { WindowsIcon } from './WindowsIcon';
 
-export type OSType = 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
+export type OSType = 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'baileys' | 'unknown';
 export type FormFactorType = 'mobile' | 'desktop';
 
 interface OSDisplayProps {
@@ -44,6 +45,11 @@ const OS_CONFIG: Record<OSType, {
     icon: WebIcon, // Will show both icons in the component
     label: 'Web or Windows',
     color: '#6B6B6B' // Neutral color between web and windows
+  },
+  baileys: {
+    icon: BaileysIcon, // Robot icon for Baileys/clawd
+    label: 'Baileys/Clawd',
+    color: '#9C27B0' // Purple color for third-party clients
   },
   unknown: { icon: UnknownDeviceIcon, label: 'Unknown', color: '#9E9E9E' }
 };
@@ -92,6 +98,8 @@ export const OSDisplay: React.FC<OSDisplayProps> = ({
       displayLabel = 'Web';
     } else if (os === 'web-or-windows') {
       displayLabel = 'Web or Windows Desktop';
+    } else if (os === 'baileys') {
+      displayLabel = 'Baileys/Clawd';
     } else {
       displayLabel = osConfig.label;
     }
@@ -119,6 +127,22 @@ export const OSDisplay: React.FC<OSDisplayProps> = ({
               <WindowsIcon
                 fontSize={iconSize}
                 sx={{ color: '#0078D4' }}
+              />
+            </>
+          ) : os === 'baileys' ? (
+            <>
+              {/* Show robot icon with web/windows icons for Baileys/clawd */}
+              <BaileysIcon
+                fontSize={iconSize}
+                sx={{ color: '#9C27B0' }}
+              />
+              <WebIcon
+                fontSize={iconSize}
+                sx={{ color: '#4285F4', opacity: 0.5 }}
+              />
+              <WindowsIcon
+                fontSize={iconSize}
+                sx={{ color: '#0078D4', opacity: 0.5 }}
               />
             </>
           ) : (

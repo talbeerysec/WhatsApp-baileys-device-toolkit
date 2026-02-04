@@ -173,6 +173,13 @@ HTTPS_PORT=8443   # Change from default 443
 
 ## 📝 Recent Updates
 
+### February 2026 Enhancements
+- **Baileys/Clawd Detection**: Identify third-party WhatsApp clients (Baileys implementations) via reaction ping
+  - WhatsApp fixed the reaction ping vulnerability - official clients no longer respond
+  - Devices showing as "Web or Windows" that respond to reaction ping are flagged as "Baileys/Clawd"
+  - Purple robot icon with "Baileys detected" badge in the UI
+  - Useful for detecting unofficial WhatsApp API clients
+
 ### January 2026 Enhancements
 - **Browser Configuration Settings**: New settings page to customize client identification shown in WhatsApp's linked devices screen
   - Preset and custom platform options

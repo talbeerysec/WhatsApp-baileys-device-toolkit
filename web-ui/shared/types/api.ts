@@ -76,11 +76,12 @@ export interface DeviceStatus {
     lastFingerprint?: string; // ISO timestamp
   };
   passiveInference?: {
-    os: 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
+    os: 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'baileys' | 'unknown';
     formFactor: 'mobile' | 'desktop';
     confidence: 'high' | 'medium' | 'low';
     reasoning: string;
   };
+  isBaileys?: boolean; // Detected via reaction ping response (official WhatsApp no longer responds)
 }
 
 export interface SendMessageRequest {
@@ -173,7 +174,7 @@ export interface DevicePrekeyData {
   error?: string;
   fetchedAt?: string; // ISO timestamp
   osInference?: {
-    os: 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
+    os: 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'baileys' | 'unknown';
     formFactor: 'mobile' | 'desktop';
     confidence: 'high' | 'medium' | 'low';
     reasoning: string;

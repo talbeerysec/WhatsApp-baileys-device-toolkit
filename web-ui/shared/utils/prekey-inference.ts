@@ -1,6 +1,6 @@
 // Utility functions for inferring device OS from prekey bundle patterns
 
-export type DeviceOS = 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'unknown';
+export type DeviceOS = 'android' | 'apple' | 'windows' | 'web' | 'web-or-windows' | 'baileys' | 'unknown';
 export type DeviceFormFactor = 'mobile' | 'desktop';
 
 export interface OSInference {
