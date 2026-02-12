@@ -861,26 +861,23 @@ const DevicesPage: React.FC = () => {
                             </TableCell>
                             <TableCell>
                               {/* Passive Device Type - From Prekey Bundle Analysis */}
-                              {/* Show 'baileys' if detected via reaction ping on web-or-windows device */}
                               {deviceStatus?.passiveInference ? (
                                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                                   <OSDisplay
-                                    os={deviceStatus.isBaileys ? 'baileys' : deviceStatus.passiveInference.os}
+                                    os={deviceStatus.passiveInference.os}
                                     formFactor={deviceStatus.passiveInference.formFactor}
                                     iconSize="small"
                                     variant="caption"
                                   />
-                                  <Tooltip title={deviceStatus.isBaileys
-                                    ? 'Detected as Baileys/Clawd: web-or-windows device responded to reaction ping (official WhatsApp no longer responds)'
-                                    : deviceStatus.passiveInference.reasoning}>
+                                  <Tooltip title={deviceStatus.passiveInference.reasoning}>
                                     <Chip
-                                      label={deviceStatus.isBaileys ? 'Baileys detected' : `${deviceStatus.passiveInference.confidence} confidence`}
+                                      label={`${deviceStatus.passiveInference.confidence} confidence`}
                                       size="small"
                                       sx={{
                                         height: '18px',
                                         fontSize: '0.65rem',
-                                        bgcolor: deviceStatus.isBaileys ? '#9C27B020' : deviceStatus.passiveInference.confidence === 'high' ? 'success.light' : 'warning.light',
-                                        color: deviceStatus.isBaileys ? '#9C27B0' : deviceStatus.passiveInference.confidence === 'high' ? 'success.dark' : 'warning.dark'
+                                        bgcolor: deviceStatus.passiveInference.confidence === 'high' ? 'success.light' : 'warning.light',
+                                        color: deviceStatus.passiveInference.confidence === 'high' ? 'success.dark' : 'warning.dark'
                                       }}
                                     />
                                   </Tooltip>
@@ -977,39 +974,64 @@ const DevicesPage: React.FC = () => {
                                 {/* Secondary device (deviceId > 0) type detection */}
                                 {deviceId > 0 && (
                                   <>
-                                    {deviceStatus?.fingerprint?.detectedSecondaryType === 'desktop' && (
+                                    {deviceStatus?.isBaileys ? (
+                                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                        <OSDisplay
+                                          os="baileys"
+                                          formFactor="desktop"
+                                          iconSize="small"
+                                          variant="caption"
+                                        />
+                                        <Tooltip title="Detected as Baileys/Clawd: web-or-windows device responded to reaction ping (official WhatsApp no longer responds)">
+                                          <Chip
+                                            label="Baileys detected"
+                                            size="small"
+                                            sx={{
+                                              height: '18px',
+                                              fontSize: '0.65rem',
+                                              bgcolor: '#9C27B020',
+                                              color: '#9C27B0'
+                                            }}
+                                          />
+                                        </Tooltip>
+                                      </Box>
+                                    ) : (
                                       <>
-                                        <DesktopIcon color="primary" fontSize="small" />
-                                        <Typography variant="caption">Desktop</Typography>
+                                        {deviceStatus?.fingerprint?.detectedSecondaryType === 'desktop' && (
+                                          <>
+                                            <DesktopIcon color="primary" fontSize="small" />
+                                            <Typography variant="caption">Desktop</Typography>
+                                          </>
+                                        )}
+                                        {deviceStatus?.fingerprint?.detectedSecondaryType === 'browser' && (
+                                          <>
+                                            <BrowserIcon color="secondary" fontSize="small" />
+                                            <Typography variant="caption">Browser</Typography>
+                                          </>
+                                        )}
+                                        {(!deviceStatus?.fingerprint?.detectedSecondaryType || deviceStatus?.fingerprint?.detectedSecondaryType === 'unknown') && (
+                                          <>
+                                            <UnknownDeviceIcon color="disabled" fontSize="small" />
+                                            <Typography variant="caption" color="text.secondary">
+                                              {deviceStatus?.status === 'online' ? 'Unknown' : 'Offline'}
+                                            </Typography>
+                                          </>
+                                        )}
+                                        {deviceStatus?.status === 'online' && (
+                                          <Tooltip title="Identify secondary device type using call-reject ping (Desktop times out, Browser responds)">
+                                            <Button
+                                              size="small"
+                                              variant="text"
+                                              startIcon={<FingerprintIcon />}
+                                              onClick={() => handleSilentPing(deviceId, 'call-reject')}
+                                              disabled={deviceStatus?.fingerprint?.callRejectPing === 'pending'}
+                                              sx={{ minWidth: 'auto', padding: '2px 4px', ml: 1 }}
+                                            >
+                                              ID
+                                            </Button>
+                                          </Tooltip>
+                                        )}
                                       </>
-                                    )}
-                                    {deviceStatus?.fingerprint?.detectedSecondaryType === 'browser' && (
-                                      <>
-                                        <BrowserIcon color="secondary" fontSize="small" />
-                                        <Typography variant="caption">Browser</Typography>
-                                      </>
-                                    )}
-                                    {(!deviceStatus?.fingerprint?.detectedSecondaryType || deviceStatus?.fingerprint?.detectedSecondaryType === 'unknown') && (
-                                      <>
-                                        <UnknownDeviceIcon color="disabled" fontSize="small" />
-                                        <Typography variant="caption" color="text.secondary">
-                                          {deviceStatus?.status === 'online' ? 'Unknown' : 'Offline'}
-                                        </Typography>
-                                      </>
-                                    )}
-                                    {deviceStatus?.status === 'online' && (
-                                      <Tooltip title="Identify secondary device type using call-reject ping (Desktop times out, Browser responds)">
-                                        <Button
-                                          size="small"
-                                          variant="text"
-                                          startIcon={<FingerprintIcon />}
-                                          onClick={() => handleSilentPing(deviceId, 'call-reject')}
-                                          disabled={deviceStatus?.fingerprint?.callRejectPing === 'pending'}
-                                          sx={{ minWidth: 'auto', padding: '2px 4px', ml: 1 }}
-                                        >
-                                          ID
-                                        </Button>
-                                      </Tooltip>
                                     )}
                                   </>
                                 )}
