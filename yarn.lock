@@ -1627,7 +1627,7 @@
 
 "@whiskeysockets/eslint-config@github:whiskeysockets/eslint-config":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/whiskeysockets/eslint-config.git#299e8389baf62f9aa3034de18ff0d62cc0a5e838"
+  resolved "https://github.com/whiskeysockets/eslint-config.git#299e8389baf62f9aa3034de18ff0d62cc0a5e838"
   dependencies:
     "@typescript-eslint/eslint-plugin" "^8.37.0"
     "@typescript-eslint/parser" "^8.37.0"
