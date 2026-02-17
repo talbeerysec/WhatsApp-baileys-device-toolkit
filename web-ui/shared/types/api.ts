@@ -199,3 +199,18 @@ export interface UpdateBrowserConfigRequest {
   browser: string;
   version?: string;
 }
+
+export interface MessageInfo {
+  id: string;
+  remoteJid: string;
+  fromMe: boolean;
+  participant?: string;
+  timestamp: number;
+  text?: string;
+  mediaType?: 'image' | 'video' | 'audio' | 'document' | 'sticker';
+  hasMedia: boolean;
+  isViewOnce: boolean;
+  viewOnceMediaCached: boolean;
+  mimetype?: string;
+  caption?: string;
+}

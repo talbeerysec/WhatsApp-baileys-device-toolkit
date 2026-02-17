@@ -8,18 +8,24 @@ import { Curve, hmacSign } from './crypto'
 import { encodeBigEndian } from './generics'
 import { createSignalIdentity } from './signal'
 
+const isAndroidPlatform = (browser: SocketConfig['browser']) =>
+	browser[1].toUpperCase().startsWith('ANDROID')
+
 const getUserAgent = (config: SocketConfig): proto.ClientPayload.IUserAgent => {
+	const android = isAndroidPlatform(config.browser)
 	return {
 		appVersion: {
 			primary: config.version[0],
 			secondary: config.version[1],
 			tertiary: config.version[2]
 		},
-		platform: proto.ClientPayload.UserAgent.Platform.WEB,
+		platform: android
+			? proto.ClientPayload.UserAgent.Platform.ANDROID
+			: proto.ClientPayload.UserAgent.Platform.WEB,
 		releaseChannel: proto.ClientPayload.UserAgent.ReleaseChannel.RELEASE,
-		osVersion: '0.1',
-		device: 'Desktop',
-		osBuildNumber: '0.1',
+		osVersion: android ? config.browser[2] : '0.1',
+		device: android ? 'Android' : 'Desktop',
+		osBuildNumber: android ? config.browser[2] : '0.1',
 		localeLanguageIso6391: 'en',
 		mnc: '000',
 		mcc: '000',
@@ -48,7 +54,9 @@ const getClientPayload = (config: SocketConfig) => {
 		userAgent: getUserAgent(config)
 	}
 
-	payload.webInfo = getWebInfo(config)
+	if (!isAndroidPlatform(config.browser)) {
+		payload.webInfo = getWebInfo(config)
+	}
 
 	return payload
 }

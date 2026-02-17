@@ -7,7 +7,7 @@ import { ApiResponse, ClientBrowserConfig, UpdateBrowserConfigRequest } from '..
 const router = express.Router();
 
 // Available browser presets
-const AVAILABLE_PRESETS = ['ubuntu', 'macOS', 'windows', 'baileys', 'appropriate'];
+const AVAILABLE_PRESETS = ['ubuntu', 'macOS', 'windows', 'baileys', 'appropriate', 'android'];
 
 // Get browser configuration file path
 function getConfigPath(): string {

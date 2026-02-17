@@ -15,6 +15,7 @@ import {
   SilentPingRequest,
   CorruptMessageRequest,
   MessageResponse,
+  MessageInfo,
   PrekeyData,
   DevicePrekeyData,
   UserProfile,
@@ -217,10 +218,34 @@ export class ApiService {
 
   static async markAsRead(jid: string): Promise<void> {
     const response: AxiosResponse<ApiResponse> = await api.post('/api/messages/read', { jid });
-    
+
     if (!response.data.success) {
       throw new Error(response.data.error || 'Failed to mark messages as read');
     }
+  }
+
+  static async getMessages(jid: string, limit?: number): Promise<MessageInfo[]> {
+    const params = limit ? `?limit=${limit}` : '';
+    const response: AxiosResponse<ApiResponse<MessageInfo[]>> = await api.get(`/api/messages/${encodeURIComponent(jid)}${params}`);
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Failed to get messages');
+    }
+
+    return response.data.data || [];
+  }
+
+  static async clearChat(jid: string): Promise<void> {
+    const response: AxiosResponse<ApiResponse> = await api.delete(`/api/messages/${encodeURIComponent(jid)}`);
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Failed to clear chat');
+    }
+  }
+
+  static getMediaUrl(jid: string, messageId: string): string {
+    const token = localStorage.getItem('auth_token');
+    return `${API_BASE_URL}/api/messages/${encodeURIComponent(jid)}/${messageId}/media?token=${token}`;
   }
 
   // Presence

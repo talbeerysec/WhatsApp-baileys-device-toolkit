@@ -46,6 +46,7 @@ import DeveloperPage from './DeveloperPage';
 import HomePage from './HomePage';
 import PrekeyPage from './PrekeyPage';
 import SettingsPage from './SettingsPage';
+import MessagesPage from './MessagesPage';
 
 const drawerWidth = 240;
 
@@ -237,6 +238,7 @@ const Dashboard: React.FC = () => {
           <Route path="/presence" element={<PresencePage />} />
           <Route path="/developer" element={<DeveloperPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/messages/:jid" element={<MessagesPage />} />
         </Routes>
         <QRCodeDisplay />
       </Box>

@@ -6,6 +6,7 @@ import makeWASocket, {
   AnyMessageContent,
   Browsers,
   DisconnectReason,
+  downloadMediaMessage,
   fetchLatestBaileysVersion,
   generateMessageIDV2,
   generateWAMessageFromContent,
@@ -18,10 +19,12 @@ import makeWASocket, {
 } from '../../../../lib/index.js';
 // Store was removed from main exports in v6.7.21, import directly (skip index to avoid cache-manager dep)
 import makeInMemoryStore from '../../../../lib/Store/make-in-memory-store.js';
+import { normalizeMessageContent, getContentType } from '../../../../lib/Utils/messages.js';
+import { toNumber } from '../../../../lib/Utils/generics.js';
 import { Boom } from '@hapi/boom';
 import NodeCache from 'node-cache';
 import P from 'pino';
-import { ConnectionStatus, ChatInfo, ContactInfo, DeviceInfo, SilentPingResult, PrekeyBundle, UserProfile } from '../../../shared/types/api';
+import { ConnectionStatus, ChatInfo, ContactInfo, DeviceInfo, SilentPingResult, PrekeyBundle, UserProfile, MessageInfo } from '../../../shared/types/api';
 
 interface PendingSilentPing {
   user: string;
@@ -103,7 +106,7 @@ export class WhatsAppService extends EventEmitter {
     this.store = makeInMemoryStore({ logger: this.logger });
 
     // Try to read existing store (use env var or fallback to writable directory)
-    const storePath = process.env.STORE_PATH || path.join(process.cwd(), 'baileys_store_multi.json');
+    const storePath = process.env.STORE_PATH || path.resolve(__dirname, '../../../../baileys_auth_info', 'baileys_store_multi.json');
     try {
       this.store.readFromFile(storePath);
     } catch (error) {
@@ -701,15 +704,36 @@ export class WhatsAppService extends EventEmitter {
         }
       }
 
+      // Look up the most recent message from the store's message dictionary
+      let lastMessage: { text: string; timestamp: number; fromMe: boolean } | undefined;
+      const msgDict = this.store.messages[chat.id];
+      if (msgDict && msgDict.array && msgDict.array.length > 0) {
+        const lastMsg = msgDict.array[msgDict.array.length - 1];
+        const normalized = normalizeMessageContent(lastMsg.message);
+        let text = '';
+        if (normalized) {
+          const contentType = getContentType(normalized);
+          if (contentType === 'conversation') {
+            text = normalized.conversation || '';
+          } else if (contentType === 'extendedTextMessage') {
+            text = normalized.extendedTextMessage?.text || '';
+          } else if (contentType) {
+            // Media or other message type - use a friendly label
+            text = contentType.replace('Message', '').replace(/([A-Z])/g, ' $1').trim();
+          }
+        }
+        lastMessage = {
+          text: text || 'Media',
+          timestamp: toNumber(lastMsg.messageTimestamp) || Date.now(),
+          fromMe: lastMsg.key?.fromMe || false
+        };
+      }
+
       return {
         id: chat.id,
         name: name || 'Unknown',
         unreadCount: chat.unreadCount || 0,
-        lastMessage: chat.lastMessage ? {
-          text: chat.lastMessage.text || 'Media',
-          timestamp: chat.lastMessage.messageTimestamp || Date.now(),
-          fromMe: chat.lastMessage.key?.fromMe || false
-        } : undefined
+        lastMessage
       };
     });
   }
@@ -798,6 +822,155 @@ export class WhatsAppService extends EventEmitter {
           isBlocked: contact.isBlocked || false
         };
       });
+  }
+
+  getMessages(jid: string, limit: number = 100): MessageInfo[] {
+    if (!this.store) return [];
+
+    const messages = this.store.messages[jid];
+    if (!messages || !messages.array || messages.array.length === 0) return [];
+
+    const msgArray = messages.array;
+    const startIndex = Math.max(0, msgArray.length - limit);
+    const result: MessageInfo[] = [];
+
+    for (let i = startIndex; i < msgArray.length; i++) {
+      const msg = msgArray[i];
+      const rawMessage = msg.message;
+      if (!rawMessage) continue;
+
+      // Use rawMessage directly as content (Baileys core now strips viewOnce wrappers)
+      const content = rawMessage;
+
+      // Extract text
+      const text = content?.conversation
+        || content?.extendedTextMessage?.text
+        || content?.imageMessage?.caption
+        || content?.videoMessage?.caption
+        || '';
+
+      // Detect media type
+      let mediaType: MessageInfo['mediaType'] = undefined;
+      if (content?.imageMessage) mediaType = 'image';
+      else if (content?.videoMessage) mediaType = 'video';
+      else if (content?.audioMessage) mediaType = 'audio';
+      else if (content?.documentMessage) mediaType = 'document';
+      else if (content?.stickerMessage) mediaType = 'sticker';
+
+      const hasMedia = !!mediaType;
+
+      // Get mimetype from media message
+      let mimetype: string | undefined = undefined;
+      if (mediaType) {
+        const mediaMsg = content?.imageMessage || content?.videoMessage || content?.audioMessage || content?.documentMessage || content?.stickerMessage;
+        mimetype = mediaMsg?.mimetype;
+      }
+
+      // Get caption
+      const caption = content?.imageMessage?.caption || content?.videoMessage?.caption || undefined;
+
+      result.push({
+        id: msg.key?.id || '',
+        remoteJid: msg.key?.remoteJid || jid,
+        fromMe: msg.key?.fromMe || false,
+        participant: msg.key?.participant || undefined,
+        timestamp: typeof msg.messageTimestamp === 'number' ? msg.messageTimestamp : (msg.messageTimestamp?.low || 0),
+        text: text || undefined,
+        mediaType,
+        hasMedia,
+        isViewOnce: false,
+        viewOnceMediaCached: false,
+        mimetype,
+        caption,
+      });
+    }
+
+    return result;
+  }
+
+  clearChat(jid: string): void {
+    // Clear messages from in-memory store
+    if (this.store?.messages[jid]) {
+      this.store.messages[jid].clear();
+      console.log(`🗑️ Cleared messages for ${jid} from store`);
+    }
+
+    // Clear cached media for this chat
+    const sanitizedJid = jid.replace(/[/:*?"<>|]/g, '_');
+    const cacheDir = path.join(__dirname, '../../media-cache', sanitizedJid);
+    try {
+      if (fs.existsSync(cacheDir)) {
+        fs.rmSync(cacheDir, { recursive: true, force: true });
+        console.log(`🗑️ Cleared media cache for ${jid}`);
+      }
+    } catch (err) {
+      console.error(`Failed to clear media cache for ${jid}:`, err);
+    }
+  }
+
+  async getMessageMedia(jid: string, messageId: string): Promise<{ buffer: Buffer; mimetype: string } | null> {
+    // First check cache
+    const sanitizedJid = jid.replace(/[/:*?"<>|]/g, '_');
+    const cacheDir = path.join(__dirname, '../../media-cache', sanitizedJid);
+
+    try {
+      if (fs.existsSync(cacheDir)) {
+        const files = fs.readdirSync(cacheDir);
+        const cachedFile = files.find((f: string) => f.startsWith(messageId));
+        if (cachedFile) {
+          const filePath = path.join(cacheDir, cachedFile);
+          const buffer = fs.readFileSync(filePath);
+          const ext = path.extname(cachedFile).toLowerCase();
+
+          const mimeMap: { [key: string]: string } = {
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.png': 'image/png',
+            '.webp': 'image/webp',
+            '.gif': 'image/gif',
+            '.mp4': 'video/mp4',
+            '.3gp': 'video/3gpp',
+            '.ogg': 'audio/ogg',
+            '.mp3': 'audio/mpeg',
+            '.m4a': 'audio/mp4',
+            '.pdf': 'application/pdf',
+            '.bin': 'application/octet-stream',
+          };
+
+          const mimetype = mimeMap[ext] || 'application/octet-stream';
+          return { buffer, mimetype };
+        }
+      }
+    } catch {
+      // Cache lookup failed, try downloading
+    }
+
+    // If not cached, find the message in store and try to download directly
+    if (!this.sock) {
+      throw new Error('WhatsApp not connected');
+    }
+
+    if (!this.store) return null;
+
+    const messages = this.store.messages[jid];
+    if (!messages || !messages.array) return null;
+
+    const msg = messages.array.find((m: any) => m.key?.id === messageId);
+    if (!msg || !msg.message) return null;
+
+    try {
+      const buffer = await downloadMediaMessage(msg, 'buffer', {});
+
+      // Baileys core now strips viewOnce wrappers, so use rawMessage directly
+      const content = msg.message;
+      const mediaMsg = content?.imageMessage || content?.videoMessage || content?.audioMessage || content?.documentMessage || content?.stickerMessage;
+      const mimetype = mediaMsg?.mimetype || 'application/octet-stream';
+
+      return { buffer: buffer as Buffer, mimetype };
+    } catch (err) {
+      console.error(`Failed to download media for message ${messageId}:`, err);
+      return null;
+    }
   }
 
   async getUserProfile(user: string): Promise<UserProfile | null> {

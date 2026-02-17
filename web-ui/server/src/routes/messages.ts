@@ -11,7 +11,7 @@ import {
   handleValidationErrors
 } from '../middleware/validation';
 import { WhatsAppService } from '../services/whatsapp';
-import { ApiResponse, MessageResponse } from '../../../shared/types/api';
+import { ApiResponse, MessageResponse, MessageInfo } from '../../../shared/types/api';
 
 const router = express.Router();
 
@@ -178,6 +178,69 @@ router.post('/read',
         success: false,
         error: error instanceof Error ? error.message : 'Failed to mark messages as read'
       } as ApiResponse);
+    }
+  }
+);
+
+// Clear local chat history
+router.delete('/:jid',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jid = decodeURIComponent(req.params.jid);
+      const whatsappService: WhatsAppService = req.app.locals.whatsappService;
+      whatsappService.clearChat(jid);
+      res.json({ success: true, message: 'Chat history cleared' });
+    } catch (error) {
+      console.error('Clear chat error:', error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to clear chat'
+      });
+    }
+  }
+);
+
+// Get messages for a chat
+router.get('/:jid',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jid = decodeURIComponent(req.params.jid);
+      const limit = parseInt(req.query.limit as string) || 100;
+      const whatsappService: WhatsAppService = req.app.locals.whatsappService;
+      const messages = whatsappService.getMessages(jid, limit);
+      res.json({ success: true, data: messages });
+    } catch (error) {
+      console.error('Get messages error:', error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to get messages'
+      });
+    }
+  }
+);
+
+// Get media for a specific message
+router.get('/:jid/:messageId/media',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jid = decodeURIComponent(req.params.jid);
+      const messageId = req.params.messageId;
+      const whatsappService: WhatsAppService = req.app.locals.whatsappService;
+      const media = await whatsappService.getMessageMedia(jid, messageId);
+      if (!media) {
+        return res.status(404).json({ success: false, error: 'Media not found' });
+      }
+      res.setHeader('Content-Type', media.mimetype);
+      res.send(media.buffer);
+    } catch (error) {
+      console.error('Get media error:', error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to get media'
+      });
     }
   }
 );

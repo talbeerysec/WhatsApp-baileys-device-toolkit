@@ -52,6 +52,8 @@ services:
       - baileys-auth:/app/baileys_auth_info
       # Server logs
       - baileys-logs:/app/logs
+      # View-once media cache
+      - baileys-media-cache:/app/web-ui/server/media-cache
     networks:
       - baileys-frontend
       - baileys-backend
@@ -156,4 +158,8 @@ volumes:
 
   # Application logs
   baileys-logs:
+    driver: local
+
+  # View-once media cache
+  baileys-media-cache:
     driver: local

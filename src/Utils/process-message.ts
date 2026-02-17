@@ -43,6 +43,16 @@ export const cleanMessage = (message: proto.IWebMessageInfo, meId: string) => {
 	// ensure remoteJid and participant doesn't have device or agent in it
 	message.key.remoteJid = jidNormalizedUser(message.key.remoteJid!)
 	message.key.participant = message.key.participant ? jidNormalizedUser(message.key.participant) : undefined
+	// Unwrap viewOnce messages so they're stored as regular media
+	// This eliminates race conditions with async view-once handling
+	if (message.message) {
+		const m = message.message
+		const viewOnceWrapper = m.viewOnceMessage || m.viewOnceMessageV2 || m.viewOnceMessageV2Extension
+		if (viewOnceWrapper?.message) {
+			message.message = viewOnceWrapper.message
+		}
+	}
+
 	const content = normalizeMessageContent(message.message)
 	// if the message has a reaction, ensure fromMe & remoteJid are from our perspective
 	if (content?.reactionMessage) {

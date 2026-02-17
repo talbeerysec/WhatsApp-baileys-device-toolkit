@@ -6,6 +6,7 @@ import {
   Typography,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   ListItemSecondaryAction,
   Chip,
@@ -15,11 +16,13 @@ import {
   InputAdornment
 } from '@mui/material';
 import { Search as SearchIcon, MarkEmailRead as MarkReadIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { useWhatsApp } from '../contexts/WhatsAppContext';
 import { ApiService } from '../services/api';
 
 const ChatsPage: React.FC = () => {
   const { chats, refreshData } = useWhatsApp();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -73,44 +76,45 @@ const ChatsPage: React.FC = () => {
           {filteredChats.length > 0 ? (
             <List>
               {filteredChats.map((chat) => (
-                <ListItem key={chat.id} divider>
-                  <ListItemText
-                    primary={chat.name || chat.id}
-                    secondary={
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          {chat.lastMessage
-                            ? `${chat.lastMessage.text.substring(0, 100)}${chat.lastMessage.text.length > 100 ? '...' : ''}`
-                            : 'No messages'
-                          }
-                        </Typography>
-                        {chat.lastMessage && (
-                          <Typography variant="caption" color="text.secondary">
-                            {new Date(chat.lastMessage.timestamp).toLocaleString()}
-                          </Typography>
-                        )}
-                      </Box>
-                    }
-                  />
-                  <ListItemSecondaryAction>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      {chat.unreadCount && chat.unreadCount > 0 && (
-                        <Chip
-                          label={chat.unreadCount}
-                          size="small"
-                          color="primary"
-                        />
-                      )}
-                      <Button
+                <ListItem key={chat.id} divider disablePadding secondaryAction={
+                  <Box display="flex" alignItems="center" gap={1}>
+                    {chat.unreadCount && chat.unreadCount > 0 && (
+                      <Chip
+                        label={chat.unreadCount}
                         size="small"
-                        startIcon={<MarkReadIcon />}
-                        onClick={() => handleMarkAsRead(chat.id)}
-                        disabled={loading}
-                      >
-                        Mark Read
-                      </Button>
-                    </Box>
-                  </ListItemSecondaryAction>
+                        color="primary"
+                      />
+                    )}
+                    <Button
+                      size="small"
+                      startIcon={<MarkReadIcon />}
+                      onClick={(e) => { e.stopPropagation(); handleMarkAsRead(chat.id); }}
+                      disabled={loading}
+                    >
+                      Mark Read
+                    </Button>
+                  </Box>
+                }>
+                  <ListItemButton onClick={() => navigate(`/messages/${encodeURIComponent(chat.id)}`)}>
+                    <ListItemText
+                      primary={chat.name || chat.id}
+                      secondary={
+                        <Box>
+                          <Typography variant="body2" color="text.secondary">
+                            {chat.lastMessage
+                              ? `${chat.lastMessage.text.substring(0, 100)}${chat.lastMessage.text.length > 100 ? '...' : ''}`
+                              : 'No messages'
+                            }
+                          </Typography>
+                          {chat.lastMessage && (
+                            <Typography variant="caption" color="text.secondary">
+                              {new Date(chat.lastMessage.timestamp).toLocaleString()}
+                            </Typography>
+                          )}
+                        </Box>
+                      }
+                    />
+                  </ListItemButton>
                 </ListItem>
               ))}
             </List>

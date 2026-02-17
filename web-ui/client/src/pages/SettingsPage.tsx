@@ -85,7 +85,10 @@ const SettingsPage: React.FC = () => {
     }
   };
 
+  const isAndroidPreset = !useCustomPlatform && platform === 'android';
+
   const getDisplayName = (): string => {
+    if (isAndroidPreset) return 'Android (13)';
     const finalPlatform = useCustomPlatform ? customPlatform : platform;
     return `${browser} (${finalPlatform})`;
   };
@@ -142,13 +145,17 @@ const SettingsPage: React.FC = () => {
                   } else {
                     setUseCustomPlatform(false);
                     setPlatform(e.target.value);
+                    if (e.target.value === 'android') {
+                      setBrowser('ANDROID_PHONE');
+                      setVersion('');
+                    }
                   }
                 }}
                 label="Platform Type"
               >
                 {availablePresets.map((preset) => (
                   <MenuItem key={preset} value={preset}>
-                    {preset}
+                    {preset === 'android' ? 'android (receive view once media)' : preset}
                   </MenuItem>
                 ))}
                 <MenuItem value="custom">Custom...</MenuItem>
@@ -167,6 +174,13 @@ const SettingsPage: React.FC = () => {
               />
             )}
 
+            {isAndroidPreset && (
+              <Alert severity="info">
+                Android mode registers as an Android companion device so WhatsApp delivers view once media.
+                Device will appear as <strong>Android (13)</strong> in linked devices. You must delete auth state and re-pair after saving.
+              </Alert>
+            )}
+
             {/* Browser Name */}
             <TextField
               fullWidth
@@ -174,7 +188,8 @@ const SettingsPage: React.FC = () => {
               value={browser}
               onChange={(e) => setBrowser(e.target.value)}
               placeholder="e.g., Chrome, Safari, Firefox, Edge"
-              helperText="The browser name to display"
+              helperText={isAndroidPreset ? "Fixed to ANDROID_PHONE for Android registration" : "The browser name to display"}
+              disabled={isAndroidPreset}
             />
 
             {/* Version (Optional) */}
@@ -184,7 +199,8 @@ const SettingsPage: React.FC = () => {
               value={version}
               onChange={(e) => setVersion(e.target.value)}
               placeholder="e.g., 1.0.0"
-              helperText="Leave empty to use preset defaults"
+              helperText={isAndroidPreset ? "Android version is set automatically (13.0)" : "Leave empty to use preset defaults"}
+              disabled={isAndroidPreset}
             />
 
             <Divider />
@@ -217,7 +233,9 @@ const SettingsPage: React.FC = () => {
             {/* Warning */}
             <Alert severity="warning">
               <strong>Important:</strong> After saving these settings, you must log out and reconnect to WhatsApp for the changes to take effect.
-              The new device name will only be visible on your next connection.
+              {isAndroidPreset
+                ? ' For Android mode, you must DELETE your auth state and RE-PAIR the device (device type is locked at registration).'
+                : ' The new device name will only be visible on your next connection.'}
             </Alert>
           </Box>
         </CardContent>

@@ -39,6 +39,7 @@
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest"
   },
   "dependencies": {
+    "@a5c-ai/babysitter-sdk": "^0.0.168",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@cacheable/node-cache": "^1.4.0",
     "@hapi/boom": "^9.1.3",
