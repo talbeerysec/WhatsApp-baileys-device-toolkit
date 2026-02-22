@@ -1,25 +1,38 @@
+/**
+ * fix-imports.js — Patch pbjs-generated index.js for ESM compatibility
+ *
+ * pbjs generates code that isn't fully ESM-compatible out of the box.
+ * This script fixes two issues:
+ *
+ *   1. "import * as $protobuf from ..." → "import $protobuf from ..."
+ *      The namespace import breaks when protobufjs uses a default export.
+ *
+ *   2. "protobufjs/minimal" → "protobufjs/minimal.js"
+ *      Node ESM resolution requires explicit file extensions.
+ *
+ * Run automatically by GenerateStatics.sh after pbjs/pbts.
+ */
+
 import { readFileSync, writeFileSync } from 'fs';
-import { argv, exit } from 'process';
+import { exit } from 'process';
 
 const filePath = './index.js';
 
 try {
-  // Read the file
   let content = readFileSync(filePath, 'utf8');
 
-  // Fix the import statement
+  // Fix namespace import to default import
   content = content.replace(
     /import \* as (\$protobuf) from/g,
     'import $1 from'
   );
 
-  // add missing extension to the import
+  // Add .js extension for ESM resolution
   content = content.replace(
     /(['"])protobufjs\/minimal(['"])/g,
     '$1protobufjs/minimal.js$2'
   );
 
-  // Write back
   writeFileSync(filePath, content, 'utf8');
 
   console.log(`✅ Fixed imports in ${filePath}`);

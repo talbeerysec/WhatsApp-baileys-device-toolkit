@@ -1,3 +1,20 @@
+/**
+ * WhatsApp Protobuf Schema Extractor
+ *
+ * Reverse-engineers WhatsApp's protobuf message definitions by:
+ *   1. Fetching the WhatsApp Web service worker (sw.js) to find the current version
+ *   2. Downloading the main JS bundle referenced by the service worker
+ *   3. Parsing the entire bundle with acorn (a JavaScript parser)
+ *   4. Walking the AST to find modules that contain `internalSpec` properties
+ *      — these are WhatsApp's internal protobuf message/enum definitions
+ *   5. Reconstructing a complete .proto file from the extracted definitions
+ *   6. Writing the result to ../WAProto/WAProto.proto
+ *
+ * The extracted .proto is then compiled into JS/TS by GenerateStatics.sh.
+ *
+ * Credit: Derived from whatseow's proto extract, updated by wppconnect-team.
+ */
+
 const request = require('request-promise-native');
 const acorn = require('acorn');
 const walk = require('acorn-walk');
@@ -7,6 +24,7 @@ let whatsAppVersion = 'latest';
 
 const addPrefix = (lines, prefix) => lines.map((line) => prefix + line);
 
+/** Recursively collect all expressions from an AST node (including nested function bodies) */
 const extractAllExpressions = (node) => {
   const expressions = [node];
   const exp = node.expression;
@@ -40,6 +58,10 @@ const extractAllExpressions = (node) => {
 };
 
 
+/**
+ * Fetch WhatsApp Web's JS bundle and extract AST modules containing protobuf definitions.
+ * Identifies modules by looking for `internalSpec` property assignments.
+ */
 async function findAppModules() {
   const ua = {
     headers: {
@@ -54,6 +76,8 @@ async function findAppModules() {
     },
   };
   const baseURL = 'https://web.whatsapp.com';
+
+  // Step 1: Fetch the service worker to extract the current WhatsApp version
   const serviceworker = await request.get(`${baseURL}/sw.js`, ua);
 
   const versions = [
@@ -65,6 +89,7 @@ async function findAppModules() {
   const waVersion = `2.3000.${version}`;
   whatsAppVersion = waVersion;
 
+  // Step 2: Extract the main JS bundle URL from the service worker's importScripts() call
   let bootstrapQRURL = '';
   const clearString = serviceworker.replaceAll('/*BTDS*/', '');
   const URLScript = clearString.match(/(?<=importScripts\(["'])(.*?)(?=["']\);)/g);
@@ -72,6 +97,7 @@ async function findAppModules() {
 
   console.info('Found source JS URL:', bootstrapQRURL);
 
+  // Step 3: Download and parse the full JS bundle
   const qrData = await request.get(bootstrapQRURL, ua);
 
   // This one list of types is so long that it's split into two JavaScript declarations.
@@ -81,12 +107,14 @@ async function findAppModules() {
     'LimitSharing$TriggerType'
   );
 
+  // Step 4: Parse the JS and filter for modules that define protobuf specs
+  // WhatsApp stores proto definitions as `internalSpec` property assignments
   const qrModules = acorn.parse(patchedQrData).body;
-  
+
   const result = qrModules.filter((m) => {
     const expressions = extractAllExpressions(m);
     return expressions?.find(
-      (e) => { 
+      (e) => {
         return e?.left?.property?.name === 'internalSpec'
       }
     );
@@ -94,21 +122,30 @@ async function findAppModules() {
   return result;
 }
 
+/**
+ * Main extraction pipeline:
+ *   1. Fetch and parse WhatsApp's JS bundle to find protobuf modules
+ *   2. Build a map of cross-references between modules (aliases)
+ *   3. Extract identifiers, enum values, and message field specs
+ *   4. Stringify everything into .proto format
+ *   5. Write the final WAProto.proto file
+ */
 (async () => {
+  // Helper: strip "Spec" suffix from identifier names (e.g. "MessageSpec" → "Message")
   const unspecName = (name) =>
     name.endsWith('Spec') ? name.slice(0, -4) : name;
+  // Helper: get the leaf name from a nested "$"-separated name (e.g. "Foo$Bar" → "Bar")
   const unnestName = (name) => name.split('$').slice(-1)[0];
+  // Helper: get the parent nesting path (e.g. "Foo$Bar$Baz" → "Foo$Bar")
   const getNesting = (name) => name.split('$').slice(0, -1).join('$');
   const makeRenameFunc = () => (name) => {
     name = unspecName(name);
-    return name; // .replaceAll('$', '__')
-    //  return renames[name] ?? unnestName(name)
+    return name;
   };
-  // The constructor IDs that can be used for enum types
 
   const modules = await findAppModules();
 
-  // find aliases of cross references between the wanted modules
+  // Phase 1: Find cross-reference aliases between modules
   const modulesInfo = {};
   const moduleIndentationMap = {};
   modules.forEach((module) => {
@@ -136,7 +173,7 @@ async function findAppModules() {
     });
   });
 
-  // find all identifiers and, for enums, their array of values
+  // Phase 2: Extract all identifiers (message/enum names) and their enum values
   for (const mod of modules) {
     const modInfo = modulesInfo[mod.expression.arguments[0].value];
     const rename = makeRenameFunc(mod.expression.arguments[0].value);
@@ -221,7 +258,7 @@ async function findAppModules() {
     });
   }
 
-  // find the contents for all protobuf messages
+  // Phase 3: Extract message field specifications (types, flags, oneofs, cross-refs)
   for (const mod of modules) {
     const modInfo = modulesInfo[mod.expression.arguments[0].value];
     const rename = makeRenameFunc(mod.expression.arguments[0].value);
@@ -368,6 +405,7 @@ async function findAppModules() {
     });
   }
 
+  // Phase 4: Stringify all extracted definitions into .proto format
   const decodedProtoMap = {};
   const spaceIndent = ' '.repeat(4);
   for (const mod of modules) {
@@ -496,6 +534,7 @@ async function findAppModules() {
     }
   }
 
+  // Phase 5: Assemble and write the final .proto file (sorted alphabetically)
   const decodedProto = Object.keys(decodedProtoMap).sort();
   const sortedStr = decodedProto.map((d) => decodedProtoMap[d]).join('\n');
 

@@ -1,13 +1,26 @@
+# Automated WhatsApp Protocol Update
+#
+# WhatsApp doesn't publish their protobuf schema — it's embedded in their
+# minified JavaScript bundles. This workflow reverse-engineers the schema daily
+# by scraping web.whatsapp.com, extracting protobuf definitions from the JS
+# source, regenerating TypeScript bindings, and opening a PR with the changes.
+#
+# Pipeline:
+#   1. Scrape WhatsApp Web JS → extract .proto schema  (proto-extract/)
+#   2. Compile .proto → JS/TS static module            (WAProto/GenerateStatics.sh)
+#   3. Update baileys-version.json with detected ver    (sed)
+#   4. Open PR if anything changed                      (peter-evans/create-pull-request)
+
 name: Update WAProto
 
 on:
   schedule:
-    - cron: '10 1 * * *'
-  workflow_dispatch:
+    - cron: '10 1 * * *'  # Daily at 01:10 UTC
+  workflow_dispatch:       # Allow manual trigger from GitHub UI
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: write       # Push commits to update-proto/stable branch
+  pull-requests: write  # Create/update the automated PR
 
 jobs:
   update-proto:
@@ -27,11 +40,16 @@ jobs:
           corepack enable
           corepack prepare yarn@4.9.2 --activate
 
+      # Install deps for both the main project (yarn) and the proto extractor (npm).
+      # --immutable ensures yarn.lock is not modified (fails if out of sync).
       - name: Install packages
         run: |
           yarn install --immutable
           npm --prefix proto-extract ci
 
+      # Run the proto extractor: scrapes web.whatsapp.com, parses the JS bundle
+      # with acorn, reconstructs protobuf definitions, and writes WAProto/WAProto.proto.
+      # Captures the detected WhatsApp version and source JS URL for later steps.
       - name: Update WAProto.proto
         id: wa_proto_info
         run: |
@@ -41,15 +59,21 @@ jobs:
           echo "wa_version=$WA_VERSION" >> $GITHUB_OUTPUT
           echo "wa_js_url=$WA_JS_URL" >> $GITHUB_OUTPUT
 
+      # Compile WAProto.proto into JavaScript (pbjs) and TypeScript declarations (pbts),
+      # then patch the generated imports for ESM compatibility (fix-imports.js).
       - name: GenerateStatics
         run: yarn gen:protobuf
 
+      # Write the detected WhatsApp version (e.g. "2.3000.12345") as a JSON array
+      # [2, 3000, 12345] so Baileys can identify itself to WhatsApp servers.
       - name: Update baileys-version.json
         run: |
           WA_VERSION="${{steps.wa_proto_info.outputs.wa_version}}"
           WA_NUMBERS=$(echo $WA_VERSION | sed "s/\./, /g")
           echo -e "{\n\t\"version\": [$WA_NUMBERS]\n}" > src/Defaults/baileys-version.json
 
+      # If any files changed, create (or update) a PR on the update-proto/stable branch.
+      # Only includes WAProto/* and baileys-version.json — no other files are committed.
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
