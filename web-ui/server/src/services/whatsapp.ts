@@ -63,9 +63,9 @@ function getBrowserConfig(): WABrowserDescription {
   }
 
   // Fall back to environment variables
-  const platform = process.env.WHATSAPP_CLIENT_PLATFORM || '@TalBeerySec WhatsApp security research client';
-  const browser = process.env.WHATSAPP_CLIENT_BROWSER || 'blabla';
-  const version = process.env.WHATSAPP_CLIENT_VERSION || '1.0.0';
+  const platform = process.env.WHATSAPP_CLIENT_PLATFORM || 'android';
+  const browser = process.env.WHATSAPP_CLIENT_BROWSER || 'ANDROID_PHONE';
+  const version = process.env.WHATSAPP_CLIENT_VERSION || '13';
 
   // Use preset if available
   if (platform in Browsers && typeof Browsers[platform as keyof typeof Browsers] === 'function') {

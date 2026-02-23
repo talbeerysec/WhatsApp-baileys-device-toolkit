@@ -18,7 +18,7 @@ import { Settings as SettingsIcon, Save as SaveIcon } from '@mui/icons-material'
 import { ApiService } from '../services/api';
 
 const SettingsPage: React.FC = () => {
-  const [platform, setPlatform] = useState('ubuntu');
+  const [platform, setPlatform] = useState('android');
   const [browser, setBrowser] = useState('Chrome');
   const [version, setVersion] = useState('');
   const [availablePresets, setAvailablePresets] = useState<string[]>([]);
