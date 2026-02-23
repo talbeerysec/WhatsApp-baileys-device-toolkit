@@ -1846,7 +1846,7 @@ export class WhatsAppService extends EventEmitter {
     if (!messages) return null;
     const msg = messages.array.find((m: any) => m.key?.id === messageId);
     if (!msg) return null;
-    return proto.WebMessageInfo.toJSON(msg as proto.WebMessageInfo);
+    return typeof (msg as any).toJSON === 'function' ? (msg as any).toJSON() : JSON.parse(JSON.stringify(msg));
   }
 
   getRawProtobufLog(jid: string, messageId: string): object | null {

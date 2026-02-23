@@ -27,8 +27,8 @@ export function logProtobufToDisk(
 
 		const filePath = path.join(dir, `${messageId}.json`)
 
-		// Use proto.WebMessageInfo.toJSON for full serialization
-		const jsonData = proto.WebMessageInfo.toJSON(msg as proto.WebMessageInfo)
+		// Use instance toJSON if available, otherwise fall back to JSON round-trip
+		const jsonData = typeof (msg as any).toJSON === 'function' ? (msg as any).toJSON() : JSON.parse(JSON.stringify(msg))
 
 		fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf-8')
 
