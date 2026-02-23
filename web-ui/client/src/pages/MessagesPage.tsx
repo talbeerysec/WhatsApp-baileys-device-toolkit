@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Paper,
@@ -6,15 +6,175 @@ import {
   IconButton,
   CircularProgress,
   Alert,
-  Chip
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Tabs,
+  Tab,
+  Tooltip
 } from '@mui/material';
-import { ArrowBack as BackIcon, DeleteSweep as ClearIcon } from '@mui/icons-material';
+import {
+  ArrowBack as BackIcon,
+  DeleteSweep as ClearIcon,
+  DataObject as DataObjectIcon,
+  Close as CloseIcon
+} from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useWhatsApp } from '../contexts/WhatsAppContext';
 import { useSocket } from '../contexts/SocketContext';
 import { ApiService } from '../services/api';
 import { MessageInfo } from '../../../shared/types/api';
 
+// --- Protobuf Viewer Dialog ---
+interface ProtobufViewerDialogProps {
+  open: boolean;
+  onClose: () => void;
+  jid: string;
+  messageId: string;
+}
+
+const ProtobufViewerDialog: React.FC<ProtobufViewerDialogProps> = ({ open, onClose, jid, messageId }) => {
+  const [tabIndex, setTabIndex] = useState(0);
+  const [storeData, setStoreData] = useState<any>(null);
+  const [rawData, setRawData] = useState<any>(null);
+  const [storeLoading, setStoreLoading] = useState(false);
+  const [rawLoading, setRawLoading] = useState(false);
+  const [storeError, setStoreError] = useState('');
+  const [rawError, setRawError] = useState('');
+
+  useEffect(() => {
+    if (!open || !jid || !messageId) return;
+
+    // Reset state
+    setStoreData(null);
+    setRawData(null);
+    setStoreError('');
+    setRawError('');
+    setStoreLoading(true);
+    setRawLoading(true);
+    setTabIndex(0);
+
+    // Fetch both in parallel
+    ApiService.getMessageProtobuf(jid, messageId)
+      .then((data) => setStoreData(data))
+      .catch((err) => setStoreError(err instanceof Error ? err.message : 'Failed to load store protobuf'))
+      .finally(() => setStoreLoading(false));
+
+    ApiService.getMessageProtobufRaw(jid, messageId)
+      .then((data) => setRawData(data))
+      .catch((err) => setRawError(err instanceof Error ? err.message : 'Raw protobuf log not available for this message'))
+      .finally(() => setRawLoading(false));
+  }, [open, jid, messageId]);
+
+  const renderContent = (data: any, isLoading: boolean, errorMsg: string) => {
+    if (isLoading) {
+      return (
+        <Box display="flex" justifyContent="center" alignItems="center" py={6}>
+          <CircularProgress />
+        </Box>
+      );
+    }
+    if (errorMsg) {
+      return (
+        <Box
+          sx={{
+            backgroundColor: '#1e1e1e',
+            color: '#d4d4d4',
+            fontFamily: 'monospace',
+            fontSize: '0.85rem',
+            p: 2,
+            borderRadius: 1,
+            maxHeight: '60vh',
+            overflow: 'auto',
+          }}
+        >
+          <Typography color="#f48771" fontFamily="monospace" fontSize="0.85rem">
+            {errorMsg}
+          </Typography>
+        </Box>
+      );
+    }
+    if (!data) {
+      return (
+        <Box
+          sx={{
+            backgroundColor: '#1e1e1e',
+            color: '#d4d4d4',
+            fontFamily: 'monospace',
+            fontSize: '0.85rem',
+            p: 2,
+            borderRadius: 1,
+            maxHeight: '60vh',
+            overflow: 'auto',
+          }}
+        >
+          <Typography color="#808080" fontFamily="monospace" fontSize="0.85rem" fontStyle="italic">
+            No data available
+          </Typography>
+        </Box>
+      );
+    }
+    return (
+      <Box
+        component="pre"
+        sx={{
+          backgroundColor: '#1e1e1e',
+          color: '#d4d4d4',
+          fontFamily: '"Fira Code", "Cascadia Code", "JetBrains Mono", "Consolas", monospace',
+          fontSize: '0.8rem',
+          lineHeight: 1.5,
+          p: 2,
+          m: 0,
+          borderRadius: 1,
+          maxHeight: '60vh',
+          overflow: 'auto',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          '&::-webkit-scrollbar': {
+            width: 8,
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: '#1e1e1e',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#555',
+            borderRadius: 4,
+          },
+        }}
+      >
+        {JSON.stringify(data, null, 2)}
+      </Box>
+    );
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+      <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pb: 0 }}>
+        <Typography variant="h6" component="span" sx={{ fontFamily: 'monospace', fontSize: '1rem' }}>
+          Protobuf: {messageId}
+        </Typography>
+        <IconButton onClick={onClose} size="small">
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent sx={{ pt: 0 }}>
+        <Tabs
+          value={tabIndex}
+          onChange={(_, v) => setTabIndex(v)}
+          sx={{ mb: 1, borderBottom: 1, borderColor: 'divider' }}
+        >
+          <Tab label="Store (Clean)" />
+          <Tab label="Raw (Disk)" />
+        </Tabs>
+        {tabIndex === 0 && renderContent(storeData, storeLoading, storeError)}
+        {tabIndex === 1 && renderContent(rawData, rawLoading, rawError)}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+// --- Messages Page ---
 const MessagesPage: React.FC = () => {
   const { jid } = useParams<{ jid: string }>();
   const navigate = useNavigate();
@@ -24,6 +184,19 @@ const MessagesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Protobuf viewer state
+  const [protoDialogOpen, setProtoDialogOpen] = useState(false);
+  const [protoMessageId, setProtoMessageId] = useState('');
+
+  const handleOpenProto = useCallback((messageId: string) => {
+    setProtoMessageId(messageId);
+    setProtoDialogOpen(true);
+  }, []);
+
+  const handleCloseProto = useCallback(() => {
+    setProtoDialogOpen(false);
+  }, []);
 
   const decodedJid = jid ? decodeURIComponent(jid) : '';
 
@@ -176,19 +349,42 @@ const MessagesPage: React.FC = () => {
                 </Typography>
               )}
 
-              {/* Timestamp */}
-              <Typography
-                variant="caption"
-                sx={{
-                  display: 'block',
-                  textAlign: 'right',
-                  mt: 0.25,
-                  opacity: 0.7,
-                  fontSize: '0.65rem',
-                }}
+              {/* Timestamp + Proto button */}
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="flex-end"
+                mt={0.25}
+                gap={0.5}
               >
-                {formatTimestamp(msg.timestamp)}
-              </Typography>
+                <Tooltip title="View Protobuf" arrow>
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenProto(msg.id);
+                    }}
+                    sx={{
+                      p: 0.25,
+                      opacity: 0.4,
+                      transition: 'opacity 0.15s',
+                      '&:hover': { opacity: 1 },
+                      color: msg.fromMe ? 'primary.contrastText' : 'text.secondary',
+                    }}
+                  >
+                    <DataObjectIcon sx={{ fontSize: '0.85rem' }} />
+                  </IconButton>
+                </Tooltip>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    opacity: 0.7,
+                    fontSize: '0.65rem',
+                  }}
+                >
+                  {formatTimestamp(msg.timestamp)}
+                </Typography>
+              </Box>
             </Paper>
           </Box>
         </React.Fragment>
@@ -254,6 +450,14 @@ const MessagesPage: React.FC = () => {
           </>
         )}
       </Box>
+
+      {/* Protobuf Viewer Dialog */}
+      <ProtobufViewerDialog
+        open={protoDialogOpen}
+        onClose={handleCloseProto}
+        jid={decodedJid}
+        messageId={protoMessageId}
+      />
     </Box>
   );
 };

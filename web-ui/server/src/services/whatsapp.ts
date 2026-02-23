@@ -11,6 +11,7 @@ import makeWASocket, {
   generateMessageIDV2,
   generateWAMessageFromContent,
   makeCacheableSignalKeyStore,
+  proto,
   useMultiFileAuthState,
   WASocket,
   WAMessageKey,
@@ -1836,6 +1837,26 @@ export class WhatsAppService extends EventEmitter {
       }
     } else {
       throw new Error('Signal repository not accessible');
+    }
+  }
+
+  getMessageProtobuf(jid: string, messageId: string): object | null {
+    if (!this.store) return null;
+    const messages = this.store.messages[jid];
+    if (!messages) return null;
+    const msg = messages.array.find((m: any) => m.key?.id === messageId);
+    if (!msg) return null;
+    return proto.WebMessageInfo.toJSON(msg as proto.WebMessageInfo);
+  }
+
+  getRawProtobufLog(jid: string, messageId: string): object | null {
+    const safeJid = jid.replace(/[@:]/g, '_');
+    const filePath = path.join('protobuf-logs', safeJid, messageId + '.json');
+    try {
+      const data = fs.readFileSync(filePath, 'utf-8');
+      return JSON.parse(data);
+    } catch {
+      return null;
     }
   }
 

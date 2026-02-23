@@ -56,6 +56,7 @@ import {
 	jidNormalizedUser,
 	S_WHATSAPP_NET
 } from '../WABinary'
+import { logProtobufToDisk } from '../Utils/protobuf-logger'
 import { extractGroupMetadata } from './groups'
 import { makeMessagesSocket } from './messages-send'
 
@@ -862,6 +863,9 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 							await sendReceipt(jid, undefined, [msg.key.id!], 'hist_sync')
 						}
 					}
+
+					// Log raw protobuf to disk before cleanMessage strips viewOnce wrappers
+					logProtobufToDisk(msg, 'protobuf-logs', logger)
 
 					cleanMessage(msg, authState.creds.me!.id)
 

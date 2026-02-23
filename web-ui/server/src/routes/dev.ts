@@ -37,4 +37,70 @@ router.post('/corrupt-message',
   }
 );
 
+// Get protobuf JSON from in-memory store (post-clean)
+router.get('/messages/:jid/:messageId/protobuf',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jid = decodeURIComponent(req.params.jid);
+      const messageId = req.params.messageId;
+      const whatsappService: WhatsAppService = req.app.locals.whatsappService;
+
+      const result = whatsappService.getMessageProtobuf(jid, messageId);
+      if (!result) {
+        return res.status(404).json({
+          success: false,
+          error: 'Message not found in store'
+        } as ApiResponse);
+      }
+
+      const response: ApiResponse = {
+        success: true,
+        data: { source: 'store', protobuf: result }
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error('Get message protobuf error:', error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to get message protobuf'
+      } as ApiResponse);
+    }
+  }
+);
+
+// Get raw protobuf JSON from disk logs (pre-clean)
+router.get('/messages/:jid/:messageId/protobuf-raw',
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const jid = decodeURIComponent(req.params.jid);
+      const messageId = req.params.messageId;
+      const whatsappService: WhatsAppService = req.app.locals.whatsappService;
+
+      const result = whatsappService.getRawProtobufLog(jid, messageId);
+      if (!result) {
+        return res.status(404).json({
+          success: false,
+          error: 'Raw protobuf log not found on disk'
+        } as ApiResponse);
+      }
+
+      const response: ApiResponse = {
+        success: true,
+        data: { source: 'disk', protobuf: result }
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error('Get raw protobuf log error:', error);
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to get raw protobuf log'
+      } as ApiResponse);
+    }
+  }
+);
+
 export default router;

@@ -46,6 +46,21 @@ export namespace proto {
         /** ADVDeviceIdentity deviceType. */
         public deviceType?: (proto.ADVEncryptionType|null);
 
+        /** ADVDeviceIdentity _rawId. */
+        public _rawId?: "rawId";
+
+        /** ADVDeviceIdentity _timestamp. */
+        public _timestamp?: "timestamp";
+
+        /** ADVDeviceIdentity _keyIndex. */
+        public _keyIndex?: "keyIndex";
+
+        /** ADVDeviceIdentity _accountType. */
+        public _accountType?: "accountType";
+
+        /** ADVDeviceIdentity _deviceType. */
+        public _deviceType?: "deviceType";
+
         /**
          * Creates a new ADVDeviceIdentity instance using the specified properties.
          * @param [properties] Properties to set
@@ -173,6 +188,18 @@ export namespace proto {
         /** ADVKeyIndexList accountType. */
         public accountType?: (proto.ADVEncryptionType|null);
 
+        /** ADVKeyIndexList _rawId. */
+        public _rawId?: "rawId";
+
+        /** ADVKeyIndexList _timestamp. */
+        public _timestamp?: "timestamp";
+
+        /** ADVKeyIndexList _currentIndex. */
+        public _currentIndex?: "currentIndex";
+
+        /** ADVKeyIndexList _accountType. */
+        public _accountType?: "accountType";
+
         /**
          * Creates a new ADVKeyIndexList instance using the specified properties.
          * @param [properties] Properties to set
@@ -288,6 +315,18 @@ export namespace proto {
         /** ADVSignedDeviceIdentity deviceSignature. */
         public deviceSignature?: (Uint8Array|null);
 
+        /** ADVSignedDeviceIdentity _details. */
+        public _details?: "details";
+
+        /** ADVSignedDeviceIdentity _accountSignatureKey. */
+        public _accountSignatureKey?: "accountSignatureKey";
+
+        /** ADVSignedDeviceIdentity _accountSignature. */
+        public _accountSignature?: "accountSignature";
+
+        /** ADVSignedDeviceIdentity _deviceSignature. */
+        public _deviceSignature?: "deviceSignature";
+
         /**
          * Creates a new ADVSignedDeviceIdentity instance using the specified properties.
          * @param [properties] Properties to set
@@ -396,6 +435,15 @@ export namespace proto {
 
         /** ADVSignedDeviceIdentityHMAC accountType. */
         public accountType?: (proto.ADVEncryptionType|null);
+
+        /** ADVSignedDeviceIdentityHMAC _details. */
+        public _details?: "details";
+
+        /** ADVSignedDeviceIdentityHMAC _hmac. */
+        public _hmac?: "hmac";
+
+        /** ADVSignedDeviceIdentityHMAC _accountType. */
+        public _accountType?: "accountType";
 
         /**
          * Creates a new ADVSignedDeviceIdentityHMAC instance using the specified properties.
@@ -506,6 +554,15 @@ export namespace proto {
         /** ADVSignedKeyIndexList accountSignatureKey. */
         public accountSignatureKey?: (Uint8Array|null);
 
+        /** ADVSignedKeyIndexList _details. */
+        public _details?: "details";
+
+        /** ADVSignedKeyIndexList _accountSignature. */
+        public _accountSignature?: "accountSignature";
+
+        /** ADVSignedKeyIndexList _accountSignatureKey. */
+        public _accountSignatureKey?: "accountSignatureKey";
+
         /**
          * Creates a new ADVSignedKeyIndexList instance using the specified properties.
          * @param [properties] Properties to set
@@ -614,6 +671,15 @@ export namespace proto {
 
         /** AIQueryFanout timestamp. */
         public timestamp?: (number|Long|null);
+
+        /** AIQueryFanout _messageKey. */
+        public _messageKey?: "messageKey";
+
+        /** AIQueryFanout _message. */
+        public _message?: "message";
+
+        /** AIQueryFanout _timestamp. */
+        public _timestamp?: "timestamp";
 
         /**
          * Creates a new AIQueryFanout instance using the specified properties.
@@ -724,6 +790,12 @@ export namespace proto {
         /** AIRichResponseMessage unifiedResponse. */
         public unifiedResponse?: (proto.AIRichResponseMessage.IAIRichResponseUnifiedResponse|null);
 
+        /** AIRichResponseMessage _messageType. */
+        public _messageType?: "messageType";
+
+        /** AIRichResponseMessage _unifiedResponse. */
+        public _unifiedResponse?: "unifiedResponse";
+
         /**
          * Creates a new AIRichResponseMessage instance using the specified properties.
          * @param [properties] Properties to set
@@ -829,6 +901,9 @@ export namespace proto {
             /** AIRichResponseCodeMetadata codeBlocks. */
             public codeBlocks: proto.AIRichResponseMessage.AIRichResponseCodeMetadata.IAIRichResponseCodeBlock[];
 
+            /** AIRichResponseCodeMetadata _codeLanguage. */
+            public _codeLanguage?: "codeLanguage";
+
             /**
              * Creates a new AIRichResponseCodeMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -933,6 +1008,12 @@ export namespace proto {
 
                 /** AIRichResponseCodeBlock codeContent. */
                 public codeContent?: (string|null);
+
+                /** AIRichResponseCodeBlock _highlightType. */
+                public _highlightType?: "highlightType";
+
+                /** AIRichResponseCodeBlock _codeContent. */
+                public _codeContent?: "codeContent";
 
                 /**
                  * Creates a new AIRichResponseCodeBlock instance using the specified properties.
@@ -1047,6 +1128,9 @@ export namespace proto {
 
             /** AIRichResponseContentItemsMetadata contentType. */
             public contentType?: (proto.AIRichResponseMessage.AIRichResponseContentItemsMetadata.ContentType|null);
+
+            /** AIRichResponseContentItemsMetadata _contentType. */
+            public _contentType?: "contentType";
 
             /**
              * Creates a new AIRichResponseContentItemsMetadata instance using the specified properties.
@@ -1265,6 +1349,18 @@ export namespace proto {
                 /** AIRichResponseReelItem videoUrl. */
                 public videoUrl?: (string|null);
 
+                /** AIRichResponseReelItem _title. */
+                public _title?: "title";
+
+                /** AIRichResponseReelItem _profileIconUrl. */
+                public _profileIconUrl?: "profileIconUrl";
+
+                /** AIRichResponseReelItem _thumbnailUrl. */
+                public _thumbnailUrl?: "thumbnailUrl";
+
+                /** AIRichResponseReelItem _videoUrl. */
+                public _videoUrl?: "videoUrl";
+
                 /**
                  * Creates a new AIRichResponseReelItem instance using the specified properties.
                  * @param [properties] Properties to set
@@ -1387,6 +1483,18 @@ export namespace proto {
             /** AIRichResponseDynamicMetadata loopCount. */
             public loopCount?: (number|null);
 
+            /** AIRichResponseDynamicMetadata _type. */
+            public _type?: "type";
+
+            /** AIRichResponseDynamicMetadata _version. */
+            public _version?: "version";
+
+            /** AIRichResponseDynamicMetadata _url. */
+            public _url?: "url";
+
+            /** AIRichResponseDynamicMetadata _loopCount. */
+            public _loopCount?: "loopCount";
+
             /**
              * Creates a new AIRichResponseDynamicMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -1500,6 +1608,9 @@ export namespace proto {
             /** AIRichResponseGridImageMetadata imageUrls. */
             public imageUrls: proto.AIRichResponseMessage.IAIRichResponseImageURL[];
 
+            /** AIRichResponseGridImageMetadata _gridImageUrl. */
+            public _gridImageUrl?: "gridImageUrl";
+
             /**
              * Creates a new AIRichResponseGridImageMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -1608,6 +1719,15 @@ export namespace proto {
 
             /** AIRichResponseImageURL sourceUrl. */
             public sourceUrl?: (string|null);
+
+            /** AIRichResponseImageURL _imagePreviewUrl. */
+            public _imagePreviewUrl?: "imagePreviewUrl";
+
+            /** AIRichResponseImageURL _imageHighResUrl. */
+            public _imageHighResUrl?: "imageHighResUrl";
+
+            /** AIRichResponseImageURL _sourceUrl. */
+            public _sourceUrl?: "sourceUrl";
 
             /**
              * Creates a new AIRichResponseImageURL instance using the specified properties.
@@ -1724,6 +1844,18 @@ export namespace proto {
             /** AIRichResponseInlineImageMetadata tapLinkUrl. */
             public tapLinkUrl?: (string|null);
 
+            /** AIRichResponseInlineImageMetadata _imageUrl. */
+            public _imageUrl?: "imageUrl";
+
+            /** AIRichResponseInlineImageMetadata _imageText. */
+            public _imageText?: "imageText";
+
+            /** AIRichResponseInlineImageMetadata _alignment. */
+            public _alignment?: "alignment";
+
+            /** AIRichResponseInlineImageMetadata _tapLinkUrl. */
+            public _tapLinkUrl?: "tapLinkUrl";
+
             /**
              * Creates a new AIRichResponseInlineImageMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -1836,6 +1968,9 @@ export namespace proto {
 
             /** AIRichResponseLatexMetadata expressions. */
             public expressions: proto.AIRichResponseMessage.AIRichResponseLatexMetadata.IAIRichResponseLatexExpression[];
+
+            /** AIRichResponseLatexMetadata _text. */
+            public _text?: "text";
 
             /**
              * Creates a new AIRichResponseLatexMetadata instance using the specified properties.
@@ -1984,6 +2119,33 @@ export namespace proto {
                 /** AIRichResponseLatexExpression imageTrailingPadding. */
                 public imageTrailingPadding?: (number|null);
 
+                /** AIRichResponseLatexExpression _latexExpression. */
+                public _latexExpression?: "latexExpression";
+
+                /** AIRichResponseLatexExpression _url. */
+                public _url?: "url";
+
+                /** AIRichResponseLatexExpression _width. */
+                public _width?: "width";
+
+                /** AIRichResponseLatexExpression _height. */
+                public _height?: "height";
+
+                /** AIRichResponseLatexExpression _fontHeight. */
+                public _fontHeight?: "fontHeight";
+
+                /** AIRichResponseLatexExpression _imageTopPadding. */
+                public _imageTopPadding?: "imageTopPadding";
+
+                /** AIRichResponseLatexExpression _imageLeadingPadding. */
+                public _imageLeadingPadding?: "imageLeadingPadding";
+
+                /** AIRichResponseLatexExpression _imageBottomPadding. */
+                public _imageBottomPadding?: "imageBottomPadding";
+
+                /** AIRichResponseLatexExpression _imageTrailingPadding. */
+                public _imageTrailingPadding?: "imageTrailingPadding";
+
                 /**
                  * Creates a new AIRichResponseLatexExpression instance using the specified properties.
                  * @param [properties] Properties to set
@@ -2112,6 +2274,21 @@ export namespace proto {
             /** AIRichResponseMapMetadata showInfoList. */
             public showInfoList?: (boolean|null);
 
+            /** AIRichResponseMapMetadata _centerLatitude. */
+            public _centerLatitude?: "centerLatitude";
+
+            /** AIRichResponseMapMetadata _centerLongitude. */
+            public _centerLongitude?: "centerLongitude";
+
+            /** AIRichResponseMapMetadata _latitudeDelta. */
+            public _latitudeDelta?: "latitudeDelta";
+
+            /** AIRichResponseMapMetadata _longitudeDelta. */
+            public _longitudeDelta?: "longitudeDelta";
+
+            /** AIRichResponseMapMetadata _showInfoList. */
+            public _showInfoList?: "showInfoList";
+
             /**
              * Creates a new AIRichResponseMapMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -2234,6 +2411,21 @@ export namespace proto {
 
                 /** AIRichResponseMapAnnotation body. */
                 public body?: (string|null);
+
+                /** AIRichResponseMapAnnotation _annotationNumber. */
+                public _annotationNumber?: "annotationNumber";
+
+                /** AIRichResponseMapAnnotation _latitude. */
+                public _latitude?: "latitude";
+
+                /** AIRichResponseMapAnnotation _longitude. */
+                public _longitude?: "longitude";
+
+                /** AIRichResponseMapAnnotation _title. */
+                public _title?: "title";
+
+                /** AIRichResponseMapAnnotation _body. */
+                public _body?: "body";
 
                 /**
                  * Creates a new AIRichResponseMapAnnotation instance using the specified properties.
@@ -2392,6 +2584,36 @@ export namespace proto {
 
             /** AIRichResponseSubMessage contentItemsMetadata. */
             public contentItemsMetadata?: (proto.AIRichResponseMessage.IAIRichResponseContentItemsMetadata|null);
+
+            /** AIRichResponseSubMessage _messageType. */
+            public _messageType?: "messageType";
+
+            /** AIRichResponseSubMessage _gridImageMetadata. */
+            public _gridImageMetadata?: "gridImageMetadata";
+
+            /** AIRichResponseSubMessage _messageText. */
+            public _messageText?: "messageText";
+
+            /** AIRichResponseSubMessage _imageMetadata. */
+            public _imageMetadata?: "imageMetadata";
+
+            /** AIRichResponseSubMessage _codeMetadata. */
+            public _codeMetadata?: "codeMetadata";
+
+            /** AIRichResponseSubMessage _tableMetadata. */
+            public _tableMetadata?: "tableMetadata";
+
+            /** AIRichResponseSubMessage _dynamicMetadata. */
+            public _dynamicMetadata?: "dynamicMetadata";
+
+            /** AIRichResponseSubMessage _latexMetadata. */
+            public _latexMetadata?: "latexMetadata";
+
+            /** AIRichResponseSubMessage _mapMetadata. */
+            public _mapMetadata?: "mapMetadata";
+
+            /** AIRichResponseSubMessage _contentItemsMetadata. */
+            public _contentItemsMetadata?: "contentItemsMetadata";
 
             /**
              * Creates a new AIRichResponseSubMessage instance using the specified properties.
@@ -2609,6 +2831,9 @@ export namespace proto {
                 /** AIRichResponseTableRow isHeading. */
                 public isHeading?: (boolean|null);
 
+                /** AIRichResponseTableRow _isHeading. */
+                public _isHeading?: "isHeading";
+
                 /**
                  * Creates a new AIRichResponseTableRow instance using the specified properties.
                  * @param [properties] Properties to set
@@ -2706,6 +2931,9 @@ export namespace proto {
 
             /** AIRichResponseUnifiedResponse data. */
             public data?: (Uint8Array|null);
+
+            /** AIRichResponseUnifiedResponse _data. */
+            public _data?: "data";
 
             /**
              * Creates a new AIRichResponseUnifiedResponse instance using the specified properties.
@@ -2823,6 +3051,18 @@ export namespace proto {
         /** Account isUsernameDeleted. */
         public isUsernameDeleted?: (boolean|null);
 
+        /** Account _lid. */
+        public _lid?: "lid";
+
+        /** Account _username. */
+        public _username?: "username";
+
+        /** Account _countryCode. */
+        public _countryCode?: "countryCode";
+
+        /** Account _isUsernameDeleted. */
+        public _isUsernameDeleted?: "isUsernameDeleted";
+
         /**
          * Creates a new Account instance using the specified properties.
          * @param [properties] Properties to set
@@ -2925,6 +3165,12 @@ export namespace proto {
 
         /** ActionLink buttonTitle. */
         public buttonTitle?: (string|null);
+
+        /** ActionLink _url. */
+        public _url?: "url";
+
+        /** ActionLink _buttonTitle. */
+        public _buttonTitle?: "buttonTitle";
 
         /**
          * Creates a new ActionLink instance using the specified properties.
@@ -3041,6 +3287,18 @@ export namespace proto {
         /** AutoDownloadSettings downloadDocuments. */
         public downloadDocuments?: (boolean|null);
 
+        /** AutoDownloadSettings _downloadImages. */
+        public _downloadImages?: "downloadImages";
+
+        /** AutoDownloadSettings _downloadAudio. */
+        public _downloadAudio?: "downloadAudio";
+
+        /** AutoDownloadSettings _downloadVideo. */
+        public _downloadVideo?: "downloadVideo";
+
+        /** AutoDownloadSettings _downloadDocuments. */
+        public _downloadDocuments?: "downloadDocuments";
+
         /**
          * Creates a new AutoDownloadSettings instance using the specified properties.
          * @param [properties] Properties to set
@@ -3143,6 +3401,12 @@ export namespace proto {
 
         /** AvatarUserSettings password. */
         public password?: (string|null);
+
+        /** AvatarUserSettings _fbid. */
+        public _fbid?: "fbid";
+
+        /** AvatarUserSettings _password. */
+        public _password?: "password";
 
         /**
          * Creates a new AvatarUserSettings instance using the specified properties.
@@ -3265,6 +3529,21 @@ export namespace proto {
         /** BizAccountLinkInfo accountType. */
         public accountType?: (proto.BizAccountLinkInfo.AccountType|null);
 
+        /** BizAccountLinkInfo _whatsappBizAcctFbid. */
+        public _whatsappBizAcctFbid?: "whatsappBizAcctFbid";
+
+        /** BizAccountLinkInfo _whatsappAcctNumber. */
+        public _whatsappAcctNumber?: "whatsappAcctNumber";
+
+        /** BizAccountLinkInfo _issueTime. */
+        public _issueTime?: "issueTime";
+
+        /** BizAccountLinkInfo _hostStorage. */
+        public _hostStorage?: "hostStorage";
+
+        /** BizAccountLinkInfo _accountType. */
+        public _accountType?: "accountType";
+
         /**
          * Creates a new BizAccountLinkInfo instance using the specified properties.
          * @param [properties] Properties to set
@@ -3381,6 +3660,12 @@ export namespace proto {
 
         /** BizAccountPayload bizAcctLinkInfo. */
         public bizAcctLinkInfo?: (Uint8Array|null);
+
+        /** BizAccountPayload _vnameCert. */
+        public _vnameCert?: "vnameCert";
+
+        /** BizAccountPayload _bizAcctLinkInfo. */
+        public _bizAcctLinkInfo?: "bizAcctLinkInfo";
 
         /**
          * Creates a new BizAccountPayload instance using the specified properties.
@@ -3521,6 +3806,30 @@ export namespace proto {
         /** BizIdentityInfo featureControls. */
         public featureControls?: (number|Long|null);
 
+        /** BizIdentityInfo _vlevel. */
+        public _vlevel?: "vlevel";
+
+        /** BizIdentityInfo _vnameCert. */
+        public _vnameCert?: "vnameCert";
+
+        /** BizIdentityInfo _signed. */
+        public _signed?: "signed";
+
+        /** BizIdentityInfo _revoked. */
+        public _revoked?: "revoked";
+
+        /** BizIdentityInfo _hostStorage. */
+        public _hostStorage?: "hostStorage";
+
+        /** BizIdentityInfo _actualActors. */
+        public _actualActors?: "actualActors";
+
+        /** BizIdentityInfo _privacyModeTs. */
+        public _privacyModeTs?: "privacyModeTs";
+
+        /** BizIdentityInfo _featureControls. */
+        public _featureControls?: "featureControls";
+
         /**
          * Creates a new BizIdentityInfo instance using the specified properties.
          * @param [properties] Properties to set
@@ -3646,6 +3955,12 @@ export namespace proto {
         /** BotAgeCollectionMetadata shouldTriggerAgeCollectionOnClient. */
         public shouldTriggerAgeCollectionOnClient?: (boolean|null);
 
+        /** BotAgeCollectionMetadata _ageCollectionEligible. */
+        public _ageCollectionEligible?: "ageCollectionEligible";
+
+        /** BotAgeCollectionMetadata _shouldTriggerAgeCollectionOnClient. */
+        public _shouldTriggerAgeCollectionOnClient?: "shouldTriggerAgeCollectionOnClient";
+
         /**
          * Creates a new BotAgeCollectionMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -3766,6 +4081,21 @@ export namespace proto {
 
         /** BotAvatarMetadata wordCount. */
         public wordCount?: (number|null);
+
+        /** BotAvatarMetadata _sentiment. */
+        public _sentiment?: "sentiment";
+
+        /** BotAvatarMetadata _behaviorGraph. */
+        public _behaviorGraph?: "behaviorGraph";
+
+        /** BotAvatarMetadata _action. */
+        public _action?: "action";
+
+        /** BotAvatarMetadata _intensity. */
+        public _intensity?: "intensity";
+
+        /** BotAvatarMetadata _wordCount. */
+        public _wordCount?: "wordCount";
 
         /**
          * Creates a new BotAvatarMetadata instance using the specified properties.
@@ -4004,6 +4334,9 @@ export namespace proto {
         /** BotImagineMetadata imagineType. */
         public imagineType?: (proto.BotImagineMetadata.ImagineType|null);
 
+        /** BotImagineMetadata _imagineType. */
+        public _imagineType?: "imagineType";
+
         /**
          * Creates a new BotImagineMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -4112,6 +4445,9 @@ export namespace proto {
 
         /** BotLinkedAccount type. */
         public type?: (proto.BotLinkedAccount.BotLinkedAccountType|null);
+
+        /** BotLinkedAccount _type. */
+        public _type?: "type";
 
         /**
          * Creates a new BotLinkedAccount instance using the specified properties.
@@ -4229,6 +4565,12 @@ export namespace proto {
 
         /** BotLinkedAccountsMetadata acErrorCode. */
         public acErrorCode?: (number|null);
+
+        /** BotLinkedAccountsMetadata _acAuthTokens. */
+        public _acAuthTokens?: "acAuthTokens";
+
+        /** BotLinkedAccountsMetadata _acErrorCode. */
+        public _acErrorCode?: "acErrorCode";
 
         /**
          * Creates a new BotLinkedAccountsMetadata instance using the specified properties.
@@ -4363,6 +4705,27 @@ export namespace proto {
         /** BotMediaMetadata orientationType. */
         public orientationType?: (proto.BotMediaMetadata.OrientationType|null);
 
+        /** BotMediaMetadata _fileSha256. */
+        public _fileSha256?: "fileSha256";
+
+        /** BotMediaMetadata _mediaKey. */
+        public _mediaKey?: "mediaKey";
+
+        /** BotMediaMetadata _fileEncSha256. */
+        public _fileEncSha256?: "fileEncSha256";
+
+        /** BotMediaMetadata _directPath. */
+        public _directPath?: "directPath";
+
+        /** BotMediaMetadata _mediaKeyTimestamp. */
+        public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+        /** BotMediaMetadata _mimetype. */
+        public _mimetype?: "mimetype";
+
+        /** BotMediaMetadata _orientationType. */
+        public _orientationType?: "orientationType";
+
         /**
          * Creates a new BotMediaMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -4476,6 +4839,12 @@ export namespace proto {
         /** BotMemoryFact factId. */
         public factId?: (string|null);
 
+        /** BotMemoryFact _fact. */
+        public _fact?: "fact";
+
+        /** BotMemoryFact _factId. */
+        public _factId?: "factId";
+
         /**
          * Creates a new BotMemoryFact instance using the specified properties.
          * @param [properties] Properties to set
@@ -4584,6 +4953,9 @@ export namespace proto {
 
         /** BotMemoryMetadata disclaimer. */
         public disclaimer?: (string|null);
+
+        /** BotMemoryMetadata _disclaimer. */
+        public _disclaimer?: "disclaimer";
 
         /**
          * Creates a new BotMemoryMetadata instance using the specified properties.
@@ -4917,6 +5289,78 @@ export namespace proto {
         /** BotMetadata botAgeCollectionMetadata. */
         public botAgeCollectionMetadata?: (proto.IBotAgeCollectionMetadata|null);
 
+        /** BotMetadata _avatarMetadata. */
+        public _avatarMetadata?: "avatarMetadata";
+
+        /** BotMetadata _personaId. */
+        public _personaId?: "personaId";
+
+        /** BotMetadata _pluginMetadata. */
+        public _pluginMetadata?: "pluginMetadata";
+
+        /** BotMetadata _suggestedPromptMetadata. */
+        public _suggestedPromptMetadata?: "suggestedPromptMetadata";
+
+        /** BotMetadata _invokerJid. */
+        public _invokerJid?: "invokerJid";
+
+        /** BotMetadata _sessionMetadata. */
+        public _sessionMetadata?: "sessionMetadata";
+
+        /** BotMetadata _memuMetadata. */
+        public _memuMetadata?: "memuMetadata";
+
+        /** BotMetadata _timezone. */
+        public _timezone?: "timezone";
+
+        /** BotMetadata _reminderMetadata. */
+        public _reminderMetadata?: "reminderMetadata";
+
+        /** BotMetadata _modelMetadata. */
+        public _modelMetadata?: "modelMetadata";
+
+        /** BotMetadata _messageDisclaimerText. */
+        public _messageDisclaimerText?: "messageDisclaimerText";
+
+        /** BotMetadata _progressIndicatorMetadata. */
+        public _progressIndicatorMetadata?: "progressIndicatorMetadata";
+
+        /** BotMetadata _capabilityMetadata. */
+        public _capabilityMetadata?: "capabilityMetadata";
+
+        /** BotMetadata _imagineMetadata. */
+        public _imagineMetadata?: "imagineMetadata";
+
+        /** BotMetadata _memoryMetadata. */
+        public _memoryMetadata?: "memoryMetadata";
+
+        /** BotMetadata _renderingMetadata. */
+        public _renderingMetadata?: "renderingMetadata";
+
+        /** BotMetadata _botMetricsMetadata. */
+        public _botMetricsMetadata?: "botMetricsMetadata";
+
+        /** BotMetadata _botLinkedAccountsMetadata. */
+        public _botLinkedAccountsMetadata?: "botLinkedAccountsMetadata";
+
+        /** BotMetadata _richResponseSourcesMetadata. */
+        public _richResponseSourcesMetadata?: "richResponseSourcesMetadata";
+
+        /** BotMetadata _aiConversationContext. */
+        public _aiConversationContext?: "aiConversationContext";
+
+        /** BotMetadata _botPromotionMessageMetadata. */
+        public _botPromotionMessageMetadata?: "botPromotionMessageMetadata";
+
+        /** BotMetadata _botModeSelectionMetadata. */
+        public _botModeSelectionMetadata?: "botModeSelectionMetadata";
+
+        /** BotMetadata _botQuotaMetadata. */
+        public _botQuotaMetadata?: "botQuotaMetadata";
+
+        /** BotMetadata _botAgeCollectionMetadata. */
+        public _botAgeCollectionMetadata?: "botAgeCollectionMetadata";
+
         /**
          * Creates a new BotMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -5053,6 +5497,15 @@ export namespace proto {
 
         /** BotMetricsMetadata threadOrigin. */
         public threadOrigin?: (proto.BotMetricsThreadEntryPoint|null);
+
+        /** BotMetricsMetadata _destinationId. */
+        public _destinationId?: "destinationId";
+
+        /** BotMetricsMetadata _destinationEntryPoint. */
+        public _destinationEntryPoint?: "destinationEntryPoint";
+
+        /** BotMetricsMetadata _threadOrigin. */
+        public _threadOrigin?: "threadOrigin";
 
         /**
          * Creates a new BotMetricsMetadata instance using the specified properties.
@@ -5271,6 +5724,12 @@ export namespace proto {
         /** BotModelMetadata premiumModelStatus. */
         public premiumModelStatus?: (proto.BotModelMetadata.PremiumModelStatus|null);
 
+        /** BotModelMetadata _modelType. */
+        public _modelType?: "modelType";
+
+        /** BotModelMetadata _premiumModelStatus. */
+        public _premiumModelStatus?: "premiumModelStatus";
+
         /**
          * Creates a new BotModelMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -5451,6 +5910,42 @@ export namespace proto {
         /** BotPluginMetadata faviconCdnUrl. */
         public faviconCdnUrl?: (string|null);
 
+        /** BotPluginMetadata _provider. */
+        public _provider?: "provider";
+
+        /** BotPluginMetadata _pluginType. */
+        public _pluginType?: "pluginType";
+
+        /** BotPluginMetadata _thumbnailCdnUrl. */
+        public _thumbnailCdnUrl?: "thumbnailCdnUrl";
+
+        /** BotPluginMetadata _profilePhotoCdnUrl. */
+        public _profilePhotoCdnUrl?: "profilePhotoCdnUrl";
+
+        /** BotPluginMetadata _searchProviderUrl. */
+        public _searchProviderUrl?: "searchProviderUrl";
+
+        /** BotPluginMetadata _referenceIndex. */
+        public _referenceIndex?: "referenceIndex";
+
+        /** BotPluginMetadata _expectedLinksCount. */
+        public _expectedLinksCount?: "expectedLinksCount";
+
+        /** BotPluginMetadata _searchQuery. */
+        public _searchQuery?: "searchQuery";
+
+        /** BotPluginMetadata _parentPluginMessageKey. */
+        public _parentPluginMessageKey?: "parentPluginMessageKey";
+
+        /** BotPluginMetadata _deprecatedField. */
+        public _deprecatedField?: "deprecatedField";
+
+        /** BotPluginMetadata _parentPluginType. */
+        public _parentPluginType?: "parentPluginType";
+
+        /** BotPluginMetadata _faviconCdnUrl. */
+        public _faviconCdnUrl?: "faviconCdnUrl";
+
         /**
          * Creates a new BotPluginMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -5571,6 +6066,9 @@ export namespace proto {
 
         /** BotProgressIndicatorMetadata stepsMetadata. */
         public stepsMetadata: proto.BotProgressIndicatorMetadata.IBotPlanningStepMetadata[];
+
+        /** BotProgressIndicatorMetadata _progressDescription. */
+        public _progressDescription?: "progressDescription";
 
         /**
          * Creates a new BotProgressIndicatorMetadata instance using the specified properties.
@@ -5707,6 +6205,21 @@ export namespace proto {
             /** BotPlanningStepMetadata sections. */
             public sections: proto.BotProgressIndicatorMetadata.BotPlanningStepMetadata.IBotPlanningStepSectionMetadata[];
 
+            /** BotPlanningStepMetadata _statusTitle. */
+            public _statusTitle?: "statusTitle";
+
+            /** BotPlanningStepMetadata _statusBody. */
+            public _statusBody?: "statusBody";
+
+            /** BotPlanningStepMetadata _status. */
+            public _status?: "status";
+
+            /** BotPlanningStepMetadata _isReasoning. */
+            public _isReasoning?: "isReasoning";
+
+            /** BotPlanningStepMetadata _isEnhancedSearch. */
+            public _isEnhancedSearch?: "isEnhancedSearch";
+
             /**
              * Creates a new BotPlanningStepMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -5824,6 +6337,18 @@ export namespace proto {
                 /** BotPlanningSearchSourceMetadata favIconUrl. */
                 public favIconUrl?: (string|null);
 
+                /** BotPlanningSearchSourceMetadata _title. */
+                public _title?: "title";
+
+                /** BotPlanningSearchSourceMetadata _provider. */
+                public _provider?: "provider";
+
+                /** BotPlanningSearchSourceMetadata _sourceUrl. */
+                public _sourceUrl?: "sourceUrl";
+
+                /** BotPlanningSearchSourceMetadata _favIconUrl. */
+                public _favIconUrl?: "favIconUrl";
+
                 /**
                  * Creates a new BotPlanningSearchSourceMetadata instance using the specified properties.
                  * @param [properties] Properties to set
@@ -5932,6 +6457,15 @@ export namespace proto {
 
                 /** BotPlanningSearchSourcesMetadata sourceUrl. */
                 public sourceUrl?: (string|null);
+
+                /** BotPlanningSearchSourcesMetadata _sourceTitle. */
+                public _sourceTitle?: "sourceTitle";
+
+                /** BotPlanningSearchSourcesMetadata _provider. */
+                public _provider?: "provider";
+
+                /** BotPlanningSearchSourcesMetadata _sourceUrl. */
+                public _sourceUrl?: "sourceUrl";
 
                 /**
                  * Creates a new BotPlanningSearchSourcesMetadata instance using the specified properties.
@@ -6052,6 +6586,12 @@ export namespace proto {
 
                 /** BotPlanningStepSectionMetadata sourcesMetadata. */
                 public sourcesMetadata: proto.BotProgressIndicatorMetadata.BotPlanningStepMetadata.IBotPlanningSearchSourceMetadata[];
+
+                /** BotPlanningStepSectionMetadata _sectionTitle. */
+                public _sectionTitle?: "sectionTitle";
+
+                /** BotPlanningStepSectionMetadata _sectionBody. */
+                public _sectionBody?: "sectionBody";
 
                 /**
                  * Creates a new BotPlanningStepSectionMetadata instance using the specified properties.
@@ -6174,6 +6714,12 @@ export namespace proto {
         /** BotPromotionMessageMetadata buttonTitle. */
         public buttonTitle?: (string|null);
 
+        /** BotPromotionMessageMetadata _promotionType. */
+        public _promotionType?: "promotionType";
+
+        /** BotPromotionMessageMetadata _buttonTitle. */
+        public _buttonTitle?: "buttonTitle";
+
         /**
          * Creates a new BotPromotionMessageMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -6285,6 +6831,12 @@ export namespace proto {
 
         /** BotPromptSuggestion promptId. */
         public promptId?: (string|null);
+
+        /** BotPromptSuggestion _prompt. */
+        public _prompt?: "prompt";
+
+        /** BotPromptSuggestion _promptId. */
+        public _promptId?: "promptId";
 
         /**
          * Creates a new BotPromptSuggestion instance using the specified properties.
@@ -6591,6 +7143,15 @@ export namespace proto {
             /** BotFeatureQuotaMetadata expirationTimestamp. */
             public expirationTimestamp?: (number|Long|null);
 
+            /** BotFeatureQuotaMetadata _featureType. */
+            public _featureType?: "featureType";
+
+            /** BotFeatureQuotaMetadata _remainingQuota. */
+            public _remainingQuota?: "remainingQuota";
+
+            /** BotFeatureQuotaMetadata _expirationTimestamp. */
+            public _expirationTimestamp?: "expirationTimestamp";
+
             /**
              * Creates a new BotFeatureQuotaMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -6721,6 +7282,21 @@ export namespace proto {
 
         /** BotReminderMetadata frequency. */
         public frequency?: (proto.BotReminderMetadata.ReminderFrequency|null);
+
+        /** BotReminderMetadata _requestMessageKey. */
+        public _requestMessageKey?: "requestMessageKey";
+
+        /** BotReminderMetadata _action. */
+        public _action?: "action";
+
+        /** BotReminderMetadata _name. */
+        public _name?: "name";
+
+        /** BotReminderMetadata _nextTriggerTimestamp. */
+        public _nextTriggerTimestamp?: "nextTriggerTimestamp";
+
+        /** BotReminderMetadata _frequency. */
+        public _frequency?: "frequency";
 
         /**
          * Creates a new BotReminderMetadata instance using the specified properties.
@@ -6944,6 +7520,9 @@ export namespace proto {
             /** Keyword associatedPrompts. */
             public associatedPrompts: string[];
 
+            /** Keyword _value. */
+            public _value?: "value";
+
             /**
              * Creates a new Keyword instance using the specified properties.
              * @param [properties] Properties to set
@@ -7047,6 +7626,12 @@ export namespace proto {
 
         /** BotSessionMetadata sessionSource. */
         public sessionSource?: (proto.BotSessionSource|null);
+
+        /** BotSessionMetadata _sessionId. */
+        public _sessionId?: "sessionId";
+
+        /** BotSessionMetadata _sessionSource. */
+        public _sessionSource?: "sessionSource";
 
         /**
          * Creates a new BotSessionMetadata instance using the specified properties.
@@ -7285,6 +7870,24 @@ export namespace proto {
             /** BotSourceItem citationNumber. */
             public citationNumber?: (number|null);
 
+            /** BotSourceItem _provider. */
+            public _provider?: "provider";
+
+            /** BotSourceItem _thumbnailCdnUrl. */
+            public _thumbnailCdnUrl?: "thumbnailCdnUrl";
+
+            /** BotSourceItem _sourceProviderUrl. */
+            public _sourceProviderUrl?: "sourceProviderUrl";
+
+            /** BotSourceItem _sourceQuery. */
+            public _sourceQuery?: "sourceQuery";
+
+            /** BotSourceItem _faviconCdnUrl. */
+            public _faviconCdnUrl?: "faviconCdnUrl";
+
+            /** BotSourceItem _citationNumber. */
+            public _citationNumber?: "citationNumber";
+
             /**
              * Creates a new BotSourceItem instance using the specified properties.
              * @param [properties] Properties to set
@@ -7411,6 +8014,15 @@ export namespace proto {
 
         /** BotSuggestedPromptMetadata selectedPromptId. */
         public selectedPromptId?: (string|null);
+
+        /** BotSuggestedPromptMetadata _selectedPromptIndex. */
+        public _selectedPromptIndex?: "selectedPromptIndex";
+
+        /** BotSuggestedPromptMetadata _promptSuggestions. */
+        public _promptSuggestions?: "promptSuggestions";
+
+        /** BotSuggestedPromptMetadata _selectedPromptId. */
+        public _selectedPromptId?: "selectedPromptId";
 
         /**
          * Creates a new BotSuggestedPromptMetadata instance using the specified properties.
@@ -7593,6 +8205,48 @@ export namespace proto {
         /** CallLogRecord callType. */
         public callType?: (proto.CallLogRecord.CallType|null);
 
+        /** CallLogRecord _callResult. */
+        public _callResult?: "callResult";
+
+        /** CallLogRecord _isDndMode. */
+        public _isDndMode?: "isDndMode";
+
+        /** CallLogRecord _silenceReason. */
+        public _silenceReason?: "silenceReason";
+
+        /** CallLogRecord _duration. */
+        public _duration?: "duration";
+
+        /** CallLogRecord _startTime. */
+        public _startTime?: "startTime";
+
+        /** CallLogRecord _isIncoming. */
+        public _isIncoming?: "isIncoming";
+
+        /** CallLogRecord _isVideo. */
+        public _isVideo?: "isVideo";
+
+        /** CallLogRecord _isCallLink. */
+        public _isCallLink?: "isCallLink";
+
+        /** CallLogRecord _callLinkToken. */
+        public _callLinkToken?: "callLinkToken";
+
+        /** CallLogRecord _scheduledCallId. */
+        public _scheduledCallId?: "scheduledCallId";
+
+        /** CallLogRecord _callId. */
+        public _callId?: "callId";
+
+        /** CallLogRecord _callCreatorJid. */
+        public _callCreatorJid?: "callCreatorJid";
+
+        /** CallLogRecord _groupJid. */
+        public _groupJid?: "groupJid";
+
+        /** CallLogRecord _callType. */
+        public _callType?: "callType";
+
         /**
          * Creates a new CallLogRecord instance using the specified properties.
          * @param [properties] Properties to set
@@ -7720,6 +8374,12 @@ export namespace proto {
             /** ParticipantInfo callResult. */
             public callResult?: (proto.CallLogRecord.CallResult|null);
 
+            /** ParticipantInfo _userJid. */
+            public _userJid?: "userJid";
+
+            /** ParticipantInfo _callResult. */
+            public _callResult?: "callResult";
+
             /**
              * Creates a new ParticipantInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -7832,6 +8492,12 @@ export namespace proto {
         /** CertChain intermediate. */
         public intermediate?: (proto.CertChain.INoiseCertificate|null);
 
+        /** CertChain _leaf. */
+        public _leaf?: "leaf";
+
+        /** CertChain _intermediate. */
+        public _intermediate?: "intermediate";
+
         /**
          * Creates a new CertChain instance using the specified properties.
          * @param [properties] Properties to set
@@ -7936,6 +8602,12 @@ export namespace proto {
 
             /** NoiseCertificate signature. */
             public signature?: (Uint8Array|null);
+
+            /** NoiseCertificate _details. */
+            public _details?: "details";
+
+            /** NoiseCertificate _signature. */
+            public _signature?: "signature";
 
             /**
              * Creates a new NoiseCertificate instance using the specified properties.
@@ -8060,6 +8732,21 @@ export namespace proto {
                 /** Details notAfter. */
                 public notAfter?: (number|Long|null);
 
+                /** Details _serial. */
+                public _serial?: "serial";
+
+                /** Details _issuerSerial. */
+                public _issuerSerial?: "issuerSerial";
+
+                /** Details _key. */
+                public _key?: "key";
+
+                /** Details _notBefore. */
+                public _notBefore?: "notBefore";
+
+                /** Details _notAfter. */
+                public _notAfter?: "notAfter";
+
                 /**
                  * Creates a new Details instance using the specified properties.
                  * @param [properties] Properties to set
@@ -8165,6 +8852,12 @@ export namespace proto {
         /** ChatLockSettings secretCode. */
         public secretCode?: (proto.IUserPassword|null);
 
+        /** ChatLockSettings _hideLockedChats. */
+        public _hideLockedChats?: "hideLockedChats";
+
+        /** ChatLockSettings _secretCode. */
+        public _secretCode?: "secretCode";
+
         /**
          * Creates a new ChatLockSettings instance using the specified properties.
          * @param [properties] Properties to set
@@ -8261,6 +8954,9 @@ export namespace proto {
 
         /** ChatRowOpaqueData draftMessage. */
         public draftMessage?: (proto.ChatRowOpaqueData.IDraftMessage|null);
+
+        /** ChatRowOpaqueData _draftMessage. */
+        public _draftMessage?: "draftMessage";
 
         /**
          * Creates a new ChatRowOpaqueData instance using the specified properties.
@@ -8384,6 +9080,21 @@ export namespace proto {
 
             /** DraftMessage timestamp. */
             public timestamp?: (number|Long|null);
+
+            /** DraftMessage _text. */
+            public _text?: "text";
+
+            /** DraftMessage _omittedUrl. */
+            public _omittedUrl?: "omittedUrl";
+
+            /** DraftMessage _ctwaContextLinkData. */
+            public _ctwaContextLinkData?: "ctwaContextLinkData";
+
+            /** DraftMessage _ctwaContext. */
+            public _ctwaContext?: "ctwaContext";
+
+            /** DraftMessage _timestamp. */
+            public _timestamp?: "timestamp";
 
             /**
              * Creates a new DraftMessage instance using the specified properties.
@@ -8550,6 +9261,42 @@ export namespace proto {
                 /** CtwaContextData isSuspiciousLink. */
                 public isSuspiciousLink?: (boolean|null);
 
+                /** CtwaContextData _conversionSource. */
+                public _conversionSource?: "conversionSource";
+
+                /** CtwaContextData _conversionData. */
+                public _conversionData?: "conversionData";
+
+                /** CtwaContextData _sourceUrl. */
+                public _sourceUrl?: "sourceUrl";
+
+                /** CtwaContextData _sourceId. */
+                public _sourceId?: "sourceId";
+
+                /** CtwaContextData _sourceType. */
+                public _sourceType?: "sourceType";
+
+                /** CtwaContextData _title. */
+                public _title?: "title";
+
+                /** CtwaContextData _description. */
+                public _description?: "description";
+
+                /** CtwaContextData _thumbnail. */
+                public _thumbnail?: "thumbnail";
+
+                /** CtwaContextData _thumbnailUrl. */
+                public _thumbnailUrl?: "thumbnailUrl";
+
+                /** CtwaContextData _mediaType. */
+                public _mediaType?: "mediaType";
+
+                /** CtwaContextData _mediaUrl. */
+                public _mediaUrl?: "mediaUrl";
+
+                /** CtwaContextData _isSuspiciousLink. */
+                public _isSuspiciousLink?: "isSuspiciousLink";
+
                 /**
                  * Creates a new CtwaContextData instance using the specified properties.
                  * @param [properties] Properties to set
@@ -8674,6 +9421,18 @@ export namespace proto {
 
                 /** CtwaContextLinkData phone. */
                 public phone?: (string|null);
+
+                /** CtwaContextLinkData _context. */
+                public _context?: "context";
+
+                /** CtwaContextLinkData _sourceUrl. */
+                public _sourceUrl?: "sourceUrl";
+
+                /** CtwaContextLinkData _icebreaker. */
+                public _icebreaker?: "icebreaker";
+
+                /** CtwaContextLinkData _phone. */
+                public _phone?: "phone";
 
                 /**
                  * Creates a new CtwaContextLinkData instance using the specified properties.
@@ -8894,6 +9653,12 @@ export namespace proto {
 
         /** ClientPairingProps isSyncdPureLidSession. */
         public isSyncdPureLidSession?: (boolean|null);
+
+        /** ClientPairingProps _isChatDbLidMigrated. */
+        public _isChatDbLidMigrated?: "isChatDbLidMigrated";
+
+        /** ClientPairingProps _isSyncdPureLidSession. */
+        public _isSyncdPureLidSession?: "isSyncdPureLidSession";
 
         /**
          * Creates a new ClientPairingProps instance using the specified properties.
@@ -9166,6 +9931,93 @@ export namespace proto {
         /** ClientPayload accountType. */
         public accountType?: (proto.ClientPayload.AccountType|null);
 
+        /** ClientPayload _username. */
+        public _username?: "username";
+
+        /** ClientPayload _passive. */
+        public _passive?: "passive";
+
+        /** ClientPayload _userAgent. */
+        public _userAgent?: "userAgent";
+
+        /** ClientPayload _webInfo. */
+        public _webInfo?: "webInfo";
+
+        /** ClientPayload _pushName. */
+        public _pushName?: "pushName";
+
+        /** ClientPayload _sessionId. */
+        public _sessionId?: "sessionId";
+
+        /** ClientPayload _shortConnect. */
+        public _shortConnect?: "shortConnect";
+
+        /** ClientPayload _connectType. */
+        public _connectType?: "connectType";
+
+        /** ClientPayload _connectReason. */
+        public _connectReason?: "connectReason";
+
+        /** ClientPayload _dnsSource. */
+        public _dnsSource?: "dnsSource";
+
+        /** ClientPayload _connectAttemptCount. */
+        public _connectAttemptCount?: "connectAttemptCount";
+
+        /** ClientPayload _device. */
+        public _device?: "device";
+
+        /** ClientPayload _devicePairingData. */
+        public _devicePairingData?: "devicePairingData";
+
+        /** ClientPayload _product. */
+        public _product?: "product";
+
+        /** ClientPayload _fbCat. */
+        public _fbCat?: "fbCat";
+
+        /** ClientPayload _fbUserAgent. */
+        public _fbUserAgent?: "fbUserAgent";
+
+        /** ClientPayload _oc. */
+        public _oc?: "oc";
+
+        /** ClientPayload _lc. */
+        public _lc?: "lc";
+
+        /** ClientPayload _iosAppExtension. */
+        public _iosAppExtension?: "iosAppExtension";
+
+        /** ClientPayload _fbAppId. */
+        public _fbAppId?: "fbAppId";
+
+        /** ClientPayload _fbDeviceId. */
+        public _fbDeviceId?: "fbDeviceId";
+
+        /** ClientPayload _pull. */
+        public _pull?: "pull";
+
+        /** ClientPayload _paddingBytes. */
+        public _paddingBytes?: "paddingBytes";
+
+        /** ClientPayload _yearClass. */
+        public _yearClass?: "yearClass";
+
+        /** ClientPayload _memClass. */
+        public _memClass?: "memClass";
+
+        /** ClientPayload _interopData. */
+        public _interopData?: "interopData";
+
+        /** ClientPayload _trafficAnonymization. */
+        public _trafficAnonymization?: "trafficAnonymization";
+
+        /** ClientPayload _lidDbMigrated. */
+        public _lidDbMigrated?: "lidDbMigrated";
+
+        /** ClientPayload _accountType. */
+        public _accountType?: "accountType";
+
         /**
          * Creates a new ClientPayload instance using the specified properties.
          * @param [properties] Properties to set
@@ -9306,6 +10158,12 @@ export namespace proto {
 
             /** DNSSource appCached. */
             public appCached?: (boolean|null);
+
+            /** DNSSource _dnsMethod. */
+            public _dnsMethod?: "dnsMethod";
+
+            /** DNSSource _appCached. */
+            public _appCached?: "appCached";
 
             /**
              * Creates a new DNSSource instance using the specified properties.
@@ -9459,6 +10317,30 @@ export namespace proto {
             /** DevicePairingRegistrationData deviceProps. */
             public deviceProps?: (Uint8Array|null);
 
+            /** DevicePairingRegistrationData _eRegid. */
+            public _eRegid?: "eRegid";
+
+            /** DevicePairingRegistrationData _eKeytype. */
+            public _eKeytype?: "eKeytype";
+
+            /** DevicePairingRegistrationData _eIdent. */
+            public _eIdent?: "eIdent";
+
+            /** DevicePairingRegistrationData _eSkeyId. */
+            public _eSkeyId?: "eSkeyId";
+
+            /** DevicePairingRegistrationData _eSkeyVal. */
+            public _eSkeyVal?: "eSkeyVal";
+
+            /** DevicePairingRegistrationData _eSkeySig. */
+            public _eSkeySig?: "eSkeySig";
+
+            /** DevicePairingRegistrationData _buildHash. */
+            public _buildHash?: "buildHash";
+
+            /** DevicePairingRegistrationData _deviceProps. */
+            public _deviceProps?: "deviceProps";
+
             /**
              * Creates a new DevicePairingRegistrationData instance using the specified properties.
              * @param [properties] Properties to set
@@ -9574,6 +10456,15 @@ export namespace proto {
 
             /** InteropData enableReadReceipts. */
             public enableReadReceipts?: (boolean|null);
+
+            /** InteropData _accountId. */
+            public _accountId?: "accountId";
+
+            /** InteropData _token. */
+            public _token?: "token";
+
+            /** InteropData _enableReadReceipts. */
+            public _enableReadReceipts?: "enableReadReceipts";
 
             /**
              * Creates a new InteropData instance using the specified properties.
@@ -9777,6 +10668,54 @@ export namespace proto {
             /** UserAgent deviceModelType. */
             public deviceModelType?: (string|null);
 
+            /** UserAgent _platform. */
+            public _platform?: "platform";
+
+            /** UserAgent _appVersion. */
+            public _appVersion?: "appVersion";
+
+            /** UserAgent _mcc. */
+            public _mcc?: "mcc";
+
+            /** UserAgent _mnc. */
+            public _mnc?: "mnc";
+
+            /** UserAgent _osVersion. */
+            public _osVersion?: "osVersion";
+
+            /** UserAgent _manufacturer. */
+            public _manufacturer?: "manufacturer";
+
+            /** UserAgent _device. */
+            public _device?: "device";
+
+            /** UserAgent _osBuildNumber. */
+            public _osBuildNumber?: "osBuildNumber";
+
+            /** UserAgent _phoneId. */
+            public _phoneId?: "phoneId";
+
+            /** UserAgent _releaseChannel. */
+            public _releaseChannel?: "releaseChannel";
+
+            /** UserAgent _localeLanguageIso6391. */
+            public _localeLanguageIso6391?: "localeLanguageIso6391";
+
+            /** UserAgent _localeCountryIso31661Alpha2. */
+            public _localeCountryIso31661Alpha2?: "localeCountryIso31661Alpha2";
+
+            /** UserAgent _deviceBoard. */
+            public _deviceBoard?: "deviceBoard";
+
+            /** UserAgent _deviceExpId. */
+            public _deviceExpId?: "deviceExpId";
+
+            /** UserAgent _deviceType. */
+            public _deviceType?: "deviceType";
+
+            /** UserAgent _deviceModelType. */
+            public _deviceModelType?: "deviceModelType";
+
             /**
              * Creates a new UserAgent instance using the specified properties.
              * @param [properties] Properties to set
@@ -9899,6 +10838,21 @@ export namespace proto {
 
                 /** AppVersion quinary. */
                 public quinary?: (number|null);
+
+                /** AppVersion _primary. */
+                public _primary?: "primary";
+
+                /** AppVersion _secondary. */
+                public _secondary?: "secondary";
+
+                /** AppVersion _tertiary. */
+                public _tertiary?: "tertiary";
+
+                /** AppVersion _quaternary. */
+                public _quaternary?: "quaternary";
+
+                /** AppVersion _quinary. */
+                public _quinary?: "quinary";
 
                 /**
                  * Creates a new AppVersion instance using the specified properties.
@@ -10073,6 +11027,18 @@ export namespace proto {
             /** WebInfo webSubPlatform. */
             public webSubPlatform?: (proto.ClientPayload.WebInfo.WebSubPlatform|null);
 
+            /** WebInfo _refToken. */
+            public _refToken?: "refToken";
+
+            /** WebInfo _version. */
+            public _version?: "version";
+
+            /** WebInfo _webdPayload. */
+            public _webdPayload?: "webdPayload";
+
+            /** WebInfo _webSubPlatform. */
+            public _webSubPlatform?: "webSubPlatform";
+
             /**
              * Creates a new WebInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -10242,6 +11208,39 @@ export namespace proto {
                 /** WebdPayload features. */
                 public features?: (Uint8Array|null);
 
+                /** WebdPayload _usesParticipantInKey. */
+                public _usesParticipantInKey?: "usesParticipantInKey";
+
+                /** WebdPayload _supportsStarredMessages. */
+                public _supportsStarredMessages?: "supportsStarredMessages";
+
+                /** WebdPayload _supportsDocumentMessages. */
+                public _supportsDocumentMessages?: "supportsDocumentMessages";
+
+                /** WebdPayload _supportsUrlMessages. */
+                public _supportsUrlMessages?: "supportsUrlMessages";
+
+                /** WebdPayload _supportsMediaRetry. */
+                public _supportsMediaRetry?: "supportsMediaRetry";
+
+                /** WebdPayload _supportsE2EImage. */
+                public _supportsE2EImage?: "supportsE2EImage";
+
+                /** WebdPayload _supportsE2EVideo. */
+                public _supportsE2EVideo?: "supportsE2EVideo";
+
+                /** WebdPayload _supportsE2EAudio. */
+                public _supportsE2EAudio?: "supportsE2EAudio";
+
+                /** WebdPayload _supportsE2EDocument. */
+                public _supportsE2EDocument?: "supportsE2EDocument";
+
+                /** WebdPayload _documentTypes. */
+                public _documentTypes?: "documentTypes";
+
+                /** WebdPayload _features. */
+                public _features?: "features";
+
                 /**
                  * Creates a new WebdPayload instance using the specified properties.
                  * @param [properties] Properties to set
@@ -10347,6 +11346,12 @@ export namespace proto {
         /** CommentMetadata replyCount. */
         public replyCount?: (number|null);
 
+        /** CommentMetadata _commentParentKey. */
+        public _commentParentKey?: "commentParentKey";
+
+        /** CommentMetadata _replyCount. */
+        public _replyCount?: "replyCount";
+
         /**
          * Creates a new CommentMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -10443,6 +11448,9 @@ export namespace proto {
 
         /** CompanionCommitment hash. */
         public hash?: (Uint8Array|null);
+
+        /** CompanionCommitment _hash. */
+        public _hash?: "hash";
 
         /**
          * Creates a new CompanionCommitment instance using the specified properties.
@@ -10553,6 +11561,15 @@ export namespace proto {
         /** CompanionEphemeralIdentity ref. */
         public ref?: (string|null);
 
+        /** CompanionEphemeralIdentity _publicKey. */
+        public _publicKey?: "publicKey";
+
+        /** CompanionEphemeralIdentity _deviceType. */
+        public _deviceType?: "deviceType";
+
+        /** CompanionEphemeralIdentity _ref. */
+        public _ref?: "ref";
+
         /**
          * Creates a new CompanionEphemeralIdentity instance using the specified properties.
          * @param [properties] Properties to set
@@ -10655,6 +11672,9 @@ export namespace proto {
 
         /** Config version. */
         public version?: (number|null);
+
+        /** Config _version. */
+        public _version?: "version";
 
         /**
          * Creates a new Config instance using the specified properties.
@@ -11029,6 +12049,141 @@ export namespace proto {
         /** ContextInfo statusSourceType. */
         public statusSourceType?: (proto.ContextInfo.StatusSourceType|null);
 
+        /** ContextInfo _stanzaId. */
+        public _stanzaId?: "stanzaId";
+
+        /** ContextInfo _participant. */
+        public _participant?: "participant";
+
+        /** ContextInfo _quotedMessage. */
+        public _quotedMessage?: "quotedMessage";
+
+        /** ContextInfo _remoteJid. */
+        public _remoteJid?: "remoteJid";
+
+        /** ContextInfo _conversionSource. */
+        public _conversionSource?: "conversionSource";
+
+        /** ContextInfo _conversionData. */
+        public _conversionData?: "conversionData";
+
+        /** ContextInfo _conversionDelaySeconds. */
+        public _conversionDelaySeconds?: "conversionDelaySeconds";
+
+        /** ContextInfo _forwardingScore. */
+        public _forwardingScore?: "forwardingScore";
+
+        /** ContextInfo _isForwarded. */
+        public _isForwarded?: "isForwarded";
+
+        /** ContextInfo _quotedAd. */
+        public _quotedAd?: "quotedAd";
+
+        /** ContextInfo _placeholderKey. */
+        public _placeholderKey?: "placeholderKey";
+
+        /** ContextInfo _expiration. */
+        public _expiration?: "expiration";
+
+        /** ContextInfo _ephemeralSettingTimestamp. */
+        public _ephemeralSettingTimestamp?: "ephemeralSettingTimestamp";
+
+        /** ContextInfo _ephemeralSharedSecret. */
+        public _ephemeralSharedSecret?: "ephemeralSharedSecret";
+
+        /** ContextInfo _externalAdReply. */
+        public _externalAdReply?: "externalAdReply";
+
+        /** ContextInfo _entryPointConversionSource. */
+        public _entryPointConversionSource?: "entryPointConversionSource";
+
+        /** ContextInfo _entryPointConversionApp. */
+        public _entryPointConversionApp?: "entryPointConversionApp";
+
+        /** ContextInfo _entryPointConversionDelaySeconds. */
+        public _entryPointConversionDelaySeconds?: "entryPointConversionDelaySeconds";
+
+        /** ContextInfo _disappearingMode. */
+        public _disappearingMode?: "disappearingMode";
+
+        /** ContextInfo _actionLink. */
+        public _actionLink?: "actionLink";
+
+        /** ContextInfo _groupSubject. */
+        public _groupSubject?: "groupSubject";
+
+        /** ContextInfo _parentGroupJid. */
+        public _parentGroupJid?: "parentGroupJid";
+
+        /** ContextInfo _trustBannerType. */
+        public _trustBannerType?: "trustBannerType";
+
+        /** ContextInfo _trustBannerAction. */
+        public _trustBannerAction?: "trustBannerAction";
+
+        /** ContextInfo _isSampled. */
+        public _isSampled?: "isSampled";
+
+        /** ContextInfo _utm. */
+        public _utm?: "utm";
+
+        /** ContextInfo _forwardedNewsletterMessageInfo. */
+        public _forwardedNewsletterMessageInfo?: "forwardedNewsletterMessageInfo";
+
+        /** ContextInfo _businessMessageForwardInfo. */
+        public _businessMessageForwardInfo?: "businessMessageForwardInfo";
+
+        /** ContextInfo _smbClientCampaignId. */
+        public _smbClientCampaignId?: "smbClientCampaignId";
+
+        /** ContextInfo _smbServerCampaignId. */
+        public _smbServerCampaignId?: "smbServerCampaignId";
+
+        /** ContextInfo _dataSharingContext. */
+        public _dataSharingContext?: "dataSharingContext";
+
+        /** ContextInfo _alwaysShowAdAttribution. */
+        public _alwaysShowAdAttribution?: "alwaysShowAdAttribution";
+
+        /** ContextInfo _featureEligibilities. */
+        public _featureEligibilities?: "featureEligibilities";
+
+        /** ContextInfo _entryPointConversionExternalSource. */
+        public _entryPointConversionExternalSource?: "entryPointConversionExternalSource";
+
+        /** ContextInfo _entryPointConversionExternalMedium. */
+        public _entryPointConversionExternalMedium?: "entryPointConversionExternalMedium";
+
+        /** ContextInfo _ctwaSignals. */
+        public _ctwaSignals?: "ctwaSignals";
+
+        /** ContextInfo _ctwaPayload. */
+        public _ctwaPayload?: "ctwaPayload";
+
+        /** ContextInfo _forwardedAiBotMessageInfo. */
+        public _forwardedAiBotMessageInfo?: "forwardedAiBotMessageInfo";
+
+        /** ContextInfo _statusAttributionType. */
+        public _statusAttributionType?: "statusAttributionType";
+
+        /** ContextInfo _urlTrackingMap. */
+        public _urlTrackingMap?: "urlTrackingMap";
+
+        /** ContextInfo _pairedMediaType. */
+        public _pairedMediaType?: "pairedMediaType";
+
+        /** ContextInfo _rankingVersion. */
+        public _rankingVersion?: "rankingVersion";
+
+        /** ContextInfo _memberLabel. */
+        public _memberLabel?: "memberLabel";
+
+        /** ContextInfo _isQuestion. */
+        public _isQuestion?: "isQuestion";
+
+        /** ContextInfo _statusSourceType. */
+        public _statusSourceType?: "statusSourceType";
+
         /**
          * Creates a new ContextInfo instance using the specified properties.
          * @param [properties] Properties to set
@@ -11146,6 +12301,18 @@ export namespace proto {
             /** AdReplyInfo caption. */
             public caption?: (string|null);
 
+            /** AdReplyInfo _advertiserName. */
+            public _advertiserName?: "advertiserName";
+
+            /** AdReplyInfo _mediaType. */
+            public _mediaType?: "mediaType";
+
+            /** AdReplyInfo _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** AdReplyInfo _caption. */
+            public _caption?: "caption";
+
             /**
              * Creates a new AdReplyInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -11252,6 +12419,9 @@ export namespace proto {
 
             /** BusinessMessageForwardInfo businessOwnerJid. */
             public businessOwnerJid?: (string|null);
+
+            /** BusinessMessageForwardInfo _businessOwnerJid. */
+            public _businessOwnerJid?: "businessOwnerJid";
 
             /**
              * Creates a new BusinessMessageForwardInfo instance using the specified properties.
@@ -11361,6 +12531,12 @@ export namespace proto {
 
             /** DataSharingContext parameters. */
             public parameters: proto.ContextInfo.DataSharingContext.IParameters[];
+
+            /** DataSharingContext _showMmDisclosure. */
+            public _showMmDisclosure?: "showMmDisclosure";
+
+            /** DataSharingContext _encryptedSignalTokenConsented. */
+            public _encryptedSignalTokenConsented?: "encryptedSignalTokenConsented";
 
             /**
              * Creates a new DataSharingContext instance using the specified properties.
@@ -11484,6 +12660,21 @@ export namespace proto {
 
                 /** Parameters contents. */
                 public contents?: (proto.ContextInfo.DataSharingContext.IParameters|null);
+
+                /** Parameters _key. */
+                public _key?: "key";
+
+                /** Parameters _stringData. */
+                public _stringData?: "stringData";
+
+                /** Parameters _intData. */
+                public _intData?: "intData";
+
+                /** Parameters _floatData. */
+                public _floatData?: "floatData";
+
+                /** Parameters _contents. */
+                public _contents?: "contents";
 
                 /**
                  * Creates a new Parameters instance using the specified properties.
@@ -11727,6 +12918,81 @@ export namespace proto {
             /** ExternalAdReplyInfo adType. */
             public adType?: (proto.ContextInfo.ExternalAdReplyInfo.AdType|null);
 
+            /** ExternalAdReplyInfo _title. */
+            public _title?: "title";
+
+            /** ExternalAdReplyInfo _body. */
+            public _body?: "body";
+
+            /** ExternalAdReplyInfo _mediaType. */
+            public _mediaType?: "mediaType";
+
+            /** ExternalAdReplyInfo _thumbnailUrl. */
+            public _thumbnailUrl?: "thumbnailUrl";
+
+            /** ExternalAdReplyInfo _mediaUrl. */
+            public _mediaUrl?: "mediaUrl";
+
+            /** ExternalAdReplyInfo _thumbnail. */
+            public _thumbnail?: "thumbnail";
+
+            /** ExternalAdReplyInfo _sourceType. */
+            public _sourceType?: "sourceType";
+
+            /** ExternalAdReplyInfo _sourceId. */
+            public _sourceId?: "sourceId";
+
+            /** ExternalAdReplyInfo _sourceUrl. */
+            public _sourceUrl?: "sourceUrl";
+
+            /** ExternalAdReplyInfo _containsAutoReply. */
+            public _containsAutoReply?: "containsAutoReply";
+
+            /** ExternalAdReplyInfo _renderLargerThumbnail. */
+            public _renderLargerThumbnail?: "renderLargerThumbnail";
+
+            /** ExternalAdReplyInfo _showAdAttribution. */
+            public _showAdAttribution?: "showAdAttribution";
+
+            /** ExternalAdReplyInfo _ctwaClid. */
+            public _ctwaClid?: "ctwaClid";
+
+            /** ExternalAdReplyInfo _ref. */
+            public _ref?: "ref";
+
+            /** ExternalAdReplyInfo _clickToWhatsappCall. */
+            public _clickToWhatsappCall?: "clickToWhatsappCall";
+
+            /** ExternalAdReplyInfo _adContextPreviewDismissed. */
+            public _adContextPreviewDismissed?: "adContextPreviewDismissed";
+
+            /** ExternalAdReplyInfo _sourceApp. */
+            public _sourceApp?: "sourceApp";
+
+            /** ExternalAdReplyInfo _automatedGreetingMessageShown. */
+            public _automatedGreetingMessageShown?: "automatedGreetingMessageShown";
+
+            /** ExternalAdReplyInfo _greetingMessageBody. */
+            public _greetingMessageBody?: "greetingMessageBody";
+
+            /** ExternalAdReplyInfo _ctaPayload. */
+            public _ctaPayload?: "ctaPayload";
+
+            /** ExternalAdReplyInfo _disableNudge. */
+            public _disableNudge?: "disableNudge";
+
+            /** ExternalAdReplyInfo _originalImageUrl. */
+            public _originalImageUrl?: "originalImageUrl";
+
+            /** ExternalAdReplyInfo _automatedGreetingMessageCtaType. */
+            public _automatedGreetingMessageCtaType?: "automatedGreetingMessageCtaType";
+
+            /** ExternalAdReplyInfo _wtwaAdFormat. */
+            public _wtwaAdFormat?: "wtwaAdFormat";
+
+            /** ExternalAdReplyInfo _adType. */
+            public _adType?: "adType";
+
             /**
              * Creates a new ExternalAdReplyInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -11858,6 +13124,18 @@ export namespace proto {
             /** FeatureEligibilities canBeReshared. */
             public canBeReshared?: (boolean|null);
 
+            /** FeatureEligibilities _cannotBeReactedTo. */
+            public _cannotBeReactedTo?: "cannotBeReactedTo";
+
+            /** FeatureEligibilities _cannotBeRanked. */
+            public _cannotBeRanked?: "cannotBeRanked";
+
+            /** FeatureEligibilities _canRequestFeedback. */
+            public _canRequestFeedback?: "canRequestFeedback";
+
+            /** FeatureEligibilities _canBeReshared. */
+            public _canBeReshared?: "canBeReshared";
+
             /**
              * Creates a new FeatureEligibilities instance using the specified properties.
              * @param [properties] Properties to set
@@ -11966,6 +13244,15 @@ export namespace proto {
 
             /** ForwardedAIBotMessageInfo creatorName. */
             public creatorName?: (string|null);
+
+            /** ForwardedAIBotMessageInfo _botName. */
+            public _botName?: "botName";
+
+            /** ForwardedAIBotMessageInfo _botJid. */
+            public _botJid?: "botJid";
+
+            /** ForwardedAIBotMessageInfo _creatorName. */
+            public _creatorName?: "creatorName";
 
             /**
              * Creates a new ForwardedAIBotMessageInfo instance using the specified properties.
@@ -12087,6 +13374,21 @@ export namespace proto {
 
             /** ForwardedNewsletterMessageInfo accessibilityText. */
             public accessibilityText?: (string|null);
+
+            /** ForwardedNewsletterMessageInfo _newsletterJid. */
+            public _newsletterJid?: "newsletterJid";
+
+            /** ForwardedNewsletterMessageInfo _serverMessageId. */
+            public _serverMessageId?: "serverMessageId";
+
+            /** ForwardedNewsletterMessageInfo _newsletterName. */
+            public _newsletterName?: "newsletterName";
+
+            /** ForwardedNewsletterMessageInfo _contentType. */
+            public _contentType?: "contentType";
+
+            /** ForwardedNewsletterMessageInfo _accessibilityText. */
+            public _accessibilityText?: "accessibilityText";
 
             /**
              * Creates a new ForwardedNewsletterMessageInfo instance using the specified properties.
@@ -12228,6 +13530,12 @@ export namespace proto {
 
             /** UTMInfo utmCampaign. */
             public utmCampaign?: (string|null);
+
+            /** UTMInfo _utmSource. */
+            public _utmSource?: "utmSource";
+
+            /** UTMInfo _utmCampaign. */
+            public _utmCampaign?: "utmCampaign";
 
             /**
              * Creates a new UTMInfo instance using the specified properties.
@@ -12639,6 +13947,156 @@ export namespace proto {
         /** Conversation limitSharingInitiatedByMe. */
         public limitSharingInitiatedByMe?: (boolean|null);
 
+        /** Conversation _newJid. */
+        public _newJid?: "newJid";
+
+        /** Conversation _oldJid. */
+        public _oldJid?: "oldJid";
+
+        /** Conversation _lastMsgTimestamp. */
+        public _lastMsgTimestamp?: "lastMsgTimestamp";
+
+        /** Conversation _unreadCount. */
+        public _unreadCount?: "unreadCount";
+
+        /** Conversation _readOnly. */
+        public _readOnly?: "readOnly";
+
+        /** Conversation _endOfHistoryTransfer. */
+        public _endOfHistoryTransfer?: "endOfHistoryTransfer";
+
+        /** Conversation _ephemeralExpiration. */
+        public _ephemeralExpiration?: "ephemeralExpiration";
+
+        /** Conversation _ephemeralSettingTimestamp. */
+        public _ephemeralSettingTimestamp?: "ephemeralSettingTimestamp";
+
+        /** Conversation _endOfHistoryTransferType. */
+        public _endOfHistoryTransferType?: "endOfHistoryTransferType";
+
+        /** Conversation _conversationTimestamp. */
+        public _conversationTimestamp?: "conversationTimestamp";
+
+        /** Conversation _name. */
+        public _name?: "name";
+
+        /** Conversation _pHash. */
+        public _pHash?: "pHash";
+
+        /** Conversation _notSpam. */
+        public _notSpam?: "notSpam";
+
+        /** Conversation _archived. */
+        public _archived?: "archived";
+
+        /** Conversation _disappearingMode. */
+        public _disappearingMode?: "disappearingMode";
+
+        /** Conversation _unreadMentionCount. */
+        public _unreadMentionCount?: "unreadMentionCount";
+
+        /** Conversation _markedAsUnread. */
+        public _markedAsUnread?: "markedAsUnread";
+
+        /** Conversation _tcToken. */
+        public _tcToken?: "tcToken";
+
+        /** Conversation _tcTokenTimestamp. */
+        public _tcTokenTimestamp?: "tcTokenTimestamp";
+
+        /** Conversation _contactPrimaryIdentityKey. */
+        public _contactPrimaryIdentityKey?: "contactPrimaryIdentityKey";
+
+        /** Conversation _pinned. */
+        public _pinned?: "pinned";
+
+        /** Conversation _muteEndTime. */
+        public _muteEndTime?: "muteEndTime";
+
+        /** Conversation _wallpaper. */
+        public _wallpaper?: "wallpaper";
+
+        /** Conversation _mediaVisibility. */
+        public _mediaVisibility?: "mediaVisibility";
+
+        /** Conversation _tcTokenSenderTimestamp. */
+        public _tcTokenSenderTimestamp?: "tcTokenSenderTimestamp";
+
+        /** Conversation _suspended. */
+        public _suspended?: "suspended";
+
+        /** Conversation _terminated. */
+        public _terminated?: "terminated";
+
+        /** Conversation _createdAt. */
+        public _createdAt?: "createdAt";
+
+        /** Conversation _createdBy. */
+        public _createdBy?: "createdBy";
+
+        /** Conversation _description. */
+        public _description?: "description";
+
+        /** Conversation _support. */
+        public _support?: "support";
+
+        /** Conversation _isParentGroup. */
+        public _isParentGroup?: "isParentGroup";
+
+        /** Conversation _parentGroupId. */
+        public _parentGroupId?: "parentGroupId";
+
+        /** Conversation _isDefaultSubgroup. */
+        public _isDefaultSubgroup?: "isDefaultSubgroup";
+
+        /** Conversation _displayName. */
+        public _displayName?: "displayName";
+
+        /** Conversation _pnJid. */
+        public _pnJid?: "pnJid";
+
+        /** Conversation _shareOwnPn. */
+        public _shareOwnPn?: "shareOwnPn";
+
+        /** Conversation _pnhDuplicateLidThread. */
+        public _pnhDuplicateLidThread?: "pnhDuplicateLidThread";
+
+        /** Conversation _lidJid. */
+        public _lidJid?: "lidJid";
+
+        /** Conversation _username. */
+        public _username?: "username";
+
+        /** Conversation _lidOriginType. */
+        public _lidOriginType?: "lidOriginType";
+
+        /** Conversation _commentsCount. */
+        public _commentsCount?: "commentsCount";
+
+        /** Conversation _locked. */
+        public _locked?: "locked";
+
+        /** Conversation _systemMessageToInsert. */
+        public _systemMessageToInsert?: "systemMessageToInsert";
+
+        /** Conversation _capiCreatedGroup. */
+        public _capiCreatedGroup?: "capiCreatedGroup";
+
+        /** Conversation _accountLid. */
+        public _accountLid?: "accountLid";
+
+        /** Conversation _limitSharing. */
+        public _limitSharing?: "limitSharing";
+
+        /** Conversation _limitSharingSettingTimestamp. */
+        public _limitSharingSettingTimestamp?: "limitSharingSettingTimestamp";
+
+        /** Conversation _limitSharingTrigger. */
+        public _limitSharingTrigger?: "limitSharingTrigger";
+
+        /** Conversation _limitSharingInitiatedByMe. */
+        public _limitSharingInitiatedByMe?: "limitSharingInitiatedByMe";
+
         /**
          * Creates a new Conversation instance using the specified properties.
          * @param [properties] Properties to set
@@ -12752,6 +14210,12 @@ export namespace proto {
         /** DeviceCapabilities lidMigration. */
         public lidMigration?: (proto.DeviceCapabilities.ILIDMigration|null);
 
+        /** DeviceCapabilities _chatLockSupportLevel. */
+        public _chatLockSupportLevel?: "chatLockSupportLevel";
+
+        /** DeviceCapabilities _lidMigration. */
+        public _lidMigration?: "lidMigration";
+
         /**
          * Creates a new DeviceCapabilities instance using the specified properties.
          * @param [properties] Properties to set
@@ -12858,6 +14322,9 @@ export namespace proto {
             /** LIDMigration chatDbMigrationTimestamp. */
             public chatDbMigrationTimestamp?: (number|Long|null);
 
+            /** LIDMigration _chatDbMigrationTimestamp. */
+            public _chatDbMigrationTimestamp?: "chatDbMigrationTimestamp";
+
             /**
              * Creates a new LIDMigration instance using the specified properties.
              * @param [properties] Properties to set
@@ -12961,6 +14428,12 @@ export namespace proto {
 
         /** DeviceConsistencyCodeMessage signature. */
         public signature?: (Uint8Array|null);
+
+        /** DeviceConsistencyCodeMessage _generation. */
+        public _generation?: "generation";
+
+        /** DeviceConsistencyCodeMessage _signature. */
+        public _signature?: "signature";
 
         /**
          * Creates a new DeviceConsistencyCodeMessage instance using the specified properties.
@@ -13101,6 +14574,24 @@ export namespace proto {
         /** DeviceListMetadata recipientKeyIndexes. */
         public recipientKeyIndexes: number[];
 
+        /** DeviceListMetadata _senderKeyHash. */
+        public _senderKeyHash?: "senderKeyHash";
+
+        /** DeviceListMetadata _senderTimestamp. */
+        public _senderTimestamp?: "senderTimestamp";
+
+        /** DeviceListMetadata _senderAccountType. */
+        public _senderAccountType?: "senderAccountType";
+
+        /** DeviceListMetadata _receiverAccountType. */
+        public _receiverAccountType?: "receiverAccountType";
+
+        /** DeviceListMetadata _recipientKeyHash. */
+        public _recipientKeyHash?: "recipientKeyHash";
+
+        /** DeviceListMetadata _recipientTimestamp. */
+        public _recipientTimestamp?: "recipientTimestamp";
+
         /**
          * Creates a new DeviceListMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -13221,6 +14712,21 @@ export namespace proto {
 
         /** DeviceProps historySyncConfig. */
         public historySyncConfig?: (proto.DeviceProps.IHistorySyncConfig|null);
+
+        /** DeviceProps _os. */
+        public _os?: "os";
+
+        /** DeviceProps _version. */
+        public _version?: "version";
+
+        /** DeviceProps _platformType. */
+        public _platformType?: "platformType";
+
+        /** DeviceProps _requireFullSync. */
+        public _requireFullSync?: "requireFullSync";
+
+        /** DeviceProps _historySyncConfig. */
+        public _historySyncConfig?: "historySyncConfig";
 
         /**
          * Creates a new DeviceProps instance using the specified properties.
@@ -13344,6 +14850,21 @@ export namespace proto {
 
             /** AppVersion quinary. */
             public quinary?: (number|null);
+
+            /** AppVersion _primary. */
+            public _primary?: "primary";
+
+            /** AppVersion _secondary. */
+            public _secondary?: "secondary";
+
+            /** AppVersion _tertiary. */
+            public _tertiary?: "tertiary";
+
+            /** AppVersion _quaternary. */
+            public _quaternary?: "quaternary";
+
+            /** AppVersion _quinary. */
+            public _quinary?: "quinary";
 
             /**
              * Creates a new AppVersion instance using the specified properties.
@@ -13520,6 +15041,48 @@ export namespace proto {
             /** HistorySyncConfig supportMessageAssociation. */
             public supportMessageAssociation?: (boolean|null);
 
+            /** HistorySyncConfig _fullSyncDaysLimit. */
+            public _fullSyncDaysLimit?: "fullSyncDaysLimit";
+
+            /** HistorySyncConfig _fullSyncSizeMbLimit. */
+            public _fullSyncSizeMbLimit?: "fullSyncSizeMbLimit";
+
+            /** HistorySyncConfig _storageQuotaMb. */
+            public _storageQuotaMb?: "storageQuotaMb";
+
+            /** HistorySyncConfig _inlineInitialPayloadInE2EeMsg. */
+            public _inlineInitialPayloadInE2EeMsg?: "inlineInitialPayloadInE2EeMsg";
+
+            /** HistorySyncConfig _recentSyncDaysLimit. */
+            public _recentSyncDaysLimit?: "recentSyncDaysLimit";
+
+            /** HistorySyncConfig _supportCallLogHistory. */
+            public _supportCallLogHistory?: "supportCallLogHistory";
+
+            /** HistorySyncConfig _supportBotUserAgentChatHistory. */
+            public _supportBotUserAgentChatHistory?: "supportBotUserAgentChatHistory";
+
+            /** HistorySyncConfig _supportCagReactionsAndPolls. */
+            public _supportCagReactionsAndPolls?: "supportCagReactionsAndPolls";
+
+            /** HistorySyncConfig _supportBizHostedMsg. */
+            public _supportBizHostedMsg?: "supportBizHostedMsg";
+
+            /** HistorySyncConfig _supportRecentSyncChunkMessageCountTuning. */
+            public _supportRecentSyncChunkMessageCountTuning?: "supportRecentSyncChunkMessageCountTuning";
+
+            /** HistorySyncConfig _supportHostedGroupMsg. */
+            public _supportHostedGroupMsg?: "supportHostedGroupMsg";
+
+            /** HistorySyncConfig _supportFbidBotChatHistory. */
+            public _supportFbidBotChatHistory?: "supportFbidBotChatHistory";
+
+            /** HistorySyncConfig _supportAddOnHistorySyncMigration. */
+            public _supportAddOnHistorySyncMigration?: "supportAddOnHistorySyncMigration";
+
+            /** HistorySyncConfig _supportMessageAssociation. */
+            public _supportMessageAssociation?: "supportMessageAssociation";
+
             /**
              * Creates a new HistorySyncConfig instance using the specified properties.
              * @param [properties] Properties to set
@@ -13664,6 +15227,18 @@ export namespace proto {
 
         /** DisappearingMode initiatedByMe. */
         public initiatedByMe?: (boolean|null);
+
+        /** DisappearingMode _initiator. */
+        public _initiator?: "initiator";
+
+        /** DisappearingMode _trigger. */
+        public _trigger?: "trigger";
+
+        /** DisappearingMode _initiatorDeviceJid. */
+        public _initiatorDeviceJid?: "initiatorDeviceJid";
+
+        /** DisappearingMode _initiatedByMe. */
+        public _initiatedByMe?: "initiatedByMe";
 
         /**
          * Creates a new DisappearingMode instance using the specified properties.
@@ -13895,6 +15470,12 @@ export namespace proto {
         /** EmbeddedMessage message. */
         public message?: (proto.IMessage|null);
 
+        /** EmbeddedMessage _stanzaId. */
+        public _stanzaId?: "stanzaId";
+
+        /** EmbeddedMessage _message. */
+        public _message?: "message";
+
         /**
          * Creates a new EmbeddedMessage instance using the specified properties.
          * @param [properties] Properties to set
@@ -14052,6 +15633,39 @@ export namespace proto {
         /** EmbeddedMusic isExplicit. */
         public isExplicit?: (boolean|null);
 
+        /** EmbeddedMusic _musicContentMediaId. */
+        public _musicContentMediaId?: "musicContentMediaId";
+
+        /** EmbeddedMusic _songId. */
+        public _songId?: "songId";
+
+        /** EmbeddedMusic _author. */
+        public _author?: "author";
+
+        /** EmbeddedMusic _title. */
+        public _title?: "title";
+
+        /** EmbeddedMusic _artworkDirectPath. */
+        public _artworkDirectPath?: "artworkDirectPath";
+
+        /** EmbeddedMusic _artworkSha256. */
+        public _artworkSha256?: "artworkSha256";
+
+        /** EmbeddedMusic _artworkEncSha256. */
+        public _artworkEncSha256?: "artworkEncSha256";
+
+        /** EmbeddedMusic _artworkMediaKey. */
+        public _artworkMediaKey?: "artworkMediaKey";
+
+        /** EmbeddedMusic _artistAttribution. */
+        public _artistAttribution?: "artistAttribution";
+
+        /** EmbeddedMusic _countryBlocklist. */
+        public _countryBlocklist?: "countryBlocklist";
+
+        /** EmbeddedMusic _isExplicit. */
+        public _isExplicit?: "isExplicit";
+
         /**
          * Creates a new EmbeddedMusic instance using the specified properties.
          * @param [properties] Properties to set
@@ -14154,6 +15768,12 @@ export namespace proto {
 
         /** EncryptedPairingRequest iv. */
         public iv?: (Uint8Array|null);
+
+        /** EncryptedPairingRequest _encryptedPayload. */
+        public _encryptedPayload?: "encryptedPayload";
+
+        /** EncryptedPairingRequest _iv. */
+        public _iv?: "iv";
 
         /**
          * Creates a new EncryptedPairingRequest instance using the specified properties.
@@ -14258,6 +15878,12 @@ export namespace proto {
         /** EphemeralSetting timestamp. */
         public timestamp?: (number|Long|null);
 
+        /** EphemeralSetting _duration. */
+        public _duration?: "duration";
+
+        /** EphemeralSetting _timestamp. */
+        public _timestamp?: "timestamp";
+
         /**
          * Creates a new EphemeralSetting instance using the specified properties.
          * @param [properties] Properties to set
@@ -14354,6 +15980,9 @@ export namespace proto {
 
         /** EventAdditionalMetadata isStale. */
         public isStale?: (boolean|null);
+
+        /** EventAdditionalMetadata _isStale. */
+        public _isStale?: "isStale";
 
         /**
          * Creates a new EventAdditionalMetadata instance using the specified properties.
@@ -14470,6 +16099,18 @@ export namespace proto {
         /** EventResponse unread. */
         public unread?: (boolean|null);
 
+        /** EventResponse _eventResponseMessageKey. */
+        public _eventResponseMessageKey?: "eventResponseMessageKey";
+
+        /** EventResponse _timestampMs. */
+        public _timestampMs?: "timestampMs";
+
+        /** EventResponse _eventResponseMessage. */
+        public _eventResponseMessage?: "eventResponseMessage";
+
+        /** EventResponse _unread. */
+        public _unread?: "unread";
+
         /**
          * Creates a new EventResponse instance using the specified properties.
          * @param [properties] Properties to set
@@ -14572,6 +16213,12 @@ export namespace proto {
 
         /** ExitCode text. */
         public text?: (string|null);
+
+        /** ExitCode _code. */
+        public _code?: "code";
+
+        /** ExitCode _text. */
+        public _text?: "text";
 
         /**
          * Creates a new ExitCode instance using the specified properties.
@@ -14700,6 +16347,24 @@ export namespace proto {
         /** ExternalBlobReference fileEncSha256. */
         public fileEncSha256?: (Uint8Array|null);
 
+        /** ExternalBlobReference _mediaKey. */
+        public _mediaKey?: "mediaKey";
+
+        /** ExternalBlobReference _directPath. */
+        public _directPath?: "directPath";
+
+        /** ExternalBlobReference _handle. */
+        public _handle?: "handle";
+
+        /** ExternalBlobReference _fileSizeBytes. */
+        public _fileSizeBytes?: "fileSizeBytes";
+
+        /** ExternalBlobReference _fileSha256. */
+        public _fileSha256?: "fileSha256";
+
+        /** ExternalBlobReference _fileEncSha256. */
+        public _fileEncSha256?: "fileEncSha256";
+
         /**
          * Creates a new ExternalBlobReference instance using the specified properties.
          * @param [properties] Properties to set
@@ -14820,6 +16485,18 @@ export namespace proto {
 
         /** Field subfield. */
         public subfield: { [k: string]: proto.IField };
+
+        /** Field _minVersion. */
+        public _minVersion?: "minVersion";
+
+        /** Field _maxVersion. */
+        public _maxVersion?: "maxVersion";
+
+        /** Field _notReportableMinVersion. */
+        public _notReportableMinVersion?: "notReportableMinVersion";
+
+        /** Field _isMessage. */
+        public _isMessage?: "isMessage";
 
         /**
          * Creates a new Field instance using the specified properties.
@@ -15032,6 +16709,66 @@ export namespace proto {
         /** GlobalSettings chatDbLidMigrationTimestamp. */
         public chatDbLidMigrationTimestamp?: (number|Long|null);
 
+        /** GlobalSettings _lightThemeWallpaper. */
+        public _lightThemeWallpaper?: "lightThemeWallpaper";
+
+        /** GlobalSettings _mediaVisibility. */
+        public _mediaVisibility?: "mediaVisibility";
+
+        /** GlobalSettings _darkThemeWallpaper. */
+        public _darkThemeWallpaper?: "darkThemeWallpaper";
+
+        /** GlobalSettings _autoDownloadWiFi. */
+        public _autoDownloadWiFi?: "autoDownloadWiFi";
+
+        /** GlobalSettings _autoDownloadCellular. */
+        public _autoDownloadCellular?: "autoDownloadCellular";
+
+        /** GlobalSettings _autoDownloadRoaming. */
+        public _autoDownloadRoaming?: "autoDownloadRoaming";
+
+        /** GlobalSettings _showIndividualNotificationsPreview. */
+        public _showIndividualNotificationsPreview?: "showIndividualNotificationsPreview";
+
+        /** GlobalSettings _showGroupNotificationsPreview. */
+        public _showGroupNotificationsPreview?: "showGroupNotificationsPreview";
+
+        /** GlobalSettings _disappearingModeDuration. */
+        public _disappearingModeDuration?: "disappearingModeDuration";
+
+        /** GlobalSettings _disappearingModeTimestamp. */
+        public _disappearingModeTimestamp?: "disappearingModeTimestamp";
+
+        /** GlobalSettings _avatarUserSettings. */
+        public _avatarUserSettings?: "avatarUserSettings";
+
+        /** GlobalSettings _fontSize. */
+        public _fontSize?: "fontSize";
+
+        /** GlobalSettings _securityNotifications. */
+        public _securityNotifications?: "securityNotifications";
+
+        /** GlobalSettings _autoUnarchiveChats. */
+        public _autoUnarchiveChats?: "autoUnarchiveChats";
+
+        /** GlobalSettings _videoQualityMode. */
+        public _videoQualityMode?: "videoQualityMode";
+
+        /** GlobalSettings _photoQualityMode. */
+        public _photoQualityMode?: "photoQualityMode";
+
+        /** GlobalSettings _individualNotificationSettings. */
+        public _individualNotificationSettings?: "individualNotificationSettings";
+
+        /** GlobalSettings _groupNotificationSettings. */
+        public _groupNotificationSettings?: "groupNotificationSettings";
+
+        /** GlobalSettings _chatLockSettings. */
+        public _chatLockSettings?: "chatLockSettings";
+
+        /** GlobalSettings _chatDbLidMigrationTimestamp. */
+        public _chatDbLidMigrationTimestamp?: "chatDbLidMigrationTimestamp";
+
         /**
          * Creates a new GlobalSettings instance using the specified properties.
          * @param [properties] Properties to set
@@ -15135,6 +16872,12 @@ export namespace proto {
         /** GroupMention groupSubject. */
         public groupSubject?: (string|null);
 
+        /** GroupMention _groupJid. */
+        public _groupJid?: "groupJid";
+
+        /** GroupMention _groupSubject. */
+        public _groupSubject?: "groupSubject";
+
         /**
          * Creates a new GroupMention instance using the specified properties.
          * @param [properties] Properties to set
@@ -15237,6 +16980,9 @@ export namespace proto {
 
         /** GroupParticipant rank. */
         public rank?: (proto.GroupParticipant.Rank|null);
+
+        /** GroupParticipant _rank. */
+        public _rank?: "rank";
 
         /**
          * Creates a new GroupParticipant instance using the specified properties.
@@ -15357,6 +17103,15 @@ export namespace proto {
         /** HandshakeMessage clientFinish. */
         public clientFinish?: (proto.HandshakeMessage.IClientFinish|null);
 
+        /** HandshakeMessage _clientHello. */
+        public _clientHello?: "clientHello";
+
+        /** HandshakeMessage _serverHello. */
+        public _serverHello?: "serverHello";
+
+        /** HandshakeMessage _clientFinish. */
+        public _clientFinish?: "clientFinish";
+
         /**
          * Creates a new HandshakeMessage instance using the specified properties.
          * @param [properties] Properties to set
@@ -15461,6 +17216,12 @@ export namespace proto {
 
             /** ClientFinish payload. */
             public payload?: (Uint8Array|null);
+
+            /** ClientFinish _static. */
+            public _static?: "static";
+
+            /** ClientFinish _payload. */
+            public _payload?: "payload";
 
             /**
              * Creates a new ClientFinish instance using the specified properties.
@@ -15571,6 +17332,15 @@ export namespace proto {
             /** ClientHello payload. */
             public payload?: (Uint8Array|null);
 
+            /** ClientHello _ephemeral. */
+            public _ephemeral?: "ephemeral";
+
+            /** ClientHello _static. */
+            public _static?: "static";
+
+            /** ClientHello _payload. */
+            public _payload?: "payload";
+
             /**
              * Creates a new ClientHello instance using the specified properties.
              * @param [properties] Properties to set
@@ -15679,6 +17449,15 @@ export namespace proto {
 
             /** ServerHello payload. */
             public payload?: (Uint8Array|null);
+
+            /** ServerHello _ephemeral. */
+            public _ephemeral?: "ephemeral";
+
+            /** ServerHello _static. */
+            public _static?: "static";
+
+            /** ServerHello _payload. */
+            public _payload?: "payload";
 
             /**
              * Creates a new ServerHello instance using the specified properties.
@@ -15874,6 +17653,30 @@ export namespace proto {
         /** HistorySync accounts. */
         public accounts: proto.IAccount[];
 
+        /** HistorySync _chunkOrder. */
+        public _chunkOrder?: "chunkOrder";
+
+        /** HistorySync _progress. */
+        public _progress?: "progress";
+
+        /** HistorySync _globalSettings. */
+        public _globalSettings?: "globalSettings";
+
+        /** HistorySync _threadIdUserSecret. */
+        public _threadIdUserSecret?: "threadIdUserSecret";
+
+        /** HistorySync _threadDsTimeframeOffset. */
+        public _threadDsTimeframeOffset?: "threadDsTimeframeOffset";
+
+        /** HistorySync _aiWaitListState. */
+        public _aiWaitListState?: "aiWaitListState";
+
+        /** HistorySync _companionMetaNonce. */
+        public _companionMetaNonce?: "companionMetaNonce";
+
+        /** HistorySync _shareableChatIdentifierEncryptionKey. */
+        public _shareableChatIdentifierEncryptionKey?: "shareableChatIdentifierEncryptionKey";
+
         /**
          * Creates a new HistorySync instance using the specified properties.
          * @param [properties] Properties to set
@@ -15997,6 +17800,12 @@ export namespace proto {
         /** HistorySyncMsg msgOrderId. */
         public msgOrderId?: (number|Long|null);
 
+        /** HistorySyncMsg _message. */
+        public _message?: "message";
+
+        /** HistorySyncMsg _msgOrderId. */
+        public _msgOrderId?: "msgOrderId";
+
         /**
          * Creates a new HistorySyncMsg instance using the specified properties.
          * @param [properties] Properties to set
@@ -16112,6 +17921,9 @@ export namespace proto {
         /** HydratedTemplateButton callButton. */
         public callButton?: (proto.HydratedTemplateButton.IHydratedCallButton|null);
 
+        /** HydratedTemplateButton _index. */
+        public _index?: "index";
+
         /** HydratedTemplateButton hydratedButton. */
         public hydratedButton?: ("quickReplyButton"|"urlButton"|"callButton");
 
@@ -16220,6 +18032,12 @@ export namespace proto {
             /** HydratedCallButton phoneNumber. */
             public phoneNumber?: (string|null);
 
+            /** HydratedCallButton _displayText. */
+            public _displayText?: "displayText";
+
+            /** HydratedCallButton _phoneNumber. */
+            public _phoneNumber?: "phoneNumber";
+
             /**
              * Creates a new HydratedCallButton instance using the specified properties.
              * @param [properties] Properties to set
@@ -16322,6 +18140,12 @@ export namespace proto {
 
             /** HydratedQuickReplyButton id. */
             public id?: (string|null);
+
+            /** HydratedQuickReplyButton _displayText. */
+            public _displayText?: "displayText";
+
+            /** HydratedQuickReplyButton _id. */
+            public _id?: "id";
 
             /**
              * Creates a new HydratedQuickReplyButton instance using the specified properties.
@@ -16438,6 +18262,18 @@ export namespace proto {
             /** HydratedURLButton webviewPresentation. */
             public webviewPresentation?: (proto.HydratedTemplateButton.HydratedURLButton.WebviewPresentationType|null);
 
+            /** HydratedURLButton _displayText. */
+            public _displayText?: "displayText";
+
+            /** HydratedURLButton _url. */
+            public _url?: "url";
+
+            /** HydratedURLButton _consentedUsersUrl. */
+            public _consentedUsersUrl?: "consentedUsersUrl";
+
+            /** HydratedURLButton _webviewPresentation. */
+            public _webviewPresentation?: "webviewPresentation";
+
             /**
              * Creates a new HydratedURLButton instance using the specified properties.
              * @param [properties] Properties to set
@@ -16551,6 +18387,12 @@ export namespace proto {
 
         /** IdentityKeyPairStructure privateKey. */
         public privateKey?: (Uint8Array|null);
+
+        /** IdentityKeyPairStructure _publicKey. */
+        public _publicKey?: "publicKey";
+
+        /** IdentityKeyPairStructure _privateKey. */
+        public _privateKey?: "privateKey";
 
         /**
          * Creates a new IdentityKeyPairStructure instance using the specified properties.
@@ -16690,6 +18532,15 @@ export namespace proto {
 
         /** InteractiveAnnotation tapAction. */
         public tapAction?: (proto.ITapLinkAction|null);
+
+        /** InteractiveAnnotation _shouldSkipConfirmation. */
+        public _shouldSkipConfirmation?: "shouldSkipConfirmation";
+
+        /** InteractiveAnnotation _embeddedContent. */
+        public _embeddedContent?: "embeddedContent";
+
+        /** InteractiveAnnotation _statusLinkType. */
+        public _statusLinkType?: "statusLinkType";
 
         /** InteractiveAnnotation action. */
         public action?: ("location"|"newsletter"|"embeddedAction"|"tapAction");
@@ -16831,6 +18682,24 @@ export namespace proto {
         /** KeepInChat serverTimestampMs. */
         public serverTimestampMs?: (number|Long|null);
 
+        /** KeepInChat _keepType. */
+        public _keepType?: "keepType";
+
+        /** KeepInChat _serverTimestamp. */
+        public _serverTimestamp?: "serverTimestamp";
+
+        /** KeepInChat _key. */
+        public _key?: "key";
+
+        /** KeepInChat _deviceJid. */
+        public _deviceJid?: "deviceJid";
+
+        /** KeepInChat _clientTimestampMs. */
+        public _clientTimestampMs?: "clientTimestampMs";
+
+        /** KeepInChat _serverTimestampMs. */
+        public _serverTimestampMs?: "serverTimestampMs";
+
         /**
          * Creates a new KeepInChat instance using the specified properties.
          * @param [properties] Properties to set
@@ -16959,6 +18828,21 @@ export namespace proto {
         /** KeyExchangeMessage baseKeySignature. */
         public baseKeySignature?: (Uint8Array|null);
 
+        /** KeyExchangeMessage _id. */
+        public _id?: "id";
+
+        /** KeyExchangeMessage _baseKey. */
+        public _baseKey?: "baseKey";
+
+        /** KeyExchangeMessage _ratchetKey. */
+        public _ratchetKey?: "ratchetKey";
+
+        /** KeyExchangeMessage _identityKey. */
+        public _identityKey?: "identityKey";
+
+        /** KeyExchangeMessage _baseKeySignature. */
+        public _baseKeySignature?: "baseKeySignature";
+
         /**
          * Creates a new KeyExchangeMessage instance using the specified properties.
          * @param [properties] Properties to set
@@ -17055,6 +18939,9 @@ export namespace proto {
 
         /** KeyId id. */
         public id?: (Uint8Array|null);
+
+        /** KeyId _id. */
+        public _id?: "id";
 
         /**
          * Creates a new KeyId instance using the specified properties.
@@ -17165,6 +19052,9 @@ export namespace proto {
         /** LIDMigrationMapping latestLid. */
         public latestLid?: (number|Long|null);
 
+        /** LIDMigrationMapping _latestLid. */
+        public _latestLid?: "latestLid";
+
         /**
          * Creates a new LIDMigrationMapping instance using the specified properties.
          * @param [properties] Properties to set
@@ -17261,6 +19151,9 @@ export namespace proto {
 
         /** LIDMigrationMappingSyncMessage encodedMappingPayload. */
         public encodedMappingPayload?: (Uint8Array|null);
+
+        /** LIDMigrationMappingSyncMessage _encodedMappingPayload. */
+        public _encodedMappingPayload?: "encodedMappingPayload";
 
         /**
          * Creates a new LIDMigrationMappingSyncMessage instance using the specified properties.
@@ -17365,6 +19258,9 @@ export namespace proto {
         /** LIDMigrationMappingSyncPayload chatDbMigrationTimestamp. */
         public chatDbMigrationTimestamp?: (number|Long|null);
 
+        /** LIDMigrationMappingSyncPayload _chatDbMigrationTimestamp. */
+        public _chatDbMigrationTimestamp?: "chatDbMigrationTimestamp";
+
         /**
          * Creates a new LIDMigrationMappingSyncPayload instance using the specified properties.
          * @param [properties] Properties to set
@@ -17467,6 +19363,12 @@ export namespace proto {
 
         /** LegacyMessage pollVote. */
         public pollVote?: (proto.Message.IPollVoteMessage|null);
+
+        /** LegacyMessage _eventResponseMessage. */
+        public _eventResponseMessage?: "eventResponseMessage";
+
+        /** LegacyMessage _pollVote. */
+        public _pollVote?: "pollVote";
 
         /**
          * Creates a new LegacyMessage instance using the specified properties.
@@ -17582,6 +19484,18 @@ export namespace proto {
 
         /** LimitSharing initiatedByMe. */
         public initiatedByMe?: (boolean|null);
+
+        /** LimitSharing _sharingLimited. */
+        public _sharingLimited?: "sharingLimited";
+
+        /** LimitSharing _trigger. */
+        public _trigger?: "trigger";
+
+        /** LimitSharing _limitSharingSettingTimestamp. */
+        public _limitSharingSettingTimestamp?: "limitSharingSettingTimestamp";
+
+        /** LimitSharing _initiatedByMe. */
+        public _initiatedByMe?: "initiatedByMe";
 
         /**
          * Creates a new LimitSharing instance using the specified properties.
@@ -17703,6 +19617,15 @@ export namespace proto {
         /** LocalizedName verifiedName. */
         public verifiedName?: (string|null);
 
+        /** LocalizedName _lg. */
+        public _lg?: "lg";
+
+        /** LocalizedName _lc. */
+        public _lc?: "lc";
+
+        /** LocalizedName _verifiedName. */
+        public _verifiedName?: "verifiedName";
+
         /**
          * Creates a new LocalizedName instance using the specified properties.
          * @param [properties] Properties to set
@@ -17812,6 +19735,15 @@ export namespace proto {
         /** Location name. */
         public name?: (string|null);
 
+        /** Location _degreesLatitude. */
+        public _degreesLatitude?: "degreesLatitude";
+
+        /** Location _degreesLongitude. */
+        public _degreesLongitude?: "degreesLongitude";
+
+        /** Location _name. */
+        public _name?: "name";
+
         /**
          * Creates a new Location instance using the specified properties.
          * @param [properties] Properties to set
@@ -17908,6 +19840,9 @@ export namespace proto {
 
         /** MediaData localPath. */
         public localPath?: (string|null);
+
+        /** MediaData _localPath. */
+        public _localPath?: "localPath";
 
         /**
          * Creates a new MediaData instance using the specified properties.
@@ -18017,6 +19952,15 @@ export namespace proto {
 
         /** MediaNotifyMessage fileLength. */
         public fileLength?: (number|Long|null);
+
+        /** MediaNotifyMessage _expressPathUrl. */
+        public _expressPathUrl?: "expressPathUrl";
+
+        /** MediaNotifyMessage _fileEncSha256. */
+        public _fileEncSha256?: "fileEncSha256";
+
+        /** MediaNotifyMessage _fileLength. */
+        public _fileLength?: "fileLength";
 
         /**
          * Creates a new MediaNotifyMessage instance using the specified properties.
@@ -18132,6 +20076,18 @@ export namespace proto {
 
         /** MediaRetryNotification messageSecret. */
         public messageSecret?: (Uint8Array|null);
+
+        /** MediaRetryNotification _stanzaId. */
+        public _stanzaId?: "stanzaId";
+
+        /** MediaRetryNotification _directPath. */
+        public _directPath?: "directPath";
+
+        /** MediaRetryNotification _result. */
+        public _result?: "result";
+
+        /** MediaRetryNotification _messageSecret. */
+        public _messageSecret?: "messageSecret";
 
         /**
          * Creates a new MediaRetryNotification instance using the specified properties.
@@ -18253,6 +20209,12 @@ export namespace proto {
 
         /** MemberLabel labelTimestamp. */
         public labelTimestamp?: (number|Long|null);
+
+        /** MemberLabel _label. */
+        public _label?: "label";
+
+        /** MemberLabel _labelTimestamp. */
+        public _labelTimestamp?: "labelTimestamp";
 
         /**
          * Creates a new MemberLabel instance using the specified properties.
@@ -18861,6 +20823,264 @@ export namespace proto {
         /** Message messageHistoryNotice. */
         public messageHistoryNotice?: (proto.Message.IMessageHistoryNotice|null);
 
+        /** Message _conversation. */
+        public _conversation?: "conversation";
+
+        /** Message _senderKeyDistributionMessage. */
+        public _senderKeyDistributionMessage?: "senderKeyDistributionMessage";
+
+        /** Message _imageMessage. */
+        public _imageMessage?: "imageMessage";
+
+        /** Message _contactMessage. */
+        public _contactMessage?: "contactMessage";
+
+        /** Message _locationMessage. */
+        public _locationMessage?: "locationMessage";
+
+        /** Message _extendedTextMessage. */
+        public _extendedTextMessage?: "extendedTextMessage";
+
+        /** Message _documentMessage. */
+        public _documentMessage?: "documentMessage";
+
+        /** Message _audioMessage. */
+        public _audioMessage?: "audioMessage";
+
+        /** Message _videoMessage. */
+        public _videoMessage?: "videoMessage";
+
+        /** Message _call. */
+        public _call?: "call";
+
+        /** Message _chat. */
+        public _chat?: "chat";
+
+        /** Message _protocolMessage. */
+        public _protocolMessage?: "protocolMessage";
+
+        /** Message _contactsArrayMessage. */
+        public _contactsArrayMessage?: "contactsArrayMessage";
+
+        /** Message _highlyStructuredMessage. */
+        public _highlyStructuredMessage?: "highlyStructuredMessage";
+
+        /** Message _fastRatchetKeySenderKeyDistributionMessage. */
+        public _fastRatchetKeySenderKeyDistributionMessage?: "fastRatchetKeySenderKeyDistributionMessage";
+
+        /** Message _sendPaymentMessage. */
+        public _sendPaymentMessage?: "sendPaymentMessage";
+
+        /** Message _liveLocationMessage. */
+        public _liveLocationMessage?: "liveLocationMessage";
+
+        /** Message _requestPaymentMessage. */
+        public _requestPaymentMessage?: "requestPaymentMessage";
+
+        /** Message _declinePaymentRequestMessage. */
+        public _declinePaymentRequestMessage?: "declinePaymentRequestMessage";
+
+        /** Message _cancelPaymentRequestMessage. */
+        public _cancelPaymentRequestMessage?: "cancelPaymentRequestMessage";
+
+        /** Message _templateMessage. */
+        public _templateMessage?: "templateMessage";
+
+        /** Message _stickerMessage. */
+        public _stickerMessage?: "stickerMessage";
+
+        /** Message _groupInviteMessage. */
+        public _groupInviteMessage?: "groupInviteMessage";
+
+        /** Message _templateButtonReplyMessage. */
+        public _templateButtonReplyMessage?: "templateButtonReplyMessage";
+
+        /** Message _productMessage. */
+        public _productMessage?: "productMessage";
+
+        /** Message _deviceSentMessage. */
+        public _deviceSentMessage?: "deviceSentMessage";
+
+        /** Message _messageContextInfo. */
+        public _messageContextInfo?: "messageContextInfo";
+
+        /** Message _listMessage. */
+        public _listMessage?: "listMessage";
+
+        /** Message _viewOnceMessage. */
+        public _viewOnceMessage?: "viewOnceMessage";
+
+        /** Message _orderMessage. */
+        public _orderMessage?: "orderMessage";
+
+        /** Message _listResponseMessage. */
+        public _listResponseMessage?: "listResponseMessage";
+
+        /** Message _ephemeralMessage. */
+        public _ephemeralMessage?: "ephemeralMessage";
+
+        /** Message _invoiceMessage. */
+        public _invoiceMessage?: "invoiceMessage";
+
+        /** Message _buttonsMessage. */
+        public _buttonsMessage?: "buttonsMessage";
+
+        /** Message _buttonsResponseMessage. */
+        public _buttonsResponseMessage?: "buttonsResponseMessage";
+
+        /** Message _paymentInviteMessage. */
+        public _paymentInviteMessage?: "paymentInviteMessage";
+
+        /** Message _interactiveMessage. */
+        public _interactiveMessage?: "interactiveMessage";
+
+        /** Message _reactionMessage. */
+        public _reactionMessage?: "reactionMessage";
+
+        /** Message _stickerSyncRmrMessage. */
+        public _stickerSyncRmrMessage?: "stickerSyncRmrMessage";
+
+        /** Message _interactiveResponseMessage. */
+        public _interactiveResponseMessage?: "interactiveResponseMessage";
+
+        /** Message _pollCreationMessage. */
+        public _pollCreationMessage?: "pollCreationMessage";
+
+        /** Message _pollUpdateMessage. */
+        public _pollUpdateMessage?: "pollUpdateMessage";
+
+        /** Message _keepInChatMessage. */
+        public _keepInChatMessage?: "keepInChatMessage";
+
+        /** Message _documentWithCaptionMessage. */
+        public _documentWithCaptionMessage?: "documentWithCaptionMessage";
+
+        /** Message _requestPhoneNumberMessage. */
+        public _requestPhoneNumberMessage?: "requestPhoneNumberMessage";
+
+        /** Message _viewOnceMessageV2. */
+        public _viewOnceMessageV2?: "viewOnceMessageV2";
+
+        /** Message _encReactionMessage. */
+        public _encReactionMessage?: "encReactionMessage";
+
+        /** Message _editedMessage. */
+        public _editedMessage?: "editedMessage";
+
+        /** Message _viewOnceMessageV2Extension. */
+        public _viewOnceMessageV2Extension?: "viewOnceMessageV2Extension";
+
+        /** Message _pollCreationMessageV2. */
+        public _pollCreationMessageV2?: "pollCreationMessageV2";
+
+        /** Message _scheduledCallCreationMessage. */
+        public _scheduledCallCreationMessage?: "scheduledCallCreationMessage";
+
+        /** Message _groupMentionedMessage. */
+        public _groupMentionedMessage?: "groupMentionedMessage";
+
+        /** Message _pinInChatMessage. */
+        public _pinInChatMessage?: "pinInChatMessage";
+
+        /** Message _pollCreationMessageV3. */
+        public _pollCreationMessageV3?: "pollCreationMessageV3";
+
+        /** Message _scheduledCallEditMessage. */
+        public _scheduledCallEditMessage?: "scheduledCallEditMessage";
+
+        /** Message _ptvMessage. */
+        public _ptvMessage?: "ptvMessage";
+
+        /** Message _botInvokeMessage. */
+        public _botInvokeMessage?: "botInvokeMessage";
+
+        /** Message _callLogMesssage. */
+        public _callLogMesssage?: "callLogMesssage";
+
+        /** Message _messageHistoryBundle. */
+        public _messageHistoryBundle?: "messageHistoryBundle";
+
+        /** Message _encCommentMessage. */
+        public _encCommentMessage?: "encCommentMessage";
+
+        /** Message _bcallMessage. */
+        public _bcallMessage?: "bcallMessage";
+
+        /** Message _lottieStickerMessage. */
+        public _lottieStickerMessage?: "lottieStickerMessage";
+
+        /** Message _eventMessage. */
+        public _eventMessage?: "eventMessage";
+
+        /** Message _encEventResponseMessage. */
+        public _encEventResponseMessage?: "encEventResponseMessage";
+
+        /** Message _commentMessage. */
+        public _commentMessage?: "commentMessage";
+
+        /** Message _newsletterAdminInviteMessage. */
+        public _newsletterAdminInviteMessage?: "newsletterAdminInviteMessage";
+
+        /** Message _placeholderMessage. */
+        public _placeholderMessage?: "placeholderMessage";
+
+        /** Message _secretEncryptedMessage. */
+        public _secretEncryptedMessage?: "secretEncryptedMessage";
+
+        /** Message _albumMessage. */
+        public _albumMessage?: "albumMessage";
+
+        /** Message _eventCoverImage. */
+        public _eventCoverImage?: "eventCoverImage";
+
+        /** Message _stickerPackMessage. */
+        public _stickerPackMessage?: "stickerPackMessage";
+
+        /** Message _statusMentionMessage. */
+        public _statusMentionMessage?: "statusMentionMessage";
+
+        /** Message _pollResultSnapshotMessage. */
+        public _pollResultSnapshotMessage?: "pollResultSnapshotMessage";
+
+        /** Message _pollCreationOptionImageMessage. */
+        public _pollCreationOptionImageMessage?: "pollCreationOptionImageMessage";
+
+        /** Message _associatedChildMessage. */
+        public _associatedChildMessage?: "associatedChildMessage";
+
+        /** Message _groupStatusMentionMessage. */
+        public _groupStatusMentionMessage?: "groupStatusMentionMessage";
+
+        /** Message _pollCreationMessageV4. */
+        public _pollCreationMessageV4?: "pollCreationMessageV4";
+
+        /** Message _pollCreationMessageV5. */
+        public _pollCreationMessageV5?: "pollCreationMessageV5";
+
+        /** Message _statusAddYours. */
+        public _statusAddYours?: "statusAddYours";
+
+        /** Message _groupStatusMessage. */
+        public _groupStatusMessage?: "groupStatusMessage";
+
+        /** Message _richResponseMessage. */
+        public _richResponseMessage?: "richResponseMessage";
+
+        /** Message _statusNotificationMessage. */
+        public _statusNotificationMessage?: "statusNotificationMessage";
+
+        /** Message _limitSharingMessage. */
+        public _limitSharingMessage?: "limitSharingMessage";
+
+        /** Message _botTaskMessage. */
+        public _botTaskMessage?: "botTaskMessage";
+
+        /** Message _questionMessage. */
+        public _questionMessage?: "questionMessage";
+
+        /** Message _messageHistoryNotice. */
+        public _messageHistoryNotice?: "messageHistoryNotice";
+
         /**
          * Creates a new Message instance using the specified properties.
          * @param [properties] Properties to set
@@ -18972,6 +21192,15 @@ export namespace proto {
             /** AlbumMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** AlbumMessage _expectedImageCount. */
+            public _expectedImageCount?: "expectedImageCount";
+
+            /** AlbumMessage _expectedVideoCount. */
+            public _expectedVideoCount?: "expectedVideoCount";
+
+            /** AlbumMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new AlbumMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -19075,6 +21304,9 @@ export namespace proto {
             /** AppStateFatalExceptionNotification timestamp. */
             public timestamp?: (number|Long|null);
 
+            /** AppStateFatalExceptionNotification _timestamp. */
+            public _timestamp?: "timestamp";
+
             /**
              * Creates a new AppStateFatalExceptionNotification instance using the specified properties.
              * @param [properties] Properties to set
@@ -19177,6 +21409,12 @@ export namespace proto {
 
             /** AppStateSyncKey keyData. */
             public keyData?: (proto.Message.IAppStateSyncKeyData|null);
+
+            /** AppStateSyncKey _keyId. */
+            public _keyId?: "keyId";
+
+            /** AppStateSyncKey _keyData. */
+            public _keyData?: "keyData";
 
             /**
              * Creates a new AppStateSyncKey instance using the specified properties.
@@ -19287,6 +21525,15 @@ export namespace proto {
             /** AppStateSyncKeyData timestamp. */
             public timestamp?: (number|Long|null);
 
+            /** AppStateSyncKeyData _keyData. */
+            public _keyData?: "keyData";
+
+            /** AppStateSyncKeyData _fingerprint. */
+            public _fingerprint?: "fingerprint";
+
+            /** AppStateSyncKeyData _timestamp. */
+            public _timestamp?: "timestamp";
+
             /**
              * Creates a new AppStateSyncKeyData instance using the specified properties.
              * @param [properties] Properties to set
@@ -19396,6 +21643,12 @@ export namespace proto {
             /** AppStateSyncKeyFingerprint deviceIndexes. */
             public deviceIndexes: number[];
 
+            /** AppStateSyncKeyFingerprint _rawId. */
+            public _rawId?: "rawId";
+
+            /** AppStateSyncKeyFingerprint _currentIndex. */
+            public _currentIndex?: "currentIndex";
+
             /**
              * Creates a new AppStateSyncKeyFingerprint instance using the specified properties.
              * @param [properties] Properties to set
@@ -19492,6 +21745,9 @@ export namespace proto {
 
             /** AppStateSyncKeyId keyId. */
             public keyId?: (Uint8Array|null);
+
+            /** AppStateSyncKeyId _keyId. */
+            public _keyId?: "keyId";
 
             /**
              * Creates a new AppStateSyncKeyId instance using the specified properties.
@@ -19874,6 +22130,54 @@ export namespace proto {
             /** AudioMessage accessibilityLabel. */
             public accessibilityLabel?: (string|null);
 
+            /** AudioMessage _url. */
+            public _url?: "url";
+
+            /** AudioMessage _mimetype. */
+            public _mimetype?: "mimetype";
+
+            /** AudioMessage _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** AudioMessage _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** AudioMessage _seconds. */
+            public _seconds?: "seconds";
+
+            /** AudioMessage _ptt. */
+            public _ptt?: "ptt";
+
+            /** AudioMessage _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** AudioMessage _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** AudioMessage _directPath. */
+            public _directPath?: "directPath";
+
+            /** AudioMessage _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** AudioMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** AudioMessage _streamingSidecar. */
+            public _streamingSidecar?: "streamingSidecar";
+
+            /** AudioMessage _waveform. */
+            public _waveform?: "waveform";
+
+            /** AudioMessage _backgroundArgb. */
+            public _backgroundArgb?: "backgroundArgb";
+
+            /** AudioMessage _viewOnce. */
+            public _viewOnce?: "viewOnce";
+
+            /** AudioMessage _accessibilityLabel. */
+            public _accessibilityLabel?: "accessibilityLabel";
+
             /**
              * Creates a new AudioMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -19988,6 +22292,18 @@ export namespace proto {
 
             /** BCallMessage caption. */
             public caption?: (string|null);
+
+            /** BCallMessage _sessionId. */
+            public _sessionId?: "sessionId";
+
+            /** BCallMessage _mediaType. */
+            public _mediaType?: "mediaType";
+
+            /** BCallMessage _masterKey. */
+            public _masterKey?: "masterKey";
+
+            /** BCallMessage _caption. */
+            public _caption?: "caption";
 
             /**
              * Creates a new BCallMessage instance using the specified properties.
@@ -20125,6 +22441,24 @@ export namespace proto {
 
             /** BotFeedbackMessage kindReport. */
             public kindReport?: (proto.Message.BotFeedbackMessage.ReportKind|null);
+
+            /** BotFeedbackMessage _messageKey. */
+            public _messageKey?: "messageKey";
+
+            /** BotFeedbackMessage _kind. */
+            public _kind?: "kind";
+
+            /** BotFeedbackMessage _text. */
+            public _text?: "text";
+
+            /** BotFeedbackMessage _kindNegative. */
+            public _kindNegative?: "kindNegative";
+
+            /** BotFeedbackMessage _kindPositive. */
+            public _kindPositive?: "kindPositive";
+
+            /** BotFeedbackMessage _kindReport. */
+            public _kindReport?: "kindReport";
 
             /**
              * Creates a new BotFeedbackMessage instance using the specified properties.
@@ -20320,6 +22654,18 @@ export namespace proto {
             /** ButtonsMessage locationMessage. */
             public locationMessage?: (proto.Message.ILocationMessage|null);
 
+            /** ButtonsMessage _contentText. */
+            public _contentText?: "contentText";
+
+            /** ButtonsMessage _footerText. */
+            public _footerText?: "footerText";
+
+            /** ButtonsMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** ButtonsMessage _headerType. */
+            public _headerType?: "headerType";
+
             /** ButtonsMessage header. */
             public header?: ("text"|"documentMessage"|"imageMessage"|"videoMessage"|"locationMessage");
 
@@ -20440,6 +22786,18 @@ export namespace proto {
                 /** Button nativeFlowInfo. */
                 public nativeFlowInfo?: (proto.Message.ButtonsMessage.Button.INativeFlowInfo|null);
 
+                /** Button _buttonId. */
+                public _buttonId?: "buttonId";
+
+                /** Button _buttonText. */
+                public _buttonText?: "buttonText";
+
+                /** Button _type. */
+                public _type?: "type";
+
+                /** Button _nativeFlowInfo. */
+                public _nativeFlowInfo?: "nativeFlowInfo";
+
                 /**
                  * Creates a new Button instance using the specified properties.
                  * @param [properties] Properties to set
@@ -20538,6 +22896,9 @@ export namespace proto {
 
                     /** ButtonText displayText. */
                     public displayText?: (string|null);
+
+                    /** ButtonText _displayText. */
+                    public _displayText?: "displayText";
 
                     /**
                      * Creates a new ButtonText instance using the specified properties.
@@ -20641,6 +23002,12 @@ export namespace proto {
 
                     /** NativeFlowInfo paramsJson. */
                     public paramsJson?: (string|null);
+
+                    /** NativeFlowInfo _name. */
+                    public _name?: "name";
+
+                    /** NativeFlowInfo _paramsJson. */
+                    public _paramsJson?: "paramsJson";
 
                     /**
                      * Creates a new NativeFlowInfo instance using the specified properties.
@@ -20776,6 +23143,15 @@ export namespace proto {
 
             /** ButtonsResponseMessage selectedDisplayText. */
             public selectedDisplayText?: (string|null);
+
+            /** ButtonsResponseMessage _selectedButtonId. */
+            public _selectedButtonId?: "selectedButtonId";
+
+            /** ButtonsResponseMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** ButtonsResponseMessage _type. */
+            public _type?: "type";
 
             /** ButtonsResponseMessage response. */
             public response?: "selectedDisplayText";
@@ -20922,6 +23298,27 @@ export namespace proto {
             /** Call contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** Call _callKey. */
+            public _callKey?: "callKey";
+
+            /** Call _conversionSource. */
+            public _conversionSource?: "conversionSource";
+
+            /** Call _conversionData. */
+            public _conversionData?: "conversionData";
+
+            /** Call _conversionDelaySeconds. */
+            public _conversionDelaySeconds?: "conversionDelaySeconds";
+
+            /** Call _ctwaSignals. */
+            public _ctwaSignals?: "ctwaSignals";
+
+            /** Call _ctwaPayload. */
+            public _ctwaPayload?: "ctwaPayload";
+
+            /** Call _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new Call instance using the specified properties.
              * @param [properties] Properties to set
@@ -21043,6 +23440,18 @@ export namespace proto {
             /** CallLogMessage participants. */
             public participants: proto.Message.CallLogMessage.ICallParticipant[];
 
+            /** CallLogMessage _isVideo. */
+            public _isVideo?: "isVideo";
+
+            /** CallLogMessage _callOutcome. */
+            public _callOutcome?: "callOutcome";
+
+            /** CallLogMessage _durationSecs. */
+            public _durationSecs?: "durationSecs";
+
+            /** CallLogMessage _callType. */
+            public _callType?: "callType";
+
             /**
              * Creates a new CallLogMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -21160,6 +23569,12 @@ export namespace proto {
                 /** CallParticipant callOutcome. */
                 public callOutcome?: (proto.Message.CallLogMessage.CallOutcome|null);
 
+                /** CallParticipant _jid. */
+                public _jid?: "jid";
+
+                /** CallParticipant _callOutcome. */
+                public _callOutcome?: "callOutcome";
+
                 /**
                  * Creates a new CallParticipant instance using the specified properties.
                  * @param [properties] Properties to set
@@ -21265,6 +23680,9 @@ export namespace proto {
             /** CancelPaymentRequestMessage key. */
             public key?: (proto.IMessageKey|null);
 
+            /** CancelPaymentRequestMessage _key. */
+            public _key?: "key";
+
             /**
              * Creates a new CancelPaymentRequestMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -21367,6 +23785,12 @@ export namespace proto {
 
             /** Chat id. */
             public id?: (string|null);
+
+            /** Chat _displayName. */
+            public _displayName?: "displayName";
+
+            /** Chat _id. */
+            public _id?: "id";
 
             /**
              * Creates a new Chat instance using the specified properties.
@@ -21489,6 +23913,21 @@ export namespace proto {
             /** CloudAPIThreadControlNotification notificationContent. */
             public notificationContent?: (proto.Message.CloudAPIThreadControlNotification.ICloudAPIThreadControlNotificationContent|null);
 
+            /** CloudAPIThreadControlNotification _status. */
+            public _status?: "status";
+
+            /** CloudAPIThreadControlNotification _senderNotificationTimestampMs. */
+            public _senderNotificationTimestampMs?: "senderNotificationTimestampMs";
+
+            /** CloudAPIThreadControlNotification _consumerLid. */
+            public _consumerLid?: "consumerLid";
+
+            /** CloudAPIThreadControlNotification _consumerPhoneNumber. */
+            public _consumerPhoneNumber?: "consumerPhoneNumber";
+
+            /** CloudAPIThreadControlNotification _notificationContent. */
+            public _notificationContent?: "notificationContent";
+
             /**
              * Creates a new CloudAPIThreadControlNotification instance using the specified properties.
              * @param [properties] Properties to set
@@ -21601,6 +24040,12 @@ export namespace proto {
                 /** CloudAPIThreadControlNotificationContent extraJson. */
                 public extraJson?: (string|null);
 
+                /** CloudAPIThreadControlNotificationContent _handoffNotificationText. */
+                public _handoffNotificationText?: "handoffNotificationText";
+
+                /** CloudAPIThreadControlNotificationContent _extraJson. */
+                public _extraJson?: "extraJson";
+
                 /**
                  * Creates a new CloudAPIThreadControlNotificationContent instance using the specified properties.
                  * @param [properties] Properties to set
@@ -21704,6 +24149,12 @@ export namespace proto {
 
             /** CommentMessage targetMessageKey. */
             public targetMessageKey?: (proto.IMessageKey|null);
+
+            /** CommentMessage _message. */
+            public _message?: "message";
+
+            /** CommentMessage _targetMessageKey. */
+            public _targetMessageKey?: "targetMessageKey";
 
             /**
              * Creates a new CommentMessage instance using the specified properties.
@@ -21814,6 +24265,15 @@ export namespace proto {
             /** ContactMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** ContactMessage _displayName. */
+            public _displayName?: "displayName";
+
+            /** ContactMessage _vcard. */
+            public _vcard?: "vcard";
+
+            /** ContactMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new ContactMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -21923,6 +24383,12 @@ export namespace proto {
             /** ContactsArrayMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** ContactsArrayMessage _displayName. */
+            public _displayName?: "displayName";
+
+            /** ContactsArrayMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new ContactsArrayMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -22019,6 +24485,9 @@ export namespace proto {
 
             /** DeclinePaymentRequestMessage key. */
             public key?: (proto.IMessageKey|null);
+
+            /** DeclinePaymentRequestMessage _key. */
+            public _key?: "key";
 
             /**
              * Creates a new DeclinePaymentRequestMessage instance using the specified properties.
@@ -22128,6 +24597,15 @@ export namespace proto {
 
             /** DeviceSentMessage phash. */
             public phash?: (string|null);
+
+            /** DeviceSentMessage _destinationJid. */
+            public _destinationJid?: "destinationJid";
+
+            /** DeviceSentMessage _message. */
+            public _message?: "message";
+
+            /** DeviceSentMessage _phash. */
+            public _phash?: "phash";
 
             /**
              * Creates a new DeviceSentMessage instance using the specified properties.
@@ -22346,6 +24824,69 @@ export namespace proto {
             /** DocumentMessage accessibilityLabel. */
             public accessibilityLabel?: (string|null);
 
+            /** DocumentMessage _url. */
+            public _url?: "url";
+
+            /** DocumentMessage _mimetype. */
+            public _mimetype?: "mimetype";
+
+            /** DocumentMessage _title. */
+            public _title?: "title";
+
+            /** DocumentMessage _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** DocumentMessage _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** DocumentMessage _pageCount. */
+            public _pageCount?: "pageCount";
+
+            /** DocumentMessage _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** DocumentMessage _fileName. */
+            public _fileName?: "fileName";
+
+            /** DocumentMessage _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** DocumentMessage _directPath. */
+            public _directPath?: "directPath";
+
+            /** DocumentMessage _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** DocumentMessage _contactVcard. */
+            public _contactVcard?: "contactVcard";
+
+            /** DocumentMessage _thumbnailDirectPath. */
+            public _thumbnailDirectPath?: "thumbnailDirectPath";
+
+            /** DocumentMessage _thumbnailSha256. */
+            public _thumbnailSha256?: "thumbnailSha256";
+
+            /** DocumentMessage _thumbnailEncSha256. */
+            public _thumbnailEncSha256?: "thumbnailEncSha256";
+
+            /** DocumentMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** DocumentMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** DocumentMessage _thumbnailHeight. */
+            public _thumbnailHeight?: "thumbnailHeight";
+
+            /** DocumentMessage _thumbnailWidth. */
+            public _thumbnailWidth?: "thumbnailWidth";
+
+            /** DocumentMessage _caption. */
+            public _caption?: "caption";
+
+            /** DocumentMessage _accessibilityLabel. */
+            public _accessibilityLabel?: "accessibilityLabel";
+
             /**
              * Creates a new DocumentMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -22454,6 +24995,15 @@ export namespace proto {
 
             /** EncCommentMessage encIv. */
             public encIv?: (Uint8Array|null);
+
+            /** EncCommentMessage _targetMessageKey. */
+            public _targetMessageKey?: "targetMessageKey";
+
+            /** EncCommentMessage _encPayload. */
+            public _encPayload?: "encPayload";
+
+            /** EncCommentMessage _encIv. */
+            public _encIv?: "encIv";
 
             /**
              * Creates a new EncCommentMessage instance using the specified properties.
@@ -22564,6 +25114,15 @@ export namespace proto {
             /** EncEventResponseMessage encIv. */
             public encIv?: (Uint8Array|null);
 
+            /** EncEventResponseMessage _eventCreationMessageKey. */
+            public _eventCreationMessageKey?: "eventCreationMessageKey";
+
+            /** EncEventResponseMessage _encPayload. */
+            public _encPayload?: "encPayload";
+
+            /** EncEventResponseMessage _encIv. */
+            public _encIv?: "encIv";
+
             /**
              * Creates a new EncEventResponseMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -22672,6 +25231,15 @@ export namespace proto {
 
             /** EncReactionMessage encIv. */
             public encIv?: (Uint8Array|null);
+
+            /** EncReactionMessage _targetMessageKey. */
+            public _targetMessageKey?: "targetMessageKey";
+
+            /** EncReactionMessage _encPayload. */
+            public _encPayload?: "encPayload";
+
+            /** EncReactionMessage _encIv. */
+            public _encIv?: "encIv";
 
             /**
              * Creates a new EncReactionMessage instance using the specified properties.
@@ -22824,6 +25392,36 @@ export namespace proto {
             /** EventMessage isScheduleCall. */
             public isScheduleCall?: (boolean|null);
 
+            /** EventMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** EventMessage _isCanceled. */
+            public _isCanceled?: "isCanceled";
+
+            /** EventMessage _name. */
+            public _name?: "name";
+
+            /** EventMessage _description. */
+            public _description?: "description";
+
+            /** EventMessage _location. */
+            public _location?: "location";
+
+            /** EventMessage _joinLink. */
+            public _joinLink?: "joinLink";
+
+            /** EventMessage _startTime. */
+            public _startTime?: "startTime";
+
+            /** EventMessage _endTime. */
+            public _endTime?: "endTime";
+
+            /** EventMessage _extraGuestsAllowed. */
+            public _extraGuestsAllowed?: "extraGuestsAllowed";
+
+            /** EventMessage _isScheduleCall. */
+            public _isScheduleCall?: "isScheduleCall";
+
             /**
              * Creates a new EventMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -22932,6 +25530,15 @@ export namespace proto {
 
             /** EventResponseMessage extraGuestCount. */
             public extraGuestCount?: (number|null);
+
+            /** EventResponseMessage _response. */
+            public _response?: "response";
+
+            /** EventResponseMessage _timestampMs. */
+            public _timestampMs?: "timestampMs";
+
+            /** EventResponseMessage _extraGuestCount. */
+            public _extraGuestCount?: "extraGuestCount";
 
             /**
              * Creates a new EventResponseMessage instance using the specified properties.
@@ -23203,6 +25810,90 @@ export namespace proto {
             /** ExtendedTextMessage paymentLinkMetadata. */
             public paymentLinkMetadata?: (proto.Message.IPaymentLinkMetadata|null);
 
+            /** ExtendedTextMessage _text. */
+            public _text?: "text";
+
+            /** ExtendedTextMessage _matchedText. */
+            public _matchedText?: "matchedText";
+
+            /** ExtendedTextMessage _description. */
+            public _description?: "description";
+
+            /** ExtendedTextMessage _title. */
+            public _title?: "title";
+
+            /** ExtendedTextMessage _textArgb. */
+            public _textArgb?: "textArgb";
+
+            /** ExtendedTextMessage _backgroundArgb. */
+            public _backgroundArgb?: "backgroundArgb";
+
+            /** ExtendedTextMessage _font. */
+            public _font?: "font";
+
+            /** ExtendedTextMessage _previewType. */
+            public _previewType?: "previewType";
+
+            /** ExtendedTextMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** ExtendedTextMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** ExtendedTextMessage _doNotPlayInline. */
+            public _doNotPlayInline?: "doNotPlayInline";
+
+            /** ExtendedTextMessage _thumbnailDirectPath. */
+            public _thumbnailDirectPath?: "thumbnailDirectPath";
+
+            /** ExtendedTextMessage _thumbnailSha256. */
+            public _thumbnailSha256?: "thumbnailSha256";
+
+            /** ExtendedTextMessage _thumbnailEncSha256. */
+            public _thumbnailEncSha256?: "thumbnailEncSha256";
+
+            /** ExtendedTextMessage _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** ExtendedTextMessage _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** ExtendedTextMessage _thumbnailHeight. */
+            public _thumbnailHeight?: "thumbnailHeight";
+
+            /** ExtendedTextMessage _thumbnailWidth. */
+            public _thumbnailWidth?: "thumbnailWidth";
+
+            /** ExtendedTextMessage _inviteLinkGroupType. */
+            public _inviteLinkGroupType?: "inviteLinkGroupType";
+
+            /** ExtendedTextMessage _inviteLinkParentGroupSubjectV2. */
+            public _inviteLinkParentGroupSubjectV2?: "inviteLinkParentGroupSubjectV2";
+
+            /** ExtendedTextMessage _inviteLinkParentGroupThumbnailV2. */
+            public _inviteLinkParentGroupThumbnailV2?: "inviteLinkParentGroupThumbnailV2";
+
+            /** ExtendedTextMessage _inviteLinkGroupTypeV2. */
+            public _inviteLinkGroupTypeV2?: "inviteLinkGroupTypeV2";
+
+            /** ExtendedTextMessage _viewOnce. */
+            public _viewOnce?: "viewOnce";
+
+            /** ExtendedTextMessage _videoHeight. */
+            public _videoHeight?: "videoHeight";
+
+            /** ExtendedTextMessage _videoWidth. */
+            public _videoWidth?: "videoWidth";
+
+            /** ExtendedTextMessage _faviconMMSMetadata. */
+            public _faviconMMSMetadata?: "faviconMMSMetadata";
+
+            /** ExtendedTextMessage _linkPreviewMetadata. */
+            public _linkPreviewMetadata?: "linkPreviewMetadata";
+
+            /** ExtendedTextMessage _paymentLinkMetadata. */
+            public _paymentLinkMetadata?: "paymentLinkMetadata";
+
             /**
              * Creates a new ExtendedTextMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -23333,6 +26024,9 @@ export namespace proto {
             /** FullHistorySyncOnDemandRequestMetadata requestId. */
             public requestId?: (string|null);
 
+            /** FullHistorySyncOnDemandRequestMetadata _requestId. */
+            public _requestId?: "requestId";
+
             /**
              * Creates a new FullHistorySyncOnDemandRequestMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -23429,6 +26123,9 @@ export namespace proto {
 
             /** FutureProofMessage message. */
             public message?: (proto.IMessage|null);
+
+            /** FutureProofMessage _message. */
+            public _message?: "message";
 
             /**
              * Creates a new FutureProofMessage instance using the specified properties.
@@ -23568,6 +26265,30 @@ export namespace proto {
 
             /** GroupInviteMessage groupType. */
             public groupType?: (proto.Message.GroupInviteMessage.GroupType|null);
+
+            /** GroupInviteMessage _groupJid. */
+            public _groupJid?: "groupJid";
+
+            /** GroupInviteMessage _inviteCode. */
+            public _inviteCode?: "inviteCode";
+
+            /** GroupInviteMessage _inviteExpiration. */
+            public _inviteExpiration?: "inviteExpiration";
+
+            /** GroupInviteMessage _groupName. */
+            public _groupName?: "groupName";
+
+            /** GroupInviteMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** GroupInviteMessage _caption. */
+            public _caption?: "caption";
+
+            /** GroupInviteMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** GroupInviteMessage _groupType. */
+            public _groupType?: "groupType";
 
             /**
              * Creates a new GroupInviteMessage instance using the specified properties.
@@ -23723,6 +26444,27 @@ export namespace proto {
             /** HighlyStructuredMessage hydratedHsm. */
             public hydratedHsm?: (proto.Message.ITemplateMessage|null);
 
+            /** HighlyStructuredMessage _namespace. */
+            public _namespace?: "namespace";
+
+            /** HighlyStructuredMessage _elementName. */
+            public _elementName?: "elementName";
+
+            /** HighlyStructuredMessage _fallbackLg. */
+            public _fallbackLg?: "fallbackLg";
+
+            /** HighlyStructuredMessage _fallbackLc. */
+            public _fallbackLc?: "fallbackLc";
+
+            /** HighlyStructuredMessage _deterministicLg. */
+            public _deterministicLg?: "deterministicLg";
+
+            /** HighlyStructuredMessage _deterministicLc. */
+            public _deterministicLc?: "deterministicLc";
+
+            /** HighlyStructuredMessage _hydratedHsm. */
+            public _hydratedHsm?: "hydratedHsm";
+
             /**
              * Creates a new HighlyStructuredMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -23834,6 +26576,9 @@ export namespace proto {
                 /** HSMLocalizableParameter dateTime. */
                 public dateTime?: (proto.Message.HighlyStructuredMessage.HSMLocalizableParameter.IHSMDateTime|null);
 
+                /** HSMLocalizableParameter _default. */
+                public _default?: "default";
+
                 /** HSMLocalizableParameter paramOneof. */
                 public paramOneof?: ("currency"|"dateTime");
 
@@ -23941,6 +26686,12 @@ export namespace proto {
 
                     /** HSMCurrency amount1000. */
                     public amount1000?: (number|Long|null);
+
+                    /** HSMCurrency _currencyCode. */
+                    public _currencyCode?: "currencyCode";
+
+                    /** HSMCurrency _amount1000. */
+                    public _amount1000?: "amount1000";
 
                     /**
                      * Creates a new HSMCurrency instance using the specified properties.
@@ -24183,6 +26934,27 @@ export namespace proto {
                         /** HSMDateTimeComponent calendar. */
                         public calendar?: (proto.Message.HighlyStructuredMessage.HSMLocalizableParameter.HSMDateTime.HSMDateTimeComponent.CalendarType|null);
 
+                        /** HSMDateTimeComponent _dayOfWeek. */
+                        public _dayOfWeek?: "dayOfWeek";
+
+                        /** HSMDateTimeComponent _year. */
+                        public _year?: "year";
+
+                        /** HSMDateTimeComponent _month. */
+                        public _month?: "month";
+
+                        /** HSMDateTimeComponent _dayOfMonth. */
+                        public _dayOfMonth?: "dayOfMonth";
+
+                        /** HSMDateTimeComponent _hour. */
+                        public _hour?: "hour";
+
+                        /** HSMDateTimeComponent _minute. */
+                        public _minute?: "minute";
+
+                        /** HSMDateTimeComponent _calendar. */
+                        public _calendar?: "calendar";
+
                         /**
                          * Creates a new HSMDateTimeComponent instance using the specified properties.
                          * @param [properties] Properties to set
@@ -24299,6 +27071,9 @@ export namespace proto {
 
                         /** HSMDateTimeUnixEpoch timestamp. */
                         public timestamp?: (number|Long|null);
+
+                        /** HSMDateTimeUnixEpoch _timestamp. */
+                        public _timestamp?: "timestamp";
 
                         /**
                          * Creates a new HSMDateTimeUnixEpoch instance using the specified properties.
@@ -24477,6 +27252,48 @@ export namespace proto {
 
             /** HistorySyncNotification encHandle. */
             public encHandle?: (string|null);
+
+            /** HistorySyncNotification _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** HistorySyncNotification _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** HistorySyncNotification _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** HistorySyncNotification _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** HistorySyncNotification _directPath. */
+            public _directPath?: "directPath";
+
+            /** HistorySyncNotification _syncType. */
+            public _syncType?: "syncType";
+
+            /** HistorySyncNotification _chunkOrder. */
+            public _chunkOrder?: "chunkOrder";
+
+            /** HistorySyncNotification _originalMessageId. */
+            public _originalMessageId?: "originalMessageId";
+
+            /** HistorySyncNotification _progress. */
+            public _progress?: "progress";
+
+            /** HistorySyncNotification _oldestMsgInChunkTimestampSec. */
+            public _oldestMsgInChunkTimestampSec?: "oldestMsgInChunkTimestampSec";
+
+            /** HistorySyncNotification _initialHistBootstrapInlinePayload. */
+            public _initialHistBootstrapInlinePayload?: "initialHistBootstrapInlinePayload";
+
+            /** HistorySyncNotification _peerDataRequestSessionId. */
+            public _peerDataRequestSessionId?: "peerDataRequestSessionId";
+
+            /** HistorySyncNotification _fullHistorySyncOnDemandRequestMetadata. */
+            public _fullHistorySyncOnDemandRequestMetadata?: "fullHistorySyncOnDemandRequestMetadata";
+
+            /** HistorySyncNotification _encHandle. */
+            public _encHandle?: "encHandle";
 
             /**
              * Creates a new HistorySyncNotification instance using the specified properties.
@@ -24758,6 +27575,84 @@ export namespace proto {
             /** ImageMessage accessibilityLabel. */
             public accessibilityLabel?: (string|null);
 
+            /** ImageMessage _url. */
+            public _url?: "url";
+
+            /** ImageMessage _mimetype. */
+            public _mimetype?: "mimetype";
+
+            /** ImageMessage _caption. */
+            public _caption?: "caption";
+
+            /** ImageMessage _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** ImageMessage _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** ImageMessage _height. */
+            public _height?: "height";
+
+            /** ImageMessage _width. */
+            public _width?: "width";
+
+            /** ImageMessage _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** ImageMessage _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** ImageMessage _directPath. */
+            public _directPath?: "directPath";
+
+            /** ImageMessage _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** ImageMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** ImageMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** ImageMessage _firstScanSidecar. */
+            public _firstScanSidecar?: "firstScanSidecar";
+
+            /** ImageMessage _firstScanLength. */
+            public _firstScanLength?: "firstScanLength";
+
+            /** ImageMessage _experimentGroupId. */
+            public _experimentGroupId?: "experimentGroupId";
+
+            /** ImageMessage _scansSidecar. */
+            public _scansSidecar?: "scansSidecar";
+
+            /** ImageMessage _midQualityFileSha256. */
+            public _midQualityFileSha256?: "midQualityFileSha256";
+
+            /** ImageMessage _midQualityFileEncSha256. */
+            public _midQualityFileEncSha256?: "midQualityFileEncSha256";
+
+            /** ImageMessage _viewOnce. */
+            public _viewOnce?: "viewOnce";
+
+            /** ImageMessage _thumbnailDirectPath. */
+            public _thumbnailDirectPath?: "thumbnailDirectPath";
+
+            /** ImageMessage _thumbnailSha256. */
+            public _thumbnailSha256?: "thumbnailSha256";
+
+            /** ImageMessage _thumbnailEncSha256. */
+            public _thumbnailEncSha256?: "thumbnailEncSha256";
+
+            /** ImageMessage _staticUrl. */
+            public _staticUrl?: "staticUrl";
+
+            /** ImageMessage _imageSourceType. */
+            public _imageSourceType?: "imageSourceType";
+
+            /** ImageMessage _accessibilityLabel. */
+            public _accessibilityLabel?: "accessibilityLabel";
+
             /**
              * Creates a new ImageMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -24865,6 +27760,9 @@ export namespace proto {
 
             /** InitialSecurityNotificationSettingSync securityNotificationEnabled. */
             public securityNotificationEnabled?: (boolean|null);
+
+            /** InitialSecurityNotificationSettingSync _securityNotificationEnabled. */
+            public _securityNotificationEnabled?: "securityNotificationEnabled";
 
             /**
              * Creates a new InitialSecurityNotificationSettingSync instance using the specified properties.
@@ -25011,6 +27909,21 @@ export namespace proto {
             /** InteractiveMessage carouselMessage. */
             public carouselMessage?: (proto.Message.InteractiveMessage.ICarouselMessage|null);
 
+            /** InteractiveMessage _header. */
+            public _header?: "header";
+
+            /** InteractiveMessage _body. */
+            public _body?: "body";
+
+            /** InteractiveMessage _footer. */
+            public _footer?: "footer";
+
+            /** InteractiveMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** InteractiveMessage _urlTrackingMap. */
+            public _urlTrackingMap?: "urlTrackingMap";
+
             /** InteractiveMessage interactiveMessage. */
             public interactiveMessage?: ("shopStorefrontMessage"|"collectionMessage"|"nativeFlowMessage"|"carouselMessage");
 
@@ -25112,6 +28025,9 @@ export namespace proto {
 
                 /** Body text. */
                 public text?: (string|null);
+
+                /** Body _text. */
+                public _text?: "text";
 
                 /**
                  * Creates a new Body instance using the specified properties.
@@ -25215,6 +28131,9 @@ export namespace proto {
 
                 /** CarouselMessage messageVersion. */
                 public messageVersion?: (number|null);
+
+                /** CarouselMessage _messageVersion. */
+                public _messageVersion?: "messageVersion";
 
                 /**
                  * Creates a new CarouselMessage instance using the specified properties.
@@ -25325,6 +28244,15 @@ export namespace proto {
                 /** CollectionMessage messageVersion. */
                 public messageVersion?: (number|null);
 
+                /** CollectionMessage _bizJid. */
+                public _bizJid?: "bizJid";
+
+                /** CollectionMessage _id. */
+                public _id?: "id";
+
+                /** CollectionMessage _messageVersion. */
+                public _messageVersion?: "messageVersion";
+
                 /**
                  * Creates a new CollectionMessage instance using the specified properties.
                  * @param [properties] Properties to set
@@ -25421,6 +28349,9 @@ export namespace proto {
 
                 /** Footer text. */
                 public text?: (string|null);
+
+                /** Footer _text. */
+                public _text?: "text";
 
                 /**
                  * Creates a new Footer instance using the specified properties.
@@ -25567,6 +28498,15 @@ export namespace proto {
                 /** Header productMessage. */
                 public productMessage?: (proto.Message.IProductMessage|null);
 
+                /** Header _title. */
+                public _title?: "title";
+
+                /** Header _subtitle. */
+                public _subtitle?: "subtitle";
+
+                /** Header _hasMediaAttachment. */
+                public _hasMediaAttachment?: "hasMediaAttachment";
+
                 /** Header media. */
                 public media?: ("documentMessage"|"imageMessage"|"jpegThumbnail"|"videoMessage"|"locationMessage"|"productMessage");
 
@@ -25679,6 +28619,12 @@ export namespace proto {
                 /** NativeFlowMessage messageVersion. */
                 public messageVersion?: (number|null);
 
+                /** NativeFlowMessage _messageParamsJson. */
+                public _messageParamsJson?: "messageParamsJson";
+
+                /** NativeFlowMessage _messageVersion. */
+                public _messageVersion?: "messageVersion";
+
                 /**
                  * Creates a new NativeFlowMessage instance using the specified properties.
                  * @param [properties] Properties to set
@@ -25783,6 +28729,12 @@ export namespace proto {
 
                     /** NativeFlowButton buttonParamsJson. */
                     public buttonParamsJson?: (string|null);
+
+                    /** NativeFlowButton _name. */
+                    public _name?: "name";
+
+                    /** NativeFlowButton _buttonParamsJson. */
+                    public _buttonParamsJson?: "buttonParamsJson";
 
                     /**
                      * Creates a new NativeFlowButton instance using the specified properties.
@@ -25893,6 +28845,15 @@ export namespace proto {
 
                 /** ShopMessage messageVersion. */
                 public messageVersion?: (number|null);
+
+                /** ShopMessage _id. */
+                public _id?: "id";
+
+                /** ShopMessage _surface. */
+                public _surface?: "surface";
+
+                /** ShopMessage _messageVersion. */
+                public _messageVersion?: "messageVersion";
 
                 /**
                  * Creates a new ShopMessage instance using the specified properties.
@@ -26015,6 +28976,12 @@ export namespace proto {
             /** InteractiveResponseMessage nativeFlowResponseMessage. */
             public nativeFlowResponseMessage?: (proto.Message.InteractiveResponseMessage.INativeFlowResponseMessage|null);
 
+            /** InteractiveResponseMessage _body. */
+            public _body?: "body";
+
+            /** InteractiveResponseMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /** InteractiveResponseMessage interactiveResponseMessage. */
             public interactiveResponseMessage?: "nativeFlowResponseMessage";
 
@@ -26122,6 +29089,12 @@ export namespace proto {
 
                 /** Body format. */
                 public format?: (proto.Message.InteractiveResponseMessage.Body.Format|null);
+
+                /** Body _text. */
+                public _text?: "text";
+
+                /** Body _format. */
+                public _format?: "format";
 
                 /**
                  * Creates a new Body instance using the specified properties.
@@ -26240,6 +29213,15 @@ export namespace proto {
 
                 /** NativeFlowResponseMessage version. */
                 public version?: (number|null);
+
+                /** NativeFlowResponseMessage _name. */
+                public _name?: "name";
+
+                /** NativeFlowResponseMessage _paramsJson. */
+                public _paramsJson?: "paramsJson";
+
+                /** NativeFlowResponseMessage _version. */
+                public _version?: "version";
 
                 /**
                  * Creates a new NativeFlowResponseMessage instance using the specified properties.
@@ -26393,6 +29375,36 @@ export namespace proto {
             /** InvoiceMessage attachmentJpegThumbnail. */
             public attachmentJpegThumbnail?: (Uint8Array|null);
 
+            /** InvoiceMessage _note. */
+            public _note?: "note";
+
+            /** InvoiceMessage _token. */
+            public _token?: "token";
+
+            /** InvoiceMessage _attachmentType. */
+            public _attachmentType?: "attachmentType";
+
+            /** InvoiceMessage _attachmentMimetype. */
+            public _attachmentMimetype?: "attachmentMimetype";
+
+            /** InvoiceMessage _attachmentMediaKey. */
+            public _attachmentMediaKey?: "attachmentMediaKey";
+
+            /** InvoiceMessage _attachmentMediaKeyTimestamp. */
+            public _attachmentMediaKeyTimestamp?: "attachmentMediaKeyTimestamp";
+
+            /** InvoiceMessage _attachmentFileSha256. */
+            public _attachmentFileSha256?: "attachmentFileSha256";
+
+            /** InvoiceMessage _attachmentFileEncSha256. */
+            public _attachmentFileEncSha256?: "attachmentFileEncSha256";
+
+            /** InvoiceMessage _attachmentDirectPath. */
+            public _attachmentDirectPath?: "attachmentDirectPath";
+
+            /** InvoiceMessage _attachmentJpegThumbnail. */
+            public _attachmentJpegThumbnail?: "attachmentJpegThumbnail";
+
             /**
              * Creates a new InvoiceMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -26511,6 +29523,15 @@ export namespace proto {
             /** KeepInChatMessage timestampMs. */
             public timestampMs?: (number|Long|null);
 
+            /** KeepInChatMessage _key. */
+            public _key?: "key";
+
+            /** KeepInChatMessage _keepType. */
+            public _keepType?: "keepType";
+
+            /** KeepInChatMessage _timestampMs. */
+            public _timestampMs?: "timestampMs";
+
             /**
              * Creates a new KeepInChatMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -26619,6 +29640,15 @@ export namespace proto {
 
             /** LinkPreviewMetadata fbExperimentId. */
             public fbExperimentId?: (number|null);
+
+            /** LinkPreviewMetadata _paymentLinkMetadata. */
+            public _paymentLinkMetadata?: "paymentLinkMetadata";
+
+            /** LinkPreviewMetadata _urlMetadata. */
+            public _urlMetadata?: "urlMetadata";
+
+            /** LinkPreviewMetadata _fbExperimentId. */
+            public _fbExperimentId?: "fbExperimentId";
 
             /**
              * Creates a new LinkPreviewMetadata instance using the specified properties.
@@ -26759,6 +29789,27 @@ export namespace proto {
             /** ListMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** ListMessage _title. */
+            public _title?: "title";
+
+            /** ListMessage _description. */
+            public _description?: "description";
+
+            /** ListMessage _buttonText. */
+            public _buttonText?: "buttonText";
+
+            /** ListMessage _listType. */
+            public _listType?: "listType";
+
+            /** ListMessage _productListInfo. */
+            public _productListInfo?: "productListInfo";
+
+            /** ListMessage _footerText. */
+            public _footerText?: "footerText";
+
+            /** ListMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new ListMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -26865,6 +29916,9 @@ export namespace proto {
                 /** Product productId. */
                 public productId?: (string|null);
 
+                /** Product _productId. */
+                public _productId?: "productId";
+
                 /**
                  * Creates a new Product instance using the specified properties.
                  * @param [properties] Properties to set
@@ -26967,6 +30021,12 @@ export namespace proto {
 
                 /** ProductListHeaderImage jpegThumbnail. */
                 public jpegThumbnail?: (Uint8Array|null);
+
+                /** ProductListHeaderImage _productId. */
+                public _productId?: "productId";
+
+                /** ProductListHeaderImage _jpegThumbnail. */
+                public _jpegThumbnail?: "jpegThumbnail";
 
                 /**
                  * Creates a new ProductListHeaderImage instance using the specified properties.
@@ -27077,6 +30137,12 @@ export namespace proto {
                 /** ProductListInfo businessOwnerJid. */
                 public businessOwnerJid?: (string|null);
 
+                /** ProductListInfo _headerImage. */
+                public _headerImage?: "headerImage";
+
+                /** ProductListInfo _businessOwnerJid. */
+                public _businessOwnerJid?: "businessOwnerJid";
+
                 /**
                  * Creates a new ProductListInfo instance using the specified properties.
                  * @param [properties] Properties to set
@@ -27179,6 +30245,9 @@ export namespace proto {
 
                 /** ProductSection products. */
                 public products: proto.Message.ListMessage.IProduct[];
+
+                /** ProductSection _title. */
+                public _title?: "title";
 
                 /**
                  * Creates a new ProductSection instance using the specified properties.
@@ -27289,6 +30358,15 @@ export namespace proto {
                 /** Row rowId. */
                 public rowId?: (string|null);
 
+                /** Row _title. */
+                public _title?: "title";
+
+                /** Row _description. */
+                public _description?: "description";
+
+                /** Row _rowId. */
+                public _rowId?: "rowId";
+
                 /**
                  * Creates a new Row instance using the specified properties.
                  * @param [properties] Properties to set
@@ -27391,6 +30469,9 @@ export namespace proto {
 
                 /** Section rows. */
                 public rows: proto.Message.ListMessage.IRow[];
+
+                /** Section _title. */
+                public _title?: "title";
 
                 /**
                  * Creates a new Section instance using the specified properties.
@@ -27514,6 +30595,21 @@ export namespace proto {
             /** ListResponseMessage description. */
             public description?: (string|null);
 
+            /** ListResponseMessage _title. */
+            public _title?: "title";
+
+            /** ListResponseMessage _listType. */
+            public _listType?: "listType";
+
+            /** ListResponseMessage _singleSelectReply. */
+            public _singleSelectReply?: "singleSelectReply";
+
+            /** ListResponseMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** ListResponseMessage _description. */
+            public _description?: "description";
+
             /**
              * Creates a new ListResponseMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -27618,6 +30714,9 @@ export namespace proto {
 
                 /** SingleSelectReply selectedRowId. */
                 public selectedRowId?: (string|null);
+
+                /** SingleSelectReply _selectedRowId. */
+                public _selectedRowId?: "selectedRowId";
 
                 /**
                  * Creates a new SingleSelectReply instance using the specified properties.
@@ -27770,6 +30869,36 @@ export namespace proto {
 
             /** LiveLocationMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
+
+            /** LiveLocationMessage _degreesLatitude. */
+            public _degreesLatitude?: "degreesLatitude";
+
+            /** LiveLocationMessage _degreesLongitude. */
+            public _degreesLongitude?: "degreesLongitude";
+
+            /** LiveLocationMessage _accuracyInMeters. */
+            public _accuracyInMeters?: "accuracyInMeters";
+
+            /** LiveLocationMessage _speedInMps. */
+            public _speedInMps?: "speedInMps";
+
+            /** LiveLocationMessage _degreesClockwiseFromMagneticNorth. */
+            public _degreesClockwiseFromMagneticNorth?: "degreesClockwiseFromMagneticNorth";
+
+            /** LiveLocationMessage _caption. */
+            public _caption?: "caption";
+
+            /** LiveLocationMessage _sequenceNumber. */
+            public _sequenceNumber?: "sequenceNumber";
+
+            /** LiveLocationMessage _timeOffset. */
+            public _timeOffset?: "timeOffset";
+
+            /** LiveLocationMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** LiveLocationMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
 
             /**
              * Creates a new LiveLocationMessage instance using the specified properties.
@@ -27934,6 +31063,42 @@ export namespace proto {
             /** LocationMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** LocationMessage _degreesLatitude. */
+            public _degreesLatitude?: "degreesLatitude";
+
+            /** LocationMessage _degreesLongitude. */
+            public _degreesLongitude?: "degreesLongitude";
+
+            /** LocationMessage _name. */
+            public _name?: "name";
+
+            /** LocationMessage _address. */
+            public _address?: "address";
+
+            /** LocationMessage _url. */
+            public _url?: "url";
+
+            /** LocationMessage _isLive. */
+            public _isLive?: "isLive";
+
+            /** LocationMessage _accuracyInMeters. */
+            public _accuracyInMeters?: "accuracyInMeters";
+
+            /** LocationMessage _speedInMps. */
+            public _speedInMps?: "speedInMps";
+
+            /** LocationMessage _degreesClockwiseFromMagneticNorth. */
+            public _degreesClockwiseFromMagneticNorth?: "degreesClockwiseFromMagneticNorth";
+
+            /** LocationMessage _comment. */
+            public _comment?: "comment";
+
+            /** LocationMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** LocationMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new LocationMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -28066,6 +31231,27 @@ export namespace proto {
 
             /** MMSThumbnailMetadata thumbnailWidth. */
             public thumbnailWidth?: (number|null);
+
+            /** MMSThumbnailMetadata _thumbnailDirectPath. */
+            public _thumbnailDirectPath?: "thumbnailDirectPath";
+
+            /** MMSThumbnailMetadata _thumbnailSha256. */
+            public _thumbnailSha256?: "thumbnailSha256";
+
+            /** MMSThumbnailMetadata _thumbnailEncSha256. */
+            public _thumbnailEncSha256?: "thumbnailEncSha256";
+
+            /** MMSThumbnailMetadata _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** MMSThumbnailMetadata _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** MMSThumbnailMetadata _thumbnailHeight. */
+            public _thumbnailHeight?: "thumbnailHeight";
+
+            /** MMSThumbnailMetadata _thumbnailWidth. */
+            public _thumbnailWidth?: "thumbnailWidth";
 
             /**
              * Creates a new MMSThumbnailMetadata instance using the specified properties.
@@ -28206,6 +31392,30 @@ export namespace proto {
             /** MessageHistoryBundle messageHistoryMetadata. */
             public messageHistoryMetadata?: (proto.Message.IMessageHistoryMetadata|null);
 
+            /** MessageHistoryBundle _mimetype. */
+            public _mimetype?: "mimetype";
+
+            /** MessageHistoryBundle _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** MessageHistoryBundle _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** MessageHistoryBundle _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** MessageHistoryBundle _directPath. */
+            public _directPath?: "directPath";
+
+            /** MessageHistoryBundle _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** MessageHistoryBundle _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** MessageHistoryBundle _messageHistoryMetadata. */
+            public _messageHistoryMetadata?: "messageHistoryMetadata";
+
             /**
              * Creates a new MessageHistoryBundle instance using the specified properties.
              * @param [properties] Properties to set
@@ -28315,6 +31525,12 @@ export namespace proto {
             /** MessageHistoryMetadata messageCount. */
             public messageCount?: (number|Long|null);
 
+            /** MessageHistoryMetadata _firstMessageTimestamp. */
+            public _firstMessageTimestamp?: "firstMessageTimestamp";
+
+            /** MessageHistoryMetadata _messageCount. */
+            public _messageCount?: "messageCount";
+
             /**
              * Creates a new MessageHistoryMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -28417,6 +31633,12 @@ export namespace proto {
 
             /** MessageHistoryNotice messageHistoryMetadata. */
             public messageHistoryMetadata?: (proto.Message.IMessageHistoryMetadata|null);
+
+            /** MessageHistoryNotice _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** MessageHistoryNotice _messageHistoryMetadata. */
+            public _messageHistoryMetadata?: "messageHistoryMetadata";
 
             /**
              * Creates a new MessageHistoryNotice instance using the specified properties.
@@ -28544,6 +31766,24 @@ export namespace proto {
 
             /** NewsletterAdminInviteMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
+
+            /** NewsletterAdminInviteMessage _newsletterJid. */
+            public _newsletterJid?: "newsletterJid";
+
+            /** NewsletterAdminInviteMessage _newsletterName. */
+            public _newsletterName?: "newsletterName";
+
+            /** NewsletterAdminInviteMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** NewsletterAdminInviteMessage _caption. */
+            public _caption?: "caption";
+
+            /** NewsletterAdminInviteMessage _inviteExpiration. */
+            public _inviteExpiration?: "inviteExpiration";
+
+            /** NewsletterAdminInviteMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
 
             /**
              * Creates a new NewsletterAdminInviteMessage instance using the specified properties.
@@ -28726,6 +31966,51 @@ export namespace proto {
             /** OrderMessage catalogType. */
             public catalogType?: (string|null);
 
+            /** OrderMessage _orderId. */
+            public _orderId?: "orderId";
+
+            /** OrderMessage _thumbnail. */
+            public _thumbnail?: "thumbnail";
+
+            /** OrderMessage _itemCount. */
+            public _itemCount?: "itemCount";
+
+            /** OrderMessage _status. */
+            public _status?: "status";
+
+            /** OrderMessage _surface. */
+            public _surface?: "surface";
+
+            /** OrderMessage _message. */
+            public _message?: "message";
+
+            /** OrderMessage _orderTitle. */
+            public _orderTitle?: "orderTitle";
+
+            /** OrderMessage _sellerJid. */
+            public _sellerJid?: "sellerJid";
+
+            /** OrderMessage _token. */
+            public _token?: "token";
+
+            /** OrderMessage _totalAmount1000. */
+            public _totalAmount1000?: "totalAmount1000";
+
+            /** OrderMessage _totalCurrencyCode. */
+            public _totalCurrencyCode?: "totalCurrencyCode";
+
+            /** OrderMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** OrderMessage _messageVersion. */
+            public _messageVersion?: "messageVersion";
+
+            /** OrderMessage _orderRequestMessageId. */
+            public _orderRequestMessageId?: "orderRequestMessageId";
+
+            /** OrderMessage _catalogType. */
+            public _catalogType?: "catalogType";
+
             /**
              * Creates a new OrderMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -28844,6 +32129,12 @@ export namespace proto {
             /** PaymentInviteMessage expiryTimestamp. */
             public expiryTimestamp?: (number|Long|null);
 
+            /** PaymentInviteMessage _serviceType. */
+            public _serviceType?: "serviceType";
+
+            /** PaymentInviteMessage _expiryTimestamp. */
+            public _expiryTimestamp?: "expiryTimestamp";
+
             /**
              * Creates a new PaymentInviteMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -28958,6 +32249,12 @@ export namespace proto {
             /** PaymentLinkMetadata header. */
             public header?: (proto.Message.PaymentLinkMetadata.IPaymentLinkHeader|null);
 
+            /** PaymentLinkMetadata _button. */
+            public _button?: "button";
+
+            /** PaymentLinkMetadata _header. */
+            public _header?: "header";
+
             /**
              * Creates a new PaymentLinkMetadata instance using the specified properties.
              * @param [properties] Properties to set
@@ -29057,6 +32354,9 @@ export namespace proto {
                 /** PaymentLinkButton displayText. */
                 public displayText?: (string|null);
 
+                /** PaymentLinkButton _displayText. */
+                public _displayText?: "displayText";
+
                 /**
                  * Creates a new PaymentLinkButton instance using the specified properties.
                  * @param [properties] Properties to set
@@ -29153,6 +32453,9 @@ export namespace proto {
 
                 /** PaymentLinkHeader headerType. */
                 public headerType?: (proto.Message.PaymentLinkMetadata.PaymentLinkHeader.PaymentLinkHeaderType|null);
+
+                /** PaymentLinkHeader _headerType. */
+                public _headerType?: "headerType";
 
                 /**
                  * Creates a new PaymentLinkHeader instance using the specified properties.
@@ -29297,6 +32600,18 @@ export namespace proto {
             /** PeerDataOperationRequestMessage syncdCollectionFatalRecoveryRequest. */
             public syncdCollectionFatalRecoveryRequest?: (proto.Message.PeerDataOperationRequestMessage.ISyncDCollectionFatalRecoveryRequest|null);
 
+            /** PeerDataOperationRequestMessage _peerDataOperationRequestType. */
+            public _peerDataOperationRequestType?: "peerDataOperationRequestType";
+
+            /** PeerDataOperationRequestMessage _historySyncOnDemandRequest. */
+            public _historySyncOnDemandRequest?: "historySyncOnDemandRequest";
+
+            /** PeerDataOperationRequestMessage _fullHistorySyncOnDemandRequest. */
+            public _fullHistorySyncOnDemandRequest?: "fullHistorySyncOnDemandRequest";
+
+            /** PeerDataOperationRequestMessage _syncdCollectionFatalRecoveryRequest. */
+            public _syncdCollectionFatalRecoveryRequest?: "syncdCollectionFatalRecoveryRequest";
+
             /**
              * Creates a new PeerDataOperationRequestMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -29401,6 +32716,12 @@ export namespace proto {
 
                 /** FullHistorySyncOnDemandRequest historySyncConfig. */
                 public historySyncConfig?: (proto.DeviceProps.IHistorySyncConfig|null);
+
+                /** FullHistorySyncOnDemandRequest _requestMetadata. */
+                public _requestMetadata?: "requestMetadata";
+
+                /** FullHistorySyncOnDemandRequest _historySyncConfig. */
+                public _historySyncConfig?: "historySyncConfig";
 
                 /**
                  * Creates a new FullHistorySyncOnDemandRequest instance using the specified properties.
@@ -29529,6 +32850,24 @@ export namespace proto {
                 /** HistorySyncOnDemandRequest accountLid. */
                 public accountLid?: (string|null);
 
+                /** HistorySyncOnDemandRequest _chatJid. */
+                public _chatJid?: "chatJid";
+
+                /** HistorySyncOnDemandRequest _oldestMsgId. */
+                public _oldestMsgId?: "oldestMsgId";
+
+                /** HistorySyncOnDemandRequest _oldestMsgFromMe. */
+                public _oldestMsgFromMe?: "oldestMsgFromMe";
+
+                /** HistorySyncOnDemandRequest _onDemandMsgCount. */
+                public _onDemandMsgCount?: "onDemandMsgCount";
+
+                /** HistorySyncOnDemandRequest _oldestMsgTimestampMs. */
+                public _oldestMsgTimestampMs?: "oldestMsgTimestampMs";
+
+                /** HistorySyncOnDemandRequest _accountLid. */
+                public _accountLid?: "accountLid";
+
                 /**
                  * Creates a new HistorySyncOnDemandRequest instance using the specified properties.
                  * @param [properties] Properties to set
@@ -29626,6 +32965,9 @@ export namespace proto {
                 /** PlaceholderMessageResendRequest messageKey. */
                 public messageKey?: (proto.IMessageKey|null);
 
+                /** PlaceholderMessageResendRequest _messageKey. */
+                public _messageKey?: "messageKey";
+
                 /**
                  * Creates a new PlaceholderMessageResendRequest instance using the specified properties.
                  * @param [properties] Properties to set
@@ -29722,6 +33064,9 @@ export namespace proto {
 
                 /** RequestStickerReupload fileSha256. */
                 public fileSha256?: (string|null);
+
+                /** RequestStickerReupload _fileSha256. */
+                public _fileSha256?: "fileSha256";
 
                 /**
                  * Creates a new RequestStickerReupload instance using the specified properties.
@@ -29826,6 +33171,12 @@ export namespace proto {
                 /** RequestUrlPreview includeHqThumbnail. */
                 public includeHqThumbnail?: (boolean|null);
 
+                /** RequestUrlPreview _url. */
+                public _url?: "url";
+
+                /** RequestUrlPreview _includeHqThumbnail. */
+                public _includeHqThumbnail?: "includeHqThumbnail";
+
                 /**
                  * Creates a new RequestUrlPreview instance using the specified properties.
                  * @param [properties] Properties to set
@@ -29928,6 +33279,12 @@ export namespace proto {
 
                 /** SyncDCollectionFatalRecoveryRequest timestamp. */
                 public timestamp?: (number|Long|null);
+
+                /** SyncDCollectionFatalRecoveryRequest _collectionName. */
+                public _collectionName?: "collectionName";
+
+                /** SyncDCollectionFatalRecoveryRequest _timestamp. */
+                public _timestamp?: "timestamp";
 
                 /**
                  * Creates a new SyncDCollectionFatalRecoveryRequest instance using the specified properties.
@@ -30038,6 +33395,12 @@ export namespace proto {
 
             /** PeerDataOperationRequestResponseMessage peerDataOperationResult. */
             public peerDataOperationResult: proto.Message.PeerDataOperationRequestResponseMessage.IPeerDataOperationResult[];
+
+            /** PeerDataOperationRequestResponseMessage _peerDataOperationRequestType. */
+            public _peerDataOperationRequestType?: "peerDataOperationRequestType";
+
+            /** PeerDataOperationRequestResponseMessage _stanzaId. */
+            public _stanzaId?: "stanzaId";
 
             /**
              * Creates a new PeerDataOperationRequestResponseMessage instance using the specified properties.
@@ -30180,6 +33543,30 @@ export namespace proto {
                 /** PeerDataOperationResult syncdSnapshotFatalRecoveryResponse. */
                 public syncdSnapshotFatalRecoveryResponse?: (proto.Message.PeerDataOperationRequestResponseMessage.PeerDataOperationResult.ISyncDSnapshotFatalRecoveryResponse|null);
 
+                /** PeerDataOperationResult _mediaUploadResult. */
+                public _mediaUploadResult?: "mediaUploadResult";
+
+                /** PeerDataOperationResult _stickerMessage. */
+                public _stickerMessage?: "stickerMessage";
+
+                /** PeerDataOperationResult _linkPreviewResponse. */
+                public _linkPreviewResponse?: "linkPreviewResponse";
+
+                /** PeerDataOperationResult _placeholderMessageResendResponse. */
+                public _placeholderMessageResendResponse?: "placeholderMessageResendResponse";
+
+                /** PeerDataOperationResult _waffleNonceFetchRequestResponse. */
+                public _waffleNonceFetchRequestResponse?: "waffleNonceFetchRequestResponse";
+
+                /** PeerDataOperationResult _fullHistorySyncOnDemandRequestResponse. */
+                public _fullHistorySyncOnDemandRequestResponse?: "fullHistorySyncOnDemandRequestResponse";
+
+                /** PeerDataOperationResult _companionMetaNonceFetchRequestResponse. */
+                public _companionMetaNonceFetchRequestResponse?: "companionMetaNonceFetchRequestResponse";
+
+                /** PeerDataOperationResult _syncdSnapshotFatalRecoveryResponse. */
+                public _syncdSnapshotFatalRecoveryResponse?: "syncdSnapshotFatalRecoveryResponse";
+
                 /**
                  * Creates a new PeerDataOperationResult instance using the specified properties.
                  * @param [properties] Properties to set
@@ -30278,6 +33665,9 @@ export namespace proto {
 
                     /** CompanionMetaNonceFetchResponse nonce. */
                     public nonce?: (string|null);
+
+                    /** CompanionMetaNonceFetchResponse _nonce. */
+                    public _nonce?: "nonce";
 
                     /**
                      * Creates a new CompanionMetaNonceFetchResponse instance using the specified properties.
@@ -30381,6 +33771,12 @@ export namespace proto {
 
                     /** FullHistorySyncOnDemandRequestResponse responseCode. */
                     public responseCode?: (proto.Message.PeerDataOperationRequestResponseMessage.PeerDataOperationResult.FullHistorySyncOnDemandResponseCode|null);
+
+                    /** FullHistorySyncOnDemandRequestResponse _requestMetadata. */
+                    public _requestMetadata?: "requestMetadata";
+
+                    /** FullHistorySyncOnDemandRequestResponse _responseCode. */
+                    public _responseCode?: "responseCode";
 
                     /**
                      * Creates a new FullHistorySyncOnDemandRequestResponse instance using the specified properties.
@@ -30526,6 +33922,27 @@ export namespace proto {
                     /** LinkPreviewResponse hqThumbnail. */
                     public hqThumbnail?: (proto.Message.PeerDataOperationRequestResponseMessage.PeerDataOperationResult.LinkPreviewResponse.ILinkPreviewHighQualityThumbnail|null);
 
+                    /** LinkPreviewResponse _url. */
+                    public _url?: "url";
+
+                    /** LinkPreviewResponse _title. */
+                    public _title?: "title";
+
+                    /** LinkPreviewResponse _description. */
+                    public _description?: "description";
+
+                    /** LinkPreviewResponse _thumbData. */
+                    public _thumbData?: "thumbData";
+
+                    /** LinkPreviewResponse _matchText. */
+                    public _matchText?: "matchText";
+
+                    /** LinkPreviewResponse _previewType. */
+                    public _previewType?: "previewType";
+
+                    /** LinkPreviewResponse _hqThumbnail. */
+                    public _hqThumbnail?: "hqThumbnail";
+
                     /**
                      * Creates a new LinkPreviewResponse instance using the specified properties.
                      * @param [properties] Properties to set
@@ -30661,6 +34078,27 @@ export namespace proto {
                         /** LinkPreviewHighQualityThumbnail thumbHeight. */
                         public thumbHeight?: (number|null);
 
+                        /** LinkPreviewHighQualityThumbnail _directPath. */
+                        public _directPath?: "directPath";
+
+                        /** LinkPreviewHighQualityThumbnail _thumbHash. */
+                        public _thumbHash?: "thumbHash";
+
+                        /** LinkPreviewHighQualityThumbnail _encThumbHash. */
+                        public _encThumbHash?: "encThumbHash";
+
+                        /** LinkPreviewHighQualityThumbnail _mediaKey. */
+                        public _mediaKey?: "mediaKey";
+
+                        /** LinkPreviewHighQualityThumbnail _mediaKeyTimestampMs. */
+                        public _mediaKeyTimestampMs?: "mediaKeyTimestampMs";
+
+                        /** LinkPreviewHighQualityThumbnail _thumbWidth. */
+                        public _thumbWidth?: "thumbWidth";
+
+                        /** LinkPreviewHighQualityThumbnail _thumbHeight. */
+                        public _thumbHeight?: "thumbHeight";
+
                         /**
                          * Creates a new LinkPreviewHighQualityThumbnail instance using the specified properties.
                          * @param [properties] Properties to set
@@ -30758,6 +34196,9 @@ export namespace proto {
 
                     /** PlaceholderMessageResendResponse webMessageInfoBytes. */
                     public webMessageInfoBytes?: (Uint8Array|null);
+
+                    /** PlaceholderMessageResendResponse _webMessageInfoBytes. */
+                    public _webMessageInfoBytes?: "webMessageInfoBytes";
 
                     /**
                      * Creates a new PlaceholderMessageResendResponse instance using the specified properties.
@@ -30862,6 +34303,12 @@ export namespace proto {
                     /** SyncDSnapshotFatalRecoveryResponse isCompressed. */
                     public isCompressed?: (boolean|null);
 
+                    /** SyncDSnapshotFatalRecoveryResponse _collectionSnapshot. */
+                    public _collectionSnapshot?: "collectionSnapshot";
+
+                    /** SyncDSnapshotFatalRecoveryResponse _isCompressed. */
+                    public _isCompressed?: "isCompressed";
+
                     /**
                      * Creates a new SyncDSnapshotFatalRecoveryResponse instance using the specified properties.
                      * @param [properties] Properties to set
@@ -30964,6 +34411,12 @@ export namespace proto {
 
                     /** WaffleNonceFetchResponse waEntFbid. */
                     public waEntFbid?: (string|null);
+
+                    /** WaffleNonceFetchResponse _nonce. */
+                    public _nonce?: "nonce";
+
+                    /** WaffleNonceFetchResponse _waEntFbid. */
+                    public _waEntFbid?: "waEntFbid";
 
                     /**
                      * Creates a new WaffleNonceFetchResponse instance using the specified properties.
@@ -31089,6 +34542,15 @@ export namespace proto {
             /** PinInChatMessage senderTimestampMs. */
             public senderTimestampMs?: (number|Long|null);
 
+            /** PinInChatMessage _key. */
+            public _key?: "key";
+
+            /** PinInChatMessage _type. */
+            public _type?: "type";
+
+            /** PinInChatMessage _senderTimestampMs. */
+            public _senderTimestampMs?: "senderTimestampMs";
+
             /**
              * Creates a new PinInChatMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -31195,6 +34657,9 @@ export namespace proto {
 
             /** PlaceholderMessage type. */
             public type?: (proto.Message.PlaceholderMessage.PlaceholderType|null);
+
+            /** PlaceholderMessage _type. */
+            public _type?: "type";
 
             /**
              * Creates a new PlaceholderMessage instance using the specified properties.
@@ -31350,6 +34815,27 @@ export namespace proto {
             /** PollCreationMessage correctAnswer. */
             public correctAnswer?: (proto.Message.PollCreationMessage.IOption|null);
 
+            /** PollCreationMessage _encKey. */
+            public _encKey?: "encKey";
+
+            /** PollCreationMessage _name. */
+            public _name?: "name";
+
+            /** PollCreationMessage _selectableOptionsCount. */
+            public _selectableOptionsCount?: "selectableOptionsCount";
+
+            /** PollCreationMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** PollCreationMessage _pollContentType. */
+            public _pollContentType?: "pollContentType";
+
+            /** PollCreationMessage _pollType. */
+            public _pollType?: "pollType";
+
+            /** PollCreationMessage _correctAnswer. */
+            public _correctAnswer?: "correctAnswer";
+
             /**
              * Creates a new PollCreationMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -31454,6 +34940,12 @@ export namespace proto {
 
                 /** Option optionHash. */
                 public optionHash?: (string|null);
+
+                /** Option _optionName. */
+                public _optionName?: "optionName";
+
+                /** Option _optionHash. */
+                public _optionHash?: "optionHash";
 
                 /**
                  * Creates a new Option instance using the specified properties.
@@ -31565,6 +35057,12 @@ export namespace proto {
             /** PollEncValue encIv. */
             public encIv?: (Uint8Array|null);
 
+            /** PollEncValue _encPayload. */
+            public _encPayload?: "encPayload";
+
+            /** PollEncValue _encIv. */
+            public _encIv?: "encIv";
+
             /**
              * Creates a new PollEncValue instance using the specified properties.
              * @param [properties] Properties to set
@@ -31674,6 +35172,12 @@ export namespace proto {
             /** PollResultSnapshotMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** PollResultSnapshotMessage _name. */
+            public _name?: "name";
+
+            /** PollResultSnapshotMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new PollResultSnapshotMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -31778,6 +35282,12 @@ export namespace proto {
 
                 /** PollVote optionVoteCount. */
                 public optionVoteCount?: (number|Long|null);
+
+                /** PollVote _optionName. */
+                public _optionName?: "optionName";
+
+                /** PollVote _optionVoteCount. */
+                public _optionVoteCount?: "optionVoteCount";
 
                 /**
                  * Creates a new PollVote instance using the specified properties.
@@ -31894,6 +35404,18 @@ export namespace proto {
 
             /** PollUpdateMessage senderTimestampMs. */
             public senderTimestampMs?: (number|Long|null);
+
+            /** PollUpdateMessage _pollCreationMessageKey. */
+            public _pollCreationMessageKey?: "pollCreationMessageKey";
+
+            /** PollUpdateMessage _vote. */
+            public _vote?: "vote";
+
+            /** PollUpdateMessage _metadata. */
+            public _metadata?: "metadata";
+
+            /** PollUpdateMessage _senderTimestampMs. */
+            public _senderTimestampMs?: "senderTimestampMs";
 
             /**
              * Creates a new PollUpdateMessage instance using the specified properties.
@@ -32210,6 +35732,24 @@ export namespace proto {
             /** ProductMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** ProductMessage _product. */
+            public _product?: "product";
+
+            /** ProductMessage _businessOwnerJid. */
+            public _businessOwnerJid?: "businessOwnerJid";
+
+            /** ProductMessage _catalog. */
+            public _catalog?: "catalog";
+
+            /** ProductMessage _body. */
+            public _body?: "body";
+
+            /** ProductMessage _footer. */
+            public _footer?: "footer";
+
+            /** ProductMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new ProductMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -32320,6 +35860,15 @@ export namespace proto {
 
                 /** CatalogSnapshot description. */
                 public description?: (string|null);
+
+                /** CatalogSnapshot _catalogImage. */
+                public _catalogImage?: "catalogImage";
+
+                /** CatalogSnapshot _title. */
+                public _title?: "title";
+
+                /** CatalogSnapshot _description. */
+                public _description?: "description";
 
                 /**
                  * Creates a new CatalogSnapshot instance using the specified properties.
@@ -32483,6 +36032,42 @@ export namespace proto {
 
                 /** ProductSnapshot signedUrl. */
                 public signedUrl?: (string|null);
+
+                /** ProductSnapshot _productImage. */
+                public _productImage?: "productImage";
+
+                /** ProductSnapshot _productId. */
+                public _productId?: "productId";
+
+                /** ProductSnapshot _title. */
+                public _title?: "title";
+
+                /** ProductSnapshot _description. */
+                public _description?: "description";
+
+                /** ProductSnapshot _currencyCode. */
+                public _currencyCode?: "currencyCode";
+
+                /** ProductSnapshot _priceAmount1000. */
+                public _priceAmount1000?: "priceAmount1000";
+
+                /** ProductSnapshot _retailerId. */
+                public _retailerId?: "retailerId";
+
+                /** ProductSnapshot _url. */
+                public _url?: "url";
+
+                /** ProductSnapshot _productImageCount. */
+                public _productImageCount?: "productImageCount";
+
+                /** ProductSnapshot _firstImageId. */
+                public _firstImageId?: "firstImageId";
+
+                /** ProductSnapshot _salePriceAmount1000. */
+                public _salePriceAmount1000?: "salePriceAmount1000";
+
+                /** ProductSnapshot _signedUrl. */
+                public _signedUrl?: "signedUrl";
 
                 /**
                  * Creates a new ProductSnapshot instance using the specified properties.
@@ -32720,6 +36305,78 @@ export namespace proto {
             /** ProtocolMessage memberLabel. */
             public memberLabel?: (proto.IMemberLabel|null);
 
+            /** ProtocolMessage _key. */
+            public _key?: "key";
+
+            /** ProtocolMessage _type. */
+            public _type?: "type";
+
+            /** ProtocolMessage _ephemeralExpiration. */
+            public _ephemeralExpiration?: "ephemeralExpiration";
+
+            /** ProtocolMessage _ephemeralSettingTimestamp. */
+            public _ephemeralSettingTimestamp?: "ephemeralSettingTimestamp";
+
+            /** ProtocolMessage _historySyncNotification. */
+            public _historySyncNotification?: "historySyncNotification";
+
+            /** ProtocolMessage _appStateSyncKeyShare. */
+            public _appStateSyncKeyShare?: "appStateSyncKeyShare";
+
+            /** ProtocolMessage _appStateSyncKeyRequest. */
+            public _appStateSyncKeyRequest?: "appStateSyncKeyRequest";
+
+            /** ProtocolMessage _initialSecurityNotificationSettingSync. */
+            public _initialSecurityNotificationSettingSync?: "initialSecurityNotificationSettingSync";
+
+            /** ProtocolMessage _appStateFatalExceptionNotification. */
+            public _appStateFatalExceptionNotification?: "appStateFatalExceptionNotification";
+
+            /** ProtocolMessage _disappearingMode. */
+            public _disappearingMode?: "disappearingMode";
+
+            /** ProtocolMessage _editedMessage. */
+            public _editedMessage?: "editedMessage";
+
+            /** ProtocolMessage _timestampMs. */
+            public _timestampMs?: "timestampMs";
+
+            /** ProtocolMessage _peerDataOperationRequestMessage. */
+            public _peerDataOperationRequestMessage?: "peerDataOperationRequestMessage";
+
+            /** ProtocolMessage _peerDataOperationRequestResponseMessage. */
+            public _peerDataOperationRequestResponseMessage?: "peerDataOperationRequestResponseMessage";
+
+            /** ProtocolMessage _botFeedbackMessage. */
+            public _botFeedbackMessage?: "botFeedbackMessage";
+
+            /** ProtocolMessage _invokerJid. */
+            public _invokerJid?: "invokerJid";
+
+            /** ProtocolMessage _requestWelcomeMessageMetadata. */
+            public _requestWelcomeMessageMetadata?: "requestWelcomeMessageMetadata";
+
+            /** ProtocolMessage _mediaNotifyMessage. */
+            public _mediaNotifyMessage?: "mediaNotifyMessage";
+
+            /** ProtocolMessage _cloudApiThreadControlNotification. */
+            public _cloudApiThreadControlNotification?: "cloudApiThreadControlNotification";
+
+            /** ProtocolMessage _lidMigrationMappingSyncMessage. */
+            public _lidMigrationMappingSyncMessage?: "lidMigrationMappingSyncMessage";
+
+            /** ProtocolMessage _limitSharing. */
+            public _limitSharing?: "limitSharing";
+
+            /** ProtocolMessage _aiPsiMetadata. */
+            public _aiPsiMetadata?: "aiPsiMetadata";
+
+            /** ProtocolMessage _aiQueryFanout. */
+            public _aiQueryFanout?: "aiQueryFanout";
+
+            /** ProtocolMessage _memberLabel. */
+            public _memberLabel?: "memberLabel";
+
             /**
              * Creates a new ProtocolMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -32868,6 +36525,18 @@ export namespace proto {
             /** ReactionMessage senderTimestampMs. */
             public senderTimestampMs?: (number|Long|null);
 
+            /** ReactionMessage _key. */
+            public _key?: "key";
+
+            /** ReactionMessage _text. */
+            public _text?: "text";
+
+            /** ReactionMessage _groupingKey. */
+            public _groupingKey?: "groupingKey";
+
+            /** ReactionMessage _senderTimestampMs. */
+            public _senderTimestampMs?: "senderTimestampMs";
+
             /**
              * Creates a new ReactionMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -33001,6 +36670,27 @@ export namespace proto {
             /** RequestPaymentMessage background. */
             public background?: (proto.IPaymentBackground|null);
 
+            /** RequestPaymentMessage _noteMessage. */
+            public _noteMessage?: "noteMessage";
+
+            /** RequestPaymentMessage _currencyCodeIso4217. */
+            public _currencyCodeIso4217?: "currencyCodeIso4217";
+
+            /** RequestPaymentMessage _amount1000. */
+            public _amount1000?: "amount1000";
+
+            /** RequestPaymentMessage _requestFrom. */
+            public _requestFrom?: "requestFrom";
+
+            /** RequestPaymentMessage _expiryTimestamp. */
+            public _expiryTimestamp?: "expiryTimestamp";
+
+            /** RequestPaymentMessage _amount. */
+            public _amount?: "amount";
+
+            /** RequestPaymentMessage _background. */
+            public _background?: "background";
+
             /**
              * Creates a new RequestPaymentMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -33098,6 +36788,9 @@ export namespace proto {
             /** RequestPhoneNumberMessage contextInfo. */
             public contextInfo?: (proto.IContextInfo|null);
 
+            /** RequestPhoneNumberMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
             /**
              * Creates a new RequestPhoneNumberMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -33194,6 +36887,9 @@ export namespace proto {
 
             /** RequestWelcomeMessageMetadata localChatState. */
             public localChatState?: (proto.Message.RequestWelcomeMessageMetadata.LocalChatState|null);
+
+            /** RequestWelcomeMessageMetadata _localChatState. */
+            public _localChatState?: "localChatState";
 
             /**
              * Creates a new RequestWelcomeMessageMetadata instance using the specified properties.
@@ -33313,6 +37009,15 @@ export namespace proto {
             /** ScheduledCallCreationMessage title. */
             public title?: (string|null);
 
+            /** ScheduledCallCreationMessage _scheduledTimestampMs. */
+            public _scheduledTimestampMs?: "scheduledTimestampMs";
+
+            /** ScheduledCallCreationMessage _callType. */
+            public _callType?: "callType";
+
+            /** ScheduledCallCreationMessage _title. */
+            public _title?: "title";
+
             /**
              * Creates a new ScheduledCallCreationMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -33425,6 +37130,12 @@ export namespace proto {
 
             /** ScheduledCallEditMessage editType. */
             public editType?: (proto.Message.ScheduledCallEditMessage.EditType|null);
+
+            /** ScheduledCallEditMessage _key. */
+            public _key?: "key";
+
+            /** ScheduledCallEditMessage _editType. */
+            public _editType?: "editType";
 
             /**
              * Creates a new ScheduledCallEditMessage instance using the specified properties.
@@ -33550,6 +37261,18 @@ export namespace proto {
             /** SecretEncryptedMessage secretEncType. */
             public secretEncType?: (proto.Message.SecretEncryptedMessage.SecretEncType|null);
 
+            /** SecretEncryptedMessage _targetMessageKey. */
+            public _targetMessageKey?: "targetMessageKey";
+
+            /** SecretEncryptedMessage _encPayload. */
+            public _encPayload?: "encPayload";
+
+            /** SecretEncryptedMessage _encIv. */
+            public _encIv?: "encIv";
+
+            /** SecretEncryptedMessage _secretEncType. */
+            public _secretEncType?: "secretEncType";
+
             /**
              * Creates a new SecretEncryptedMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -33669,6 +37392,15 @@ export namespace proto {
             /** SendPaymentMessage background. */
             public background?: (proto.IPaymentBackground|null);
 
+            /** SendPaymentMessage _noteMessage. */
+            public _noteMessage?: "noteMessage";
+
+            /** SendPaymentMessage _requestMessageKey. */
+            public _requestMessageKey?: "requestMessageKey";
+
+            /** SendPaymentMessage _background. */
+            public _background?: "background";
+
             /**
              * Creates a new SendPaymentMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -33771,6 +37503,12 @@ export namespace proto {
 
             /** SenderKeyDistributionMessage axolotlSenderKeyDistributionMessage. */
             public axolotlSenderKeyDistributionMessage?: (Uint8Array|null);
+
+            /** SenderKeyDistributionMessage _groupId. */
+            public _groupId?: "groupId";
+
+            /** SenderKeyDistributionMessage _axolotlSenderKeyDistributionMessage. */
+            public _axolotlSenderKeyDistributionMessage?: "axolotlSenderKeyDistributionMessage";
 
             /**
              * Creates a new SenderKeyDistributionMessage instance using the specified properties.
@@ -33880,6 +37618,15 @@ export namespace proto {
 
             /** StatusNotificationMessage type. */
             public type?: (proto.Message.StatusNotificationMessage.StatusNotificationType|null);
+
+            /** StatusNotificationMessage _responseMessageKey. */
+            public _responseMessageKey?: "responseMessageKey";
+
+            /** StatusNotificationMessage _originalMessageKey. */
+            public _originalMessageKey?: "originalMessageKey";
+
+            /** StatusNotificationMessage _type. */
+            public _type?: "type";
 
             /**
              * Creates a new StatusNotificationMessage instance using the specified properties.
@@ -34101,6 +37848,66 @@ export namespace proto {
 
             /** StickerMessage accessibilityLabel. */
             public accessibilityLabel?: (string|null);
+
+            /** StickerMessage _url. */
+            public _url?: "url";
+
+            /** StickerMessage _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** StickerMessage _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** StickerMessage _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** StickerMessage _mimetype. */
+            public _mimetype?: "mimetype";
+
+            /** StickerMessage _height. */
+            public _height?: "height";
+
+            /** StickerMessage _width. */
+            public _width?: "width";
+
+            /** StickerMessage _directPath. */
+            public _directPath?: "directPath";
+
+            /** StickerMessage _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** StickerMessage _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** StickerMessage _firstFrameLength. */
+            public _firstFrameLength?: "firstFrameLength";
+
+            /** StickerMessage _firstFrameSidecar. */
+            public _firstFrameSidecar?: "firstFrameSidecar";
+
+            /** StickerMessage _isAnimated. */
+            public _isAnimated?: "isAnimated";
+
+            /** StickerMessage _pngThumbnail. */
+            public _pngThumbnail?: "pngThumbnail";
+
+            /** StickerMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** StickerMessage _stickerSentTs. */
+            public _stickerSentTs?: "stickerSentTs";
+
+            /** StickerMessage _isAvatar. */
+            public _isAvatar?: "isAvatar";
+
+            /** StickerMessage _isAiSticker. */
+            public _isAiSticker?: "isAiSticker";
+
+            /** StickerMessage _isLottie. */
+            public _isLottie?: "isLottie";
+
+            /** StickerMessage _accessibilityLabel. */
+            public _accessibilityLabel?: "accessibilityLabel";
 
             /**
              * Creates a new StickerMessage instance using the specified properties.
@@ -34325,6 +38132,69 @@ export namespace proto {
             /** StickerPackMessage stickerPackOrigin. */
             public stickerPackOrigin?: (proto.Message.StickerPackMessage.StickerPackOrigin|null);
 
+            /** StickerPackMessage _stickerPackId. */
+            public _stickerPackId?: "stickerPackId";
+
+            /** StickerPackMessage _name. */
+            public _name?: "name";
+
+            /** StickerPackMessage _publisher. */
+            public _publisher?: "publisher";
+
+            /** StickerPackMessage _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** StickerPackMessage _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** StickerPackMessage _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** StickerPackMessage _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** StickerPackMessage _directPath. */
+            public _directPath?: "directPath";
+
+            /** StickerPackMessage _caption. */
+            public _caption?: "caption";
+
+            /** StickerPackMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** StickerPackMessage _packDescription. */
+            public _packDescription?: "packDescription";
+
+            /** StickerPackMessage _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** StickerPackMessage _trayIconFileName. */
+            public _trayIconFileName?: "trayIconFileName";
+
+            /** StickerPackMessage _thumbnailDirectPath. */
+            public _thumbnailDirectPath?: "thumbnailDirectPath";
+
+            /** StickerPackMessage _thumbnailSha256. */
+            public _thumbnailSha256?: "thumbnailSha256";
+
+            /** StickerPackMessage _thumbnailEncSha256. */
+            public _thumbnailEncSha256?: "thumbnailEncSha256";
+
+            /** StickerPackMessage _thumbnailHeight. */
+            public _thumbnailHeight?: "thumbnailHeight";
+
+            /** StickerPackMessage _thumbnailWidth. */
+            public _thumbnailWidth?: "thumbnailWidth";
+
+            /** StickerPackMessage _imageDataHash. */
+            public _imageDataHash?: "imageDataHash";
+
+            /** StickerPackMessage _stickerPackSize. */
+            public _stickerPackSize?: "stickerPackSize";
+
+            /** StickerPackMessage _stickerPackOrigin. */
+            public _stickerPackOrigin?: "stickerPackOrigin";
+
             /**
              * Creates a new StickerPackMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -34454,6 +38324,21 @@ export namespace proto {
                 /** Sticker mimetype. */
                 public mimetype?: (string|null);
 
+                /** Sticker _fileName. */
+                public _fileName?: "fileName";
+
+                /** Sticker _isAnimated. */
+                public _isAnimated?: "isAnimated";
+
+                /** Sticker _accessibilityLabel. */
+                public _accessibilityLabel?: "accessibilityLabel";
+
+                /** Sticker _isLottie. */
+                public _isLottie?: "isLottie";
+
+                /** Sticker _mimetype. */
+                public _mimetype?: "mimetype";
+
                 /**
                  * Creates a new Sticker instance using the specified properties.
                  * @param [properties] Properties to set
@@ -34570,6 +38455,12 @@ export namespace proto {
 
             /** StickerSyncRMRMessage requestTimestamp. */
             public requestTimestamp?: (number|Long|null);
+
+            /** StickerSyncRMRMessage _rmrSource. */
+            public _rmrSource?: "rmrSource";
+
+            /** StickerSyncRMRMessage _requestTimestamp. */
+            public _requestTimestamp?: "requestTimestamp";
 
             /**
              * Creates a new StickerSyncRMRMessage instance using the specified properties.
@@ -34691,6 +38582,21 @@ export namespace proto {
 
             /** TemplateButtonReplyMessage selectedCarouselCardIndex. */
             public selectedCarouselCardIndex?: (number|null);
+
+            /** TemplateButtonReplyMessage _selectedId. */
+            public _selectedId?: "selectedId";
+
+            /** TemplateButtonReplyMessage _selectedDisplayText. */
+            public _selectedDisplayText?: "selectedDisplayText";
+
+            /** TemplateButtonReplyMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** TemplateButtonReplyMessage _selectedIndex. */
+            public _selectedIndex?: "selectedIndex";
+
+            /** TemplateButtonReplyMessage _selectedCarouselCardIndex. */
+            public _selectedCarouselCardIndex?: "selectedCarouselCardIndex";
 
             /**
              * Creates a new TemplateButtonReplyMessage instance using the specified properties.
@@ -34818,6 +38724,15 @@ export namespace proto {
 
             /** TemplateMessage interactiveMessageTemplate. */
             public interactiveMessageTemplate?: (proto.Message.IInteractiveMessage|null);
+
+            /** TemplateMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** TemplateMessage _hydratedTemplate. */
+            public _hydratedTemplate?: "hydratedTemplate";
+
+            /** TemplateMessage _templateId. */
+            public _templateId?: "templateId";
 
             /** TemplateMessage format. */
             public format?: ("fourRowTemplate"|"hydratedFourRowTemplate"|"interactiveMessageTemplate");
@@ -34962,6 +38877,12 @@ export namespace proto {
 
                 /** FourRowTemplate locationMessage. */
                 public locationMessage?: (proto.Message.ILocationMessage|null);
+
+                /** FourRowTemplate _content. */
+                public _content?: "content";
+
+                /** FourRowTemplate _footer. */
+                public _footer?: "footer";
 
                 /** FourRowTemplate title. */
                 public title?: ("documentMessage"|"highlyStructuredMessage"|"imageMessage"|"videoMessage"|"locationMessage");
@@ -35117,6 +39038,18 @@ export namespace proto {
                 /** HydratedFourRowTemplate locationMessage. */
                 public locationMessage?: (proto.Message.ILocationMessage|null);
 
+                /** HydratedFourRowTemplate _hydratedContentText. */
+                public _hydratedContentText?: "hydratedContentText";
+
+                /** HydratedFourRowTemplate _hydratedFooterText. */
+                public _hydratedFooterText?: "hydratedFooterText";
+
+                /** HydratedFourRowTemplate _templateId. */
+                public _templateId?: "templateId";
+
+                /** HydratedFourRowTemplate _maskLinkedDevices. */
+                public _maskLinkedDevices?: "maskLinkedDevices";
+
                 /** HydratedFourRowTemplate title. */
                 public title?: ("documentMessage"|"hydratedTitleText"|"imageMessage"|"videoMessage"|"locationMessage");
 
@@ -35217,6 +39150,9 @@ export namespace proto {
 
             /** URLMetadata fbExperimentId. */
             public fbExperimentId?: (number|null);
+
+            /** URLMetadata _fbExperimentId. */
+            public _fbExperimentId?: "fbExperimentId";
 
             /**
              * Creates a new URLMetadata instance using the specified properties.
@@ -35471,6 +39407,78 @@ export namespace proto {
             /** VideoMessage externalShareFullVideoDurationInSeconds. */
             public externalShareFullVideoDurationInSeconds?: (number|null);
 
+            /** VideoMessage _url. */
+            public _url?: "url";
+
+            /** VideoMessage _mimetype. */
+            public _mimetype?: "mimetype";
+
+            /** VideoMessage _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** VideoMessage _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** VideoMessage _seconds. */
+            public _seconds?: "seconds";
+
+            /** VideoMessage _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** VideoMessage _caption. */
+            public _caption?: "caption";
+
+            /** VideoMessage _gifPlayback. */
+            public _gifPlayback?: "gifPlayback";
+
+            /** VideoMessage _height. */
+            public _height?: "height";
+
+            /** VideoMessage _width. */
+            public _width?: "width";
+
+            /** VideoMessage _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** VideoMessage _directPath. */
+            public _directPath?: "directPath";
+
+            /** VideoMessage _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** VideoMessage _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
+            /** VideoMessage _contextInfo. */
+            public _contextInfo?: "contextInfo";
+
+            /** VideoMessage _streamingSidecar. */
+            public _streamingSidecar?: "streamingSidecar";
+
+            /** VideoMessage _gifAttribution. */
+            public _gifAttribution?: "gifAttribution";
+
+            /** VideoMessage _viewOnce. */
+            public _viewOnce?: "viewOnce";
+
+            /** VideoMessage _thumbnailDirectPath. */
+            public _thumbnailDirectPath?: "thumbnailDirectPath";
+
+            /** VideoMessage _thumbnailSha256. */
+            public _thumbnailSha256?: "thumbnailSha256";
+
+            /** VideoMessage _thumbnailEncSha256. */
+            public _thumbnailEncSha256?: "thumbnailEncSha256";
+
+            /** VideoMessage _staticUrl. */
+            public _staticUrl?: "staticUrl";
+
+            /** VideoMessage _accessibilityLabel. */
+            public _accessibilityLabel?: "accessibilityLabel";
+
+            /** VideoMessage _externalShareFullVideoDurationInSeconds. */
+            public _externalShareFullVideoDurationInSeconds?: "externalShareFullVideoDurationInSeconds";
+
             /**
              * Creates a new VideoMessage instance using the specified properties.
              * @param [properties] Properties to set
@@ -35621,6 +39629,30 @@ export namespace proto {
         /** MessageAddOn legacyMessage. */
         public legacyMessage?: (proto.ILegacyMessage|null);
 
+        /** MessageAddOn _messageAddOnType. */
+        public _messageAddOnType?: "messageAddOnType";
+
+        /** MessageAddOn _messageAddOn. */
+        public _messageAddOn?: "messageAddOn";
+
+        /** MessageAddOn _senderTimestampMs. */
+        public _senderTimestampMs?: "senderTimestampMs";
+
+        /** MessageAddOn _serverTimestampMs. */
+        public _serverTimestampMs?: "serverTimestampMs";
+
+        /** MessageAddOn _status. */
+        public _status?: "status";
+
+        /** MessageAddOn _addOnContextInfo. */
+        public _addOnContextInfo?: "addOnContextInfo";
+
+        /** MessageAddOn _messageAddOnKey. */
+        public _messageAddOnKey?: "messageAddOnKey";
+
+        /** MessageAddOn _legacyMessage. */
+        public _legacyMessage?: "legacyMessage";
+
         /**
          * Creates a new MessageAddOn instance using the specified properties.
          * @param [properties] Properties to set
@@ -35736,6 +39768,12 @@ export namespace proto {
         /** MessageAddOnContextInfo messageAddOnExpiryType. */
         public messageAddOnExpiryType?: (proto.MessageContextInfo.MessageAddonExpiryType|null);
 
+        /** MessageAddOnContextInfo _messageAddOnDurationInSecs. */
+        public _messageAddOnDurationInSecs?: "messageAddOnDurationInSecs";
+
+        /** MessageAddOnContextInfo _messageAddOnExpiryType. */
+        public _messageAddOnExpiryType?: "messageAddOnExpiryType";
+
         /**
          * Creates a new MessageAddOnContextInfo instance using the specified properties.
          * @param [properties] Properties to set
@@ -35844,6 +39882,15 @@ export namespace proto {
 
         /** MessageAssociation messageIndex. */
         public messageIndex?: (number|null);
+
+        /** MessageAssociation _associationType. */
+        public _associationType?: "associationType";
+
+        /** MessageAssociation _parentMessageKey. */
+        public _parentMessageKey?: "parentMessageKey";
+
+        /** MessageAssociation _messageIndex. */
+        public _messageIndex?: "messageIndex";
 
         /**
          * Creates a new MessageAssociation instance using the specified properties.
@@ -36042,6 +40089,48 @@ export namespace proto {
         /** MessageContextInfo limitSharingV2. */
         public limitSharingV2?: (proto.ILimitSharing|null);
 
+        /** MessageContextInfo _deviceListMetadata. */
+        public _deviceListMetadata?: "deviceListMetadata";
+
+        /** MessageContextInfo _deviceListMetadataVersion. */
+        public _deviceListMetadataVersion?: "deviceListMetadataVersion";
+
+        /** MessageContextInfo _messageSecret. */
+        public _messageSecret?: "messageSecret";
+
+        /** MessageContextInfo _paddingBytes. */
+        public _paddingBytes?: "paddingBytes";
+
+        /** MessageContextInfo _messageAddOnDurationInSecs. */
+        public _messageAddOnDurationInSecs?: "messageAddOnDurationInSecs";
+
+        /** MessageContextInfo _botMessageSecret. */
+        public _botMessageSecret?: "botMessageSecret";
+
+        /** MessageContextInfo _botMetadata. */
+        public _botMetadata?: "botMetadata";
+
+        /** MessageContextInfo _reportingTokenVersion. */
+        public _reportingTokenVersion?: "reportingTokenVersion";
+
+        /** MessageContextInfo _messageAddOnExpiryType. */
+        public _messageAddOnExpiryType?: "messageAddOnExpiryType";
+
+        /** MessageContextInfo _messageAssociation. */
+        public _messageAssociation?: "messageAssociation";
+
+        /** MessageContextInfo _capiCreatedGroup. */
+        public _capiCreatedGroup?: "capiCreatedGroup";
+
+        /** MessageContextInfo _supportPayload. */
+        public _supportPayload?: "supportPayload";
+
+        /** MessageContextInfo _limitSharing. */
+        public _limitSharing?: "limitSharing";
+
+        /** MessageContextInfo _limitSharingV2. */
+        public _limitSharingV2?: "limitSharingV2";
+
         /**
          * Creates a new MessageContextInfo instance using the specified properties.
          * @param [properties] Properties to set
@@ -36166,6 +40255,18 @@ export namespace proto {
         /** MessageKey participant. */
         public participant?: (string|null);
 
+        /** MessageKey _remoteJid. */
+        public _remoteJid?: "remoteJid";
+
+        /** MessageKey _fromMe. */
+        public _fromMe?: "fromMe";
+
+        /** MessageKey _id. */
+        public _id?: "id";
+
+        /** MessageKey _participant. */
+        public _participant?: "participant";
+
         /**
          * Creates a new MessageKey instance using the specified properties.
          * @param [properties] Properties to set
@@ -36275,6 +40376,15 @@ export namespace proto {
         /** MessageSecretMessage encPayload. */
         public encPayload?: (Uint8Array|null);
 
+        /** MessageSecretMessage _version. */
+        public _version?: "version";
+
+        /** MessageSecretMessage _encIv. */
+        public _encIv?: "encIv";
+
+        /** MessageSecretMessage _encPayload. */
+        public _encPayload?: "encPayload";
+
         /**
          * Creates a new MessageSecretMessage instance using the specified properties.
          * @param [properties] Properties to set
@@ -36383,6 +40493,15 @@ export namespace proto {
 
         /** Money currencyCode. */
         public currencyCode?: (string|null);
+
+        /** Money _value. */
+        public _value?: "value";
+
+        /** Money _offset. */
+        public _offset?: "offset";
+
+        /** Money _currencyCode. */
+        public _currencyCode?: "currencyCode";
 
         /**
          * Creates a new Money instance using the specified properties.
@@ -36709,6 +40828,120 @@ export namespace proto {
         /** MsgOpaqueData plainProtobufBytes. */
         public plainProtobufBytes?: (Uint8Array|null);
 
+        /** MsgOpaqueData _body. */
+        public _body?: "body";
+
+        /** MsgOpaqueData _caption. */
+        public _caption?: "caption";
+
+        /** MsgOpaqueData _lng. */
+        public _lng?: "lng";
+
+        /** MsgOpaqueData _isLive. */
+        public _isLive?: "isLive";
+
+        /** MsgOpaqueData _lat. */
+        public _lat?: "lat";
+
+        /** MsgOpaqueData _paymentAmount1000. */
+        public _paymentAmount1000?: "paymentAmount1000";
+
+        /** MsgOpaqueData _paymentNoteMsgBody. */
+        public _paymentNoteMsgBody?: "paymentNoteMsgBody";
+
+        /** MsgOpaqueData _matchedText. */
+        public _matchedText?: "matchedText";
+
+        /** MsgOpaqueData _title. */
+        public _title?: "title";
+
+        /** MsgOpaqueData _description. */
+        public _description?: "description";
+
+        /** MsgOpaqueData _futureproofBuffer. */
+        public _futureproofBuffer?: "futureproofBuffer";
+
+        /** MsgOpaqueData _clientUrl. */
+        public _clientUrl?: "clientUrl";
+
+        /** MsgOpaqueData _loc. */
+        public _loc?: "loc";
+
+        /** MsgOpaqueData _pollName. */
+        public _pollName?: "pollName";
+
+        /** MsgOpaqueData _pollSelectableOptionsCount. */
+        public _pollSelectableOptionsCount?: "pollSelectableOptionsCount";
+
+        /** MsgOpaqueData _messageSecret. */
+        public _messageSecret?: "messageSecret";
+
+        /** MsgOpaqueData _originalSelfAuthor. */
+        public _originalSelfAuthor?: "originalSelfAuthor";
+
+        /** MsgOpaqueData _senderTimestampMs. */
+        public _senderTimestampMs?: "senderTimestampMs";
+
+        /** MsgOpaqueData _pollUpdateParentKey. */
+        public _pollUpdateParentKey?: "pollUpdateParentKey";
+
+        /** MsgOpaqueData _encPollVote. */
+        public _encPollVote?: "encPollVote";
+
+        /** MsgOpaqueData _isSentCagPollCreation. */
+        public _isSentCagPollCreation?: "isSentCagPollCreation";
+
+        /** MsgOpaqueData _pollContentType. */
+        public _pollContentType?: "pollContentType";
+
+        /** MsgOpaqueData _pollVotesSnapshot. */
+        public _pollVotesSnapshot?: "pollVotesSnapshot";
+
+        /** MsgOpaqueData _encReactionTargetMessageKey. */
+        public _encReactionTargetMessageKey?: "encReactionTargetMessageKey";
+
+        /** MsgOpaqueData _encReactionEncPayload. */
+        public _encReactionEncPayload?: "encReactionEncPayload";
+
+        /** MsgOpaqueData _encReactionEncIv. */
+        public _encReactionEncIv?: "encReactionEncIv";
+
+        /** MsgOpaqueData _botMessageSecret. */
+        public _botMessageSecret?: "botMessageSecret";
+
+        /** MsgOpaqueData _targetMessageKey. */
+        public _targetMessageKey?: "targetMessageKey";
+
+        /** MsgOpaqueData _encPayload. */
+        public _encPayload?: "encPayload";
+
+        /** MsgOpaqueData _encIv. */
+        public _encIv?: "encIv";
+
+        /** MsgOpaqueData _eventName. */
+        public _eventName?: "eventName";
+
+        /** MsgOpaqueData _isEventCanceled. */
+        public _isEventCanceled?: "isEventCanceled";
+
+        /** MsgOpaqueData _eventDescription. */
+        public _eventDescription?: "eventDescription";
+
+        /** MsgOpaqueData _eventJoinLink. */
+        public _eventJoinLink?: "eventJoinLink";
+
+        /** MsgOpaqueData _eventStartTime. */
+        public _eventStartTime?: "eventStartTime";
+
+        /** MsgOpaqueData _eventLocation. */
+        public _eventLocation?: "eventLocation";
+
+        /** MsgOpaqueData _eventEndTime. */
+        public _eventEndTime?: "eventEndTime";
+
+        /** MsgOpaqueData _plainProtobufBytes. */
+        public _plainProtobufBytes?: "plainProtobufBytes";
+
         /**
          * Creates a new MsgOpaqueData instance using the specified properties.
          * @param [properties] Properties to set
@@ -36838,6 +41071,24 @@ export namespace proto {
             /** EventLocation jpegThumbnail. */
             public jpegThumbnail?: (Uint8Array|null);
 
+            /** EventLocation _degreesLatitude. */
+            public _degreesLatitude?: "degreesLatitude";
+
+            /** EventLocation _degreesLongitude. */
+            public _degreesLongitude?: "degreesLongitude";
+
+            /** EventLocation _name. */
+            public _name?: "name";
+
+            /** EventLocation _address. */
+            public _address?: "address";
+
+            /** EventLocation _url. */
+            public _url?: "url";
+
+            /** EventLocation _jpegThumbnail. */
+            public _jpegThumbnail?: "jpegThumbnail";
+
             /**
              * Creates a new EventLocation instance using the specified properties.
              * @param [properties] Properties to set
@@ -36948,6 +41199,12 @@ export namespace proto {
             /** PollOption hash. */
             public hash?: (string|null);
 
+            /** PollOption _name. */
+            public _name?: "name";
+
+            /** PollOption _hash. */
+            public _hash?: "hash";
+
             /**
              * Creates a new PollOption instance using the specified properties.
              * @param [properties] Properties to set
@@ -37050,6 +41307,12 @@ export namespace proto {
 
             /** PollVoteSnapshot optionVoteCount. */
             public optionVoteCount?: (number|null);
+
+            /** PollVoteSnapshot _option. */
+            public _option?: "option";
+
+            /** PollVoteSnapshot _optionVoteCount. */
+            public _optionVoteCount?: "optionVoteCount";
 
             /**
              * Creates a new PollVoteSnapshot instance using the specified properties.
@@ -37252,6 +41515,12 @@ export namespace proto {
         /** MsgRowOpaqueData quotedMsg. */
         public quotedMsg?: (proto.IMsgOpaqueData|null);
 
+        /** MsgRowOpaqueData _currentMsg. */
+        public _currentMsg?: "currentMsg";
+
+        /** MsgRowOpaqueData _quotedMsg. */
+        public _quotedMsg?: "quotedMsg";
+
         /**
          * Creates a new MsgRowOpaqueData instance using the specified properties.
          * @param [properties] Properties to set
@@ -37354,6 +41623,12 @@ export namespace proto {
 
         /** NoiseCertificate signature. */
         public signature?: (Uint8Array|null);
+
+        /** NoiseCertificate _details. */
+        public _details?: "details";
+
+        /** NoiseCertificate _signature. */
+        public _signature?: "signature";
 
         /**
          * Creates a new NoiseCertificate instance using the specified properties.
@@ -37478,6 +41753,21 @@ export namespace proto {
             /** Details key. */
             public key?: (Uint8Array|null);
 
+            /** Details _serial. */
+            public _serial?: "serial";
+
+            /** Details _issuer. */
+            public _issuer?: "issuer";
+
+            /** Details _expires. */
+            public _expires?: "expires";
+
+            /** Details _subject. */
+            public _subject?: "subject";
+
+            /** Details _key. */
+            public _key?: "key";
+
             /**
              * Creates a new Details instance using the specified properties.
              * @param [properties] Properties to set
@@ -37593,6 +41883,18 @@ export namespace proto {
 
         /** NotificationMessageInfo participant. */
         public participant?: (string|null);
+
+        /** NotificationMessageInfo _key. */
+        public _key?: "key";
+
+        /** NotificationMessageInfo _message. */
+        public _message?: "message";
+
+        /** NotificationMessageInfo _messageTimestamp. */
+        public _messageTimestamp?: "messageTimestamp";
+
+        /** NotificationMessageInfo _participant. */
+        public _participant?: "participant";
 
         /**
          * Creates a new NotificationMessageInfo instance using the specified properties.
@@ -37721,6 +42023,24 @@ export namespace proto {
         /** NotificationSettings callVibrate. */
         public callVibrate?: (string|null);
 
+        /** NotificationSettings _messageVibrate. */
+        public _messageVibrate?: "messageVibrate";
+
+        /** NotificationSettings _messagePopup. */
+        public _messagePopup?: "messagePopup";
+
+        /** NotificationSettings _messageLight. */
+        public _messageLight?: "messageLight";
+
+        /** NotificationSettings _lowPriorityNotifications. */
+        public _lowPriorityNotifications?: "lowPriorityNotifications";
+
+        /** NotificationSettings _reactionsMuted. */
+        public _reactionsMuted?: "reactionsMuted";
+
+        /** NotificationSettings _callVibrate. */
+        public _callVibrate?: "callVibrate";
+
         /**
          * Creates a new NotificationSettings instance using the specified properties.
          * @param [properties] Properties to set
@@ -37830,6 +42150,15 @@ export namespace proto {
         /** PairingRequest advSecret. */
         public advSecret?: (Uint8Array|null);
 
+        /** PairingRequest _companionPublicKey. */
+        public _companionPublicKey?: "companionPublicKey";
+
+        /** PairingRequest _companionIdentityKey. */
+        public _companionIdentityKey?: "companionIdentityKey";
+
+        /** PairingRequest _advSecret. */
+        public _advSecret?: "advSecret";
+
         /**
          * Creates a new PairingRequest instance using the specified properties.
          * @param [properties] Properties to set
@@ -37938,6 +42267,15 @@ export namespace proto {
 
         /** PastParticipant leaveTs. */
         public leaveTs?: (number|Long|null);
+
+        /** PastParticipant _userJid. */
+        public _userJid?: "userJid";
+
+        /** PastParticipant _leaveReason. */
+        public _leaveReason?: "leaveReason";
+
+        /** PastParticipant _leaveTs. */
+        public _leaveTs?: "leaveTs";
 
         /**
          * Creates a new PastParticipant instance using the specified properties.
@@ -38050,6 +42388,9 @@ export namespace proto {
 
         /** PastParticipants pastParticipants. */
         public pastParticipants: proto.IPastParticipant[];
+
+        /** PastParticipants _groupJid. */
+        public _groupJid?: "groupJid";
 
         /**
          * Creates a new PastParticipants instance using the specified properties.
@@ -38207,6 +42548,39 @@ export namespace proto {
 
         /** PatchDebugData isSenderPrimary. */
         public isSenderPrimary?: (boolean|null);
+
+        /** PatchDebugData _currentLthash. */
+        public _currentLthash?: "currentLthash";
+
+        /** PatchDebugData _newLthash. */
+        public _newLthash?: "newLthash";
+
+        /** PatchDebugData _patchVersion. */
+        public _patchVersion?: "patchVersion";
+
+        /** PatchDebugData _collectionName. */
+        public _collectionName?: "collectionName";
+
+        /** PatchDebugData _firstFourBytesFromAHashOfSnapshotMacKey. */
+        public _firstFourBytesFromAHashOfSnapshotMacKey?: "firstFourBytesFromAHashOfSnapshotMacKey";
+
+        /** PatchDebugData _newLthashSubtract. */
+        public _newLthashSubtract?: "newLthashSubtract";
+
+        /** PatchDebugData _numberAdd. */
+        public _numberAdd?: "numberAdd";
+
+        /** PatchDebugData _numberRemove. */
+        public _numberRemove?: "numberRemove";
+
+        /** PatchDebugData _numberOverride. */
+        public _numberOverride?: "numberOverride";
+
+        /** PatchDebugData _senderPlatform. */
+        public _senderPlatform?: "senderPlatform";
+
+        /** PatchDebugData _isSenderPrimary. */
+        public _isSenderPrimary?: "isSenderPrimary";
 
         /**
          * Creates a new PatchDebugData instance using the specified properties.
@@ -38375,6 +42749,36 @@ export namespace proto {
         /** PaymentBackground type. */
         public type?: (proto.PaymentBackground.Type|null);
 
+        /** PaymentBackground _id. */
+        public _id?: "id";
+
+        /** PaymentBackground _fileLength. */
+        public _fileLength?: "fileLength";
+
+        /** PaymentBackground _width. */
+        public _width?: "width";
+
+        /** PaymentBackground _height. */
+        public _height?: "height";
+
+        /** PaymentBackground _mimetype. */
+        public _mimetype?: "mimetype";
+
+        /** PaymentBackground _placeholderArgb. */
+        public _placeholderArgb?: "placeholderArgb";
+
+        /** PaymentBackground _textArgb. */
+        public _textArgb?: "textArgb";
+
+        /** PaymentBackground _subtextArgb. */
+        public _subtextArgb?: "subtextArgb";
+
+        /** PaymentBackground _mediaData. */
+        public _mediaData?: "mediaData";
+
+        /** PaymentBackground _type. */
+        public _type?: "type";
+
         /**
          * Creates a new PaymentBackground instance using the specified properties.
          * @param [properties] Properties to set
@@ -38497,6 +42901,21 @@ export namespace proto {
 
             /** MediaData directPath. */
             public directPath?: (string|null);
+
+            /** MediaData _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** MediaData _mediaKeyTimestamp. */
+            public _mediaKeyTimestamp?: "mediaKeyTimestamp";
+
+            /** MediaData _fileSha256. */
+            public _fileSha256?: "fileSha256";
+
+            /** MediaData _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** MediaData _directPath. */
+            public _directPath?: "directPath";
 
             /**
              * Creates a new MediaData instance using the specified properties.
@@ -38674,6 +43093,45 @@ export namespace proto {
         /** PaymentInfo exchangeAmount. */
         public exchangeAmount?: (proto.IMoney|null);
 
+        /** PaymentInfo _currencyDeprecated. */
+        public _currencyDeprecated?: "currencyDeprecated";
+
+        /** PaymentInfo _amount1000. */
+        public _amount1000?: "amount1000";
+
+        /** PaymentInfo _receiverJid. */
+        public _receiverJid?: "receiverJid";
+
+        /** PaymentInfo _status. */
+        public _status?: "status";
+
+        /** PaymentInfo _transactionTimestamp. */
+        public _transactionTimestamp?: "transactionTimestamp";
+
+        /** PaymentInfo _requestMessageKey. */
+        public _requestMessageKey?: "requestMessageKey";
+
+        /** PaymentInfo _expiryTimestamp. */
+        public _expiryTimestamp?: "expiryTimestamp";
+
+        /** PaymentInfo _futureproofed. */
+        public _futureproofed?: "futureproofed";
+
+        /** PaymentInfo _currency. */
+        public _currency?: "currency";
+
+        /** PaymentInfo _txnStatus. */
+        public _txnStatus?: "txnStatus";
+
+        /** PaymentInfo _useNoviFiatFormat. */
+        public _useNoviFiatFormat?: "useNoviFiatFormat";
+
+        /** PaymentInfo _primaryAmount. */
+        public _primaryAmount?: "primaryAmount";
+
+        /** PaymentInfo _exchangeAmount. */
+        public _exchangeAmount?: "exchangeAmount";
+
         /**
          * Creates a new PaymentInfo instance using the specified properties.
          * @param [properties] Properties to set
@@ -38838,6 +43296,12 @@ export namespace proto {
         /** PhoneNumberToLIDMapping lidJid. */
         public lidJid?: (string|null);
 
+        /** PhoneNumberToLIDMapping _pnJid. */
+        public _pnJid?: "pnJid";
+
+        /** PhoneNumberToLIDMapping _lidJid. */
+        public _lidJid?: "lidJid";
+
         /**
          * Creates a new PhoneNumberToLIDMapping instance using the specified properties.
          * @param [properties] Properties to set
@@ -38946,6 +43410,15 @@ export namespace proto {
 
         /** PhotoChange newPhotoId. */
         public newPhotoId?: (number|null);
+
+        /** PhotoChange _oldPhoto. */
+        public _oldPhoto?: "oldPhoto";
+
+        /** PhotoChange _newPhoto. */
+        public _newPhoto?: "newPhoto";
+
+        /** PhotoChange _newPhotoId. */
+        public _newPhotoId?: "newPhotoId";
 
         /**
          * Creates a new PhotoChange instance using the specified properties.
@@ -39067,6 +43540,21 @@ export namespace proto {
 
         /** PinInChat messageAddOnContextInfo. */
         public messageAddOnContextInfo?: (proto.IMessageAddOnContextInfo|null);
+
+        /** PinInChat _type. */
+        public _type?: "type";
+
+        /** PinInChat _key. */
+        public _key?: "key";
+
+        /** PinInChat _senderTimestampMs. */
+        public _senderTimestampMs?: "senderTimestampMs";
+
+        /** PinInChat _serverTimestampMs. */
+        public _serverTimestampMs?: "serverTimestampMs";
+
+        /** PinInChat _messageAddOnContextInfo. */
+        public _messageAddOnContextInfo?: "messageAddOnContextInfo";
 
         /**
          * Creates a new PinInChat instance using the specified properties.
@@ -39193,6 +43681,18 @@ export namespace proto {
         /** Point y. */
         public y?: (number|null);
 
+        /** Point _xDeprecated. */
+        public _xDeprecated?: "xDeprecated";
+
+        /** Point _yDeprecated. */
+        public _yDeprecated?: "yDeprecated";
+
+        /** Point _x. */
+        public _x?: "x";
+
+        /** Point _y. */
+        public _y?: "y";
+
         /**
          * Creates a new Point instance using the specified properties.
          * @param [properties] Properties to set
@@ -39289,6 +43789,9 @@ export namespace proto {
 
         /** PollAdditionalMetadata pollInvalidated. */
         public pollInvalidated?: (boolean|null);
+
+        /** PollAdditionalMetadata _pollInvalidated. */
+        public _pollInvalidated?: "pollInvalidated";
 
         /**
          * Creates a new PollAdditionalMetadata instance using the specified properties.
@@ -39392,6 +43895,12 @@ export namespace proto {
 
         /** PollEncValue encIv. */
         public encIv?: (Uint8Array|null);
+
+        /** PollEncValue _encPayload. */
+        public _encPayload?: "encPayload";
+
+        /** PollEncValue _encIv. */
+        public _encIv?: "encIv";
 
         /**
          * Creates a new PollEncValue instance using the specified properties.
@@ -39514,6 +44023,21 @@ export namespace proto {
         /** PollUpdate unread. */
         public unread?: (boolean|null);
 
+        /** PollUpdate _pollUpdateMessageKey. */
+        public _pollUpdateMessageKey?: "pollUpdateMessageKey";
+
+        /** PollUpdate _vote. */
+        public _vote?: "vote";
+
+        /** PollUpdate _senderTimestampMs. */
+        public _senderTimestampMs?: "senderTimestampMs";
+
+        /** PollUpdate _serverTimestampMs. */
+        public _serverTimestampMs?: "serverTimestampMs";
+
+        /** PollUpdate _unread. */
+        public _unread?: "unread";
+
         /**
          * Creates a new PollUpdate instance using the specified properties.
          * @param [properties] Properties to set
@@ -39622,6 +44146,15 @@ export namespace proto {
 
         /** PreKeyRecordStructure privateKey. */
         public privateKey?: (Uint8Array|null);
+
+        /** PreKeyRecordStructure _id. */
+        public _id?: "id";
+
+        /** PreKeyRecordStructure _publicKey. */
+        public _publicKey?: "publicKey";
+
+        /** PreKeyRecordStructure _privateKey. */
+        public _privateKey?: "privateKey";
 
         /**
          * Creates a new PreKeyRecordStructure instance using the specified properties.
@@ -39750,6 +44283,24 @@ export namespace proto {
         /** PreKeySignalMessage message. */
         public message?: (Uint8Array|null);
 
+        /** PreKeySignalMessage _registrationId. */
+        public _registrationId?: "registrationId";
+
+        /** PreKeySignalMessage _preKeyId. */
+        public _preKeyId?: "preKeyId";
+
+        /** PreKeySignalMessage _signedPreKeyId. */
+        public _signedPreKeyId?: "signedPreKeyId";
+
+        /** PreKeySignalMessage _baseKey. */
+        public _baseKey?: "baseKey";
+
+        /** PreKeySignalMessage _identityKey. */
+        public _identityKey?: "identityKey";
+
+        /** PreKeySignalMessage _message. */
+        public _message?: "message";
+
         /**
          * Creates a new PreKeySignalMessage instance using the specified properties.
          * @param [properties] Properties to set
@@ -39846,6 +44397,9 @@ export namespace proto {
 
         /** PremiumMessageInfo serverCampaignId. */
         public serverCampaignId?: (string|null);
+
+        /** PremiumMessageInfo _serverCampaignId. */
+        public _serverCampaignId?: "serverCampaignId";
 
         /**
          * Creates a new PremiumMessageInfo instance using the specified properties.
@@ -39949,6 +44503,12 @@ export namespace proto {
 
         /** PrimaryEphemeralIdentity nonce. */
         public nonce?: (Uint8Array|null);
+
+        /** PrimaryEphemeralIdentity _publicKey. */
+        public _publicKey?: "publicKey";
+
+        /** PrimaryEphemeralIdentity _nonce. */
+        public _nonce?: "nonce";
 
         /**
          * Creates a new PrimaryEphemeralIdentity instance using the specified properties.
@@ -40096,6 +44656,27 @@ export namespace proto {
         /** ProcessedVideo capabilities. */
         public capabilities: string[];
 
+        /** ProcessedVideo _directPath. */
+        public _directPath?: "directPath";
+
+        /** ProcessedVideo _fileSha256. */
+        public _fileSha256?: "fileSha256";
+
+        /** ProcessedVideo _height. */
+        public _height?: "height";
+
+        /** ProcessedVideo _width. */
+        public _width?: "width";
+
+        /** ProcessedVideo _fileLength. */
+        public _fileLength?: "fileLength";
+
+        /** ProcessedVideo _bitrate. */
+        public _bitrate?: "bitrate";
+
+        /** ProcessedVideo _quality. */
+        public _quality?: "quality";
+
         /**
          * Creates a new ProcessedVideo instance using the specified properties.
          * @param [properties] Properties to set
@@ -40210,6 +44791,12 @@ export namespace proto {
         /** ProloguePayload commitment. */
         public commitment?: (proto.ICompanionCommitment|null);
 
+        /** ProloguePayload _companionEphemeralIdentity. */
+        public _companionEphemeralIdentity?: "companionEphemeralIdentity";
+
+        /** ProloguePayload _commitment. */
+        public _commitment?: "commitment";
+
         /**
          * Creates a new ProloguePayload instance using the specified properties.
          * @param [properties] Properties to set
@@ -40312,6 +44899,12 @@ export namespace proto {
 
         /** Pushname pushname. */
         public pushname?: (string|null);
+
+        /** Pushname _id. */
+        public _id?: "id";
+
+        /** Pushname _pushname. */
+        public _pushname?: "pushname";
 
         /**
          * Creates a new Pushname instance using the specified properties.
@@ -40434,6 +45027,21 @@ export namespace proto {
         /** Reaction unread. */
         public unread?: (boolean|null);
 
+        /** Reaction _key. */
+        public _key?: "key";
+
+        /** Reaction _text. */
+        public _text?: "text";
+
+        /** Reaction _groupingKey. */
+        public _groupingKey?: "groupingKey";
+
+        /** Reaction _senderTimestampMs. */
+        public _senderTimestampMs?: "senderTimestampMs";
+
+        /** Reaction _unread. */
+        public _unread?: "unread";
+
         /**
          * Creates a new Reaction instance using the specified properties.
          * @param [properties] Properties to set
@@ -40537,6 +45145,12 @@ export namespace proto {
         /** RecentEmojiWeight weight. */
         public weight?: (number|null);
 
+        /** RecentEmojiWeight _emoji. */
+        public _emoji?: "emoji";
+
+        /** RecentEmojiWeight _weight. */
+        public _weight?: "weight";
+
         /**
          * Creates a new RecentEmojiWeight instance using the specified properties.
          * @param [properties] Properties to set
@@ -40639,6 +45253,9 @@ export namespace proto {
 
         /** RecordStructure previousSessions. */
         public previousSessions: proto.ISessionStructure[];
+
+        /** RecordStructure _currentSession. */
+        public _currentSession?: "currentSession";
 
         /**
          * Creates a new RecordStructure instance using the specified properties.
@@ -40755,6 +45372,18 @@ export namespace proto {
         /** Reportable never. */
         public never?: (boolean|null);
 
+        /** Reportable _minVersion. */
+        public _minVersion?: "minVersion";
+
+        /** Reportable _maxVersion. */
+        public _maxVersion?: "maxVersion";
+
+        /** Reportable _notReportableMinVersion. */
+        public _notReportableMinVersion?: "notReportableMinVersion";
+
+        /** Reportable _never. */
+        public _never?: "never";
+
         /**
          * Creates a new Reportable instance using the specified properties.
          * @param [properties] Properties to set
@@ -40851,6 +45480,9 @@ export namespace proto {
 
         /** ReportingTokenInfo reportingTag. */
         public reportingTag?: (Uint8Array|null);
+
+        /** ReportingTokenInfo _reportingTag. */
+        public _reportingTag?: "reportingTag";
 
         /**
          * Creates a new ReportingTokenInfo instance using the specified properties.
@@ -40967,6 +45599,18 @@ export namespace proto {
         /** SenderKeyDistributionMessage signingKey. */
         public signingKey?: (Uint8Array|null);
 
+        /** SenderKeyDistributionMessage _id. */
+        public _id?: "id";
+
+        /** SenderKeyDistributionMessage _iteration. */
+        public _iteration?: "iteration";
+
+        /** SenderKeyDistributionMessage _chainKey. */
+        public _chainKey?: "chainKey";
+
+        /** SenderKeyDistributionMessage _signingKey. */
+        public _signingKey?: "signingKey";
+
         /**
          * Creates a new SenderKeyDistributionMessage instance using the specified properties.
          * @param [properties] Properties to set
@@ -41075,6 +45719,15 @@ export namespace proto {
 
         /** SenderKeyMessage ciphertext. */
         public ciphertext?: (Uint8Array|null);
+
+        /** SenderKeyMessage _id. */
+        public _id?: "id";
+
+        /** SenderKeyMessage _iteration. */
+        public _iteration?: "iteration";
+
+        /** SenderKeyMessage _ciphertext. */
+        public _ciphertext?: "ciphertext";
 
         /**
          * Creates a new SenderKeyMessage instance using the specified properties.
@@ -41288,6 +45941,15 @@ export namespace proto {
         /** SenderKeyStateStructure senderMessageKeys. */
         public senderMessageKeys: proto.SenderKeyStateStructure.ISenderMessageKey[];
 
+        /** SenderKeyStateStructure _senderKeyId. */
+        public _senderKeyId?: "senderKeyId";
+
+        /** SenderKeyStateStructure _senderChainKey. */
+        public _senderChainKey?: "senderChainKey";
+
+        /** SenderKeyStateStructure _senderSigningKey. */
+        public _senderSigningKey?: "senderSigningKey";
+
         /**
          * Creates a new SenderKeyStateStructure instance using the specified properties.
          * @param [properties] Properties to set
@@ -41393,6 +46055,12 @@ export namespace proto {
             /** SenderChainKey seed. */
             public seed?: (Uint8Array|null);
 
+            /** SenderChainKey _iteration. */
+            public _iteration?: "iteration";
+
+            /** SenderChainKey _seed. */
+            public _seed?: "seed";
+
             /**
              * Creates a new SenderChainKey instance using the specified properties.
              * @param [properties] Properties to set
@@ -41495,6 +46163,12 @@ export namespace proto {
 
             /** SenderMessageKey seed. */
             public seed?: (Uint8Array|null);
+
+            /** SenderMessageKey _iteration. */
+            public _iteration?: "iteration";
+
+            /** SenderMessageKey _seed. */
+            public _seed?: "seed";
 
             /**
              * Creates a new SenderMessageKey instance using the specified properties.
@@ -41599,6 +46273,12 @@ export namespace proto {
             /** SenderSigningKey private. */
             public private?: (Uint8Array|null);
 
+            /** SenderSigningKey _public. */
+            public _public?: "public";
+
+            /** SenderSigningKey _private. */
+            public _private?: "private";
+
             /**
              * Creates a new SenderSigningKey instance using the specified properties.
              * @param [properties] Properties to set
@@ -41696,6 +46376,9 @@ export namespace proto {
 
         /** ServerErrorReceipt stanzaId. */
         public stanzaId?: (string|null);
+
+        /** ServerErrorReceipt _stanzaId. */
+        public _stanzaId?: "stanzaId";
 
         /**
          * Creates a new ServerErrorReceipt instance using the specified properties.
@@ -41866,6 +46549,42 @@ export namespace proto {
         /** SessionStructure aliceBaseKey. */
         public aliceBaseKey?: (Uint8Array|null);
 
+        /** SessionStructure _sessionVersion. */
+        public _sessionVersion?: "sessionVersion";
+
+        /** SessionStructure _localIdentityPublic. */
+        public _localIdentityPublic?: "localIdentityPublic";
+
+        /** SessionStructure _remoteIdentityPublic. */
+        public _remoteIdentityPublic?: "remoteIdentityPublic";
+
+        /** SessionStructure _rootKey. */
+        public _rootKey?: "rootKey";
+
+        /** SessionStructure _previousCounter. */
+        public _previousCounter?: "previousCounter";
+
+        /** SessionStructure _senderChain. */
+        public _senderChain?: "senderChain";
+
+        /** SessionStructure _pendingKeyExchange. */
+        public _pendingKeyExchange?: "pendingKeyExchange";
+
+        /** SessionStructure _pendingPreKey. */
+        public _pendingPreKey?: "pendingPreKey";
+
+        /** SessionStructure _remoteRegistrationId. */
+        public _remoteRegistrationId?: "remoteRegistrationId";
+
+        /** SessionStructure _localRegistrationId. */
+        public _localRegistrationId?: "localRegistrationId";
+
+        /** SessionStructure _needsRefresh. */
+        public _needsRefresh?: "needsRefresh";
+
+        /** SessionStructure _aliceBaseKey. */
+        public _aliceBaseKey?: "aliceBaseKey";
+
         /**
          * Creates a new SessionStructure instance using the specified properties.
          * @param [properties] Properties to set
@@ -41983,6 +46702,15 @@ export namespace proto {
             /** Chain messageKeys. */
             public messageKeys: proto.SessionStructure.Chain.IMessageKey[];
 
+            /** Chain _senderRatchetKey. */
+            public _senderRatchetKey?: "senderRatchetKey";
+
+            /** Chain _senderRatchetKeyPrivate. */
+            public _senderRatchetKeyPrivate?: "senderRatchetKeyPrivate";
+
+            /** Chain _chainKey. */
+            public _chainKey?: "chainKey";
+
             /**
              * Creates a new Chain instance using the specified properties.
              * @param [properties] Properties to set
@@ -42087,6 +46815,12 @@ export namespace proto {
 
                 /** ChainKey key. */
                 public key?: (Uint8Array|null);
+
+                /** ChainKey _index. */
+                public _index?: "index";
+
+                /** ChainKey _key. */
+                public _key?: "key";
 
                 /**
                  * Creates a new ChainKey instance using the specified properties.
@@ -42202,6 +46936,18 @@ export namespace proto {
 
                 /** MessageKey iv. */
                 public iv?: (Uint8Array|null);
+
+                /** MessageKey _index. */
+                public _index?: "index";
+
+                /** MessageKey _cipherKey. */
+                public _cipherKey?: "cipherKey";
+
+                /** MessageKey _macKey. */
+                public _macKey?: "macKey";
+
+                /** MessageKey _iv. */
+                public _iv?: "iv";
 
                 /**
                  * Creates a new MessageKey instance using the specified properties.
@@ -42337,6 +47083,27 @@ export namespace proto {
             /** PendingKeyExchange localIdentityKeyPrivate. */
             public localIdentityKeyPrivate?: (Uint8Array|null);
 
+            /** PendingKeyExchange _sequence. */
+            public _sequence?: "sequence";
+
+            /** PendingKeyExchange _localBaseKey. */
+            public _localBaseKey?: "localBaseKey";
+
+            /** PendingKeyExchange _localBaseKeyPrivate. */
+            public _localBaseKeyPrivate?: "localBaseKeyPrivate";
+
+            /** PendingKeyExchange _localRatchetKey. */
+            public _localRatchetKey?: "localRatchetKey";
+
+            /** PendingKeyExchange _localRatchetKeyPrivate. */
+            public _localRatchetKeyPrivate?: "localRatchetKeyPrivate";
+
+            /** PendingKeyExchange _localIdentityKey. */
+            public _localIdentityKey?: "localIdentityKey";
+
+            /** PendingKeyExchange _localIdentityKeyPrivate. */
+            public _localIdentityKeyPrivate?: "localIdentityKeyPrivate";
+
             /**
              * Creates a new PendingKeyExchange instance using the specified properties.
              * @param [properties] Properties to set
@@ -42445,6 +47212,15 @@ export namespace proto {
 
             /** PendingPreKey baseKey. */
             public baseKey?: (Uint8Array|null);
+
+            /** PendingPreKey _preKeyId. */
+            public _preKeyId?: "preKeyId";
+
+            /** PendingPreKey _signedPreKeyId. */
+            public _signedPreKeyId?: "signedPreKeyId";
+
+            /** PendingPreKey _baseKey. */
+            public _baseKey?: "baseKey";
 
             /**
              * Creates a new PendingPreKey instance using the specified properties.
@@ -42561,6 +47337,18 @@ export namespace proto {
 
         /** SignalMessage ciphertext. */
         public ciphertext?: (Uint8Array|null);
+
+        /** SignalMessage _ratchetKey. */
+        public _ratchetKey?: "ratchetKey";
+
+        /** SignalMessage _counter. */
+        public _counter?: "counter";
+
+        /** SignalMessage _previousCounter. */
+        public _previousCounter?: "previousCounter";
+
+        /** SignalMessage _ciphertext. */
+        public _ciphertext?: "ciphertext";
 
         /**
          * Creates a new SignalMessage instance using the specified properties.
@@ -42683,6 +47471,21 @@ export namespace proto {
         /** SignedPreKeyRecordStructure timestamp. */
         public timestamp?: (number|Long|null);
 
+        /** SignedPreKeyRecordStructure _id. */
+        public _id?: "id";
+
+        /** SignedPreKeyRecordStructure _publicKey. */
+        public _publicKey?: "publicKey";
+
+        /** SignedPreKeyRecordStructure _privateKey. */
+        public _privateKey?: "privateKey";
+
+        /** SignedPreKeyRecordStructure _signature. */
+        public _signature?: "signature";
+
+        /** SignedPreKeyRecordStructure _timestamp. */
+        public _timestamp?: "timestamp";
+
         /**
          * Creates a new SignedPreKeyRecordStructure instance using the specified properties.
          * @param [properties] Properties to set
@@ -42779,6 +47582,9 @@ export namespace proto {
 
         /** StatusMentionMessage quotedStatus. */
         public quotedStatus?: (proto.IMessage|null);
+
+        /** StatusMentionMessage _quotedStatus. */
+        public _quotedStatus?: "quotedStatus";
 
         /**
          * Creates a new StatusMentionMessage instance using the specified properties.
@@ -42882,6 +47688,9 @@ export namespace proto {
 
         /** StatusPSA campaignExpirationTimestamp. */
         public campaignExpirationTimestamp?: (number|Long|null);
+
+        /** StatusPSA _campaignExpirationTimestamp. */
+        public _campaignExpirationTimestamp?: "campaignExpirationTimestamp";
 
         /**
          * Creates a new StatusPSA instance using the specified properties.
@@ -43046,6 +47855,42 @@ export namespace proto {
         /** StickerMetadata isLottie. */
         public isLottie?: (boolean|null);
 
+        /** StickerMetadata _url. */
+        public _url?: "url";
+
+        /** StickerMetadata _fileSha256. */
+        public _fileSha256?: "fileSha256";
+
+        /** StickerMetadata _fileEncSha256. */
+        public _fileEncSha256?: "fileEncSha256";
+
+        /** StickerMetadata _mediaKey. */
+        public _mediaKey?: "mediaKey";
+
+        /** StickerMetadata _mimetype. */
+        public _mimetype?: "mimetype";
+
+        /** StickerMetadata _height. */
+        public _height?: "height";
+
+        /** StickerMetadata _width. */
+        public _width?: "width";
+
+        /** StickerMetadata _directPath. */
+        public _directPath?: "directPath";
+
+        /** StickerMetadata _fileLength. */
+        public _fileLength?: "fileLength";
+
+        /** StickerMetadata _weight. */
+        public _weight?: "weight";
+
+        /** StickerMetadata _lastStickerSentTs. */
+        public _lastStickerSentTs?: "lastStickerSentTs";
+
+        /** StickerMetadata _isLottie. */
+        public _isLottie?: "isLottie";
+
         /**
          * Creates a new StickerMetadata instance using the specified properties.
          * @param [properties] Properties to set
@@ -43160,6 +48005,18 @@ export namespace proto {
 
         /** SyncActionData version. */
         public version?: (number|null);
+
+        /** SyncActionData _index. */
+        public _index?: "index";
+
+        /** SyncActionData _value. */
+        public _value?: "value";
+
+        /** SyncActionData _padding. */
+        public _padding?: "padding";
+
+        /** SyncActionData _version. */
+        public _version?: "version";
 
         /**
          * Creates a new SyncActionData instance using the specified properties.
@@ -43594,6 +48451,177 @@ export namespace proto {
         /** SyncActionValue paymentTosAction. */
         public paymentTosAction?: (proto.SyncActionValue.IPaymentTosAction|null);
 
+        /** SyncActionValue _timestamp. */
+        public _timestamp?: "timestamp";
+
+        /** SyncActionValue _starAction. */
+        public _starAction?: "starAction";
+
+        /** SyncActionValue _contactAction. */
+        public _contactAction?: "contactAction";
+
+        /** SyncActionValue _muteAction. */
+        public _muteAction?: "muteAction";
+
+        /** SyncActionValue _pinAction. */
+        public _pinAction?: "pinAction";
+
+        /** SyncActionValue _securityNotificationSetting. */
+        public _securityNotificationSetting?: "securityNotificationSetting";
+
+        /** SyncActionValue _pushNameSetting. */
+        public _pushNameSetting?: "pushNameSetting";
+
+        /** SyncActionValue _quickReplyAction. */
+        public _quickReplyAction?: "quickReplyAction";
+
+        /** SyncActionValue _recentEmojiWeightsAction. */
+        public _recentEmojiWeightsAction?: "recentEmojiWeightsAction";
+
+        /** SyncActionValue _labelEditAction. */
+        public _labelEditAction?: "labelEditAction";
+
+        /** SyncActionValue _labelAssociationAction. */
+        public _labelAssociationAction?: "labelAssociationAction";
+
+        /** SyncActionValue _localeSetting. */
+        public _localeSetting?: "localeSetting";
+
+        /** SyncActionValue _archiveChatAction. */
+        public _archiveChatAction?: "archiveChatAction";
+
+        /** SyncActionValue _deleteMessageForMeAction. */
+        public _deleteMessageForMeAction?: "deleteMessageForMeAction";
+
+        /** SyncActionValue _keyExpiration. */
+        public _keyExpiration?: "keyExpiration";
+
+        /** SyncActionValue _markChatAsReadAction. */
+        public _markChatAsReadAction?: "markChatAsReadAction";
+
+        /** SyncActionValue _clearChatAction. */
+        public _clearChatAction?: "clearChatAction";
+
+        /** SyncActionValue _deleteChatAction. */
+        public _deleteChatAction?: "deleteChatAction";
+
+        /** SyncActionValue _unarchiveChatsSetting. */
+        public _unarchiveChatsSetting?: "unarchiveChatsSetting";
+
+        /** SyncActionValue _primaryFeature. */
+        public _primaryFeature?: "primaryFeature";
+
+        /** SyncActionValue _androidUnsupportedActions. */
+        public _androidUnsupportedActions?: "androidUnsupportedActions";
+
+        /** SyncActionValue _agentAction. */
+        public _agentAction?: "agentAction";
+
+        /** SyncActionValue _subscriptionAction. */
+        public _subscriptionAction?: "subscriptionAction";
+
+        /** SyncActionValue _userStatusMuteAction. */
+        public _userStatusMuteAction?: "userStatusMuteAction";
+
+        /** SyncActionValue _timeFormatAction. */
+        public _timeFormatAction?: "timeFormatAction";
+
+        /** SyncActionValue _nuxAction. */
+        public _nuxAction?: "nuxAction";
+
+        /** SyncActionValue _primaryVersionAction. */
+        public _primaryVersionAction?: "primaryVersionAction";
+
+        /** SyncActionValue _stickerAction. */
+        public _stickerAction?: "stickerAction";
+
+        /** SyncActionValue _removeRecentStickerAction. */
+        public _removeRecentStickerAction?: "removeRecentStickerAction";
+
+        /** SyncActionValue _chatAssignment. */
+        public _chatAssignment?: "chatAssignment";
+
+        /** SyncActionValue _chatAssignmentOpenedStatus. */
+        public _chatAssignmentOpenedStatus?: "chatAssignmentOpenedStatus";
+
+        /** SyncActionValue _pnForLidChatAction. */
+        public _pnForLidChatAction?: "pnForLidChatAction";
+
+        /** SyncActionValue _marketingMessageAction. */
+        public _marketingMessageAction?: "marketingMessageAction";
+
+        /** SyncActionValue _marketingMessageBroadcastAction. */
+        public _marketingMessageBroadcastAction?: "marketingMessageBroadcastAction";
+
+        /** SyncActionValue _externalWebBetaAction. */
+        public _externalWebBetaAction?: "externalWebBetaAction";
+
+        /** SyncActionValue _privacySettingRelayAllCalls. */
+        public _privacySettingRelayAllCalls?: "privacySettingRelayAllCalls";
+
+        /** SyncActionValue _callLogAction. */
+        public _callLogAction?: "callLogAction";
+
+        /** SyncActionValue _statusPrivacy. */
+        public _statusPrivacy?: "statusPrivacy";
+
+        /** SyncActionValue _botWelcomeRequestAction. */
+        public _botWelcomeRequestAction?: "botWelcomeRequestAction";
+
+        /** SyncActionValue _deleteIndividualCallLog. */
+        public _deleteIndividualCallLog?: "deleteIndividualCallLog";
+
+        /** SyncActionValue _labelReorderingAction. */
+        public _labelReorderingAction?: "labelReorderingAction";
+
+        /** SyncActionValue _paymentInfoAction. */
+        public _paymentInfoAction?: "paymentInfoAction";
+
+        /** SyncActionValue _customPaymentMethodsAction. */
+        public _customPaymentMethodsAction?: "customPaymentMethodsAction";
+
+        /** SyncActionValue _lockChatAction. */
+        public _lockChatAction?: "lockChatAction";
+
+        /** SyncActionValue _chatLockSettings. */
+        public _chatLockSettings?: "chatLockSettings";
+
+        /** SyncActionValue _wamoUserIdentifierAction. */
+        public _wamoUserIdentifierAction?: "wamoUserIdentifierAction";
+
+        /** SyncActionValue _privacySettingDisableLinkPreviewsAction. */
+        public _privacySettingDisableLinkPreviewsAction?: "privacySettingDisableLinkPreviewsAction";
+
+        /** SyncActionValue _deviceCapabilities. */
+        public _deviceCapabilities?: "deviceCapabilities";
+
+        /** SyncActionValue _noteEditAction. */
+        public _noteEditAction?: "noteEditAction";
+
+        /** SyncActionValue _favoritesAction. */
+        public _favoritesAction?: "favoritesAction";
+
+        /** SyncActionValue _merchantPaymentPartnerAction. */
+        public _merchantPaymentPartnerAction?: "merchantPaymentPartnerAction";
+
+        /** SyncActionValue _waffleAccountLinkStateAction. */
+        public _waffleAccountLinkStateAction?: "waffleAccountLinkStateAction";
+
+        /** SyncActionValue _usernameChatStartMode. */
+        public _usernameChatStartMode?: "usernameChatStartMode";
+
+        /** SyncActionValue _notificationActivitySettingAction. */
+        public _notificationActivitySettingAction?: "notificationActivitySettingAction";
+
+        /** SyncActionValue _lidContactAction. */
+        public _lidContactAction?: "lidContactAction";
+
+        /** SyncActionValue _ctwaPerCustomerDataSharingAction. */
+        public _ctwaPerCustomerDataSharingAction?: "ctwaPerCustomerDataSharingAction";
+
+        /** SyncActionValue _paymentTosAction. */
+        public _paymentTosAction?: "paymentTosAction";
+
         /**
          * Creates a new SyncActionValue instance using the specified properties.
          * @param [properties] Properties to set
@@ -43705,6 +48733,15 @@ export namespace proto {
             /** AgentAction isDeleted. */
             public isDeleted?: (boolean|null);
 
+            /** AgentAction _name. */
+            public _name?: "name";
+
+            /** AgentAction _deviceID. */
+            public _deviceID?: "deviceID";
+
+            /** AgentAction _isDeleted. */
+            public _isDeleted?: "isDeleted";
+
             /**
              * Creates a new AgentAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -43801,6 +48838,9 @@ export namespace proto {
 
             /** AndroidUnsupportedActions allowed. */
             public allowed?: (boolean|null);
+
+            /** AndroidUnsupportedActions _allowed. */
+            public _allowed?: "allowed";
 
             /**
              * Creates a new AndroidUnsupportedActions instance using the specified properties.
@@ -43905,6 +48945,12 @@ export namespace proto {
             /** ArchiveChatAction messageRange. */
             public messageRange?: (proto.SyncActionValue.ISyncActionMessageRange|null);
 
+            /** ArchiveChatAction _archived. */
+            public _archived?: "archived";
+
+            /** ArchiveChatAction _messageRange. */
+            public _messageRange?: "messageRange";
+
             /**
              * Creates a new ArchiveChatAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -44001,6 +49047,9 @@ export namespace proto {
 
             /** BotWelcomeRequestAction isSent. */
             public isSent?: (boolean|null);
+
+            /** BotWelcomeRequestAction _isSent. */
+            public _isSent?: "isSent";
 
             /**
              * Creates a new BotWelcomeRequestAction instance using the specified properties.
@@ -44099,6 +49148,9 @@ export namespace proto {
             /** CallLogAction callLogRecord. */
             public callLogRecord?: (proto.ICallLogRecord|null);
 
+            /** CallLogAction _callLogRecord. */
+            public _callLogRecord?: "callLogRecord";
+
             /**
              * Creates a new CallLogAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -44195,6 +49247,9 @@ export namespace proto {
 
             /** ChatAssignmentAction deviceAgentID. */
             public deviceAgentID?: (string|null);
+
+            /** ChatAssignmentAction _deviceAgentID. */
+            public _deviceAgentID?: "deviceAgentID";
 
             /**
              * Creates a new ChatAssignmentAction instance using the specified properties.
@@ -44293,6 +49348,9 @@ export namespace proto {
             /** ChatAssignmentOpenedStatusAction chatOpened. */
             public chatOpened?: (boolean|null);
 
+            /** ChatAssignmentOpenedStatusAction _chatOpened. */
+            public _chatOpened?: "chatOpened";
+
             /**
              * Creates a new ChatAssignmentOpenedStatusAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -44389,6 +49447,9 @@ export namespace proto {
 
             /** ClearChatAction messageRange. */
             public messageRange?: (proto.SyncActionValue.ISyncActionMessageRange|null);
+
+            /** ClearChatAction _messageRange. */
+            public _messageRange?: "messageRange";
 
             /**
              * Creates a new ClearChatAction instance using the specified properties.
@@ -44517,6 +49578,24 @@ export namespace proto {
             /** ContactAction username. */
             public username?: (string|null);
 
+            /** ContactAction _fullName. */
+            public _fullName?: "fullName";
+
+            /** ContactAction _firstName. */
+            public _firstName?: "firstName";
+
+            /** ContactAction _lidJid. */
+            public _lidJid?: "lidJid";
+
+            /** ContactAction _saveOnPrimaryAddressbook. */
+            public _saveOnPrimaryAddressbook?: "saveOnPrimaryAddressbook";
+
+            /** ContactAction _pnJid. */
+            public _pnJid?: "pnJid";
+
+            /** ContactAction _username. */
+            public _username?: "username";
+
             /**
              * Creates a new ContactAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -44613,6 +49692,9 @@ export namespace proto {
 
             /** CtwaPerCustomerDataSharingAction isCtwaPerCustomerDataSharingEnabled. */
             public isCtwaPerCustomerDataSharingEnabled?: (boolean|null);
+
+            /** CtwaPerCustomerDataSharingAction _isCtwaPerCustomerDataSharingEnabled. */
+            public _isCtwaPerCustomerDataSharingEnabled?: "isCtwaPerCustomerDataSharingEnabled";
 
             /**
              * Creates a new CtwaPerCustomerDataSharingAction instance using the specified properties.
@@ -45026,6 +50108,9 @@ export namespace proto {
             /** DeleteChatAction messageRange. */
             public messageRange?: (proto.SyncActionValue.ISyncActionMessageRange|null);
 
+            /** DeleteChatAction _messageRange. */
+            public _messageRange?: "messageRange";
+
             /**
              * Creates a new DeleteChatAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -45128,6 +50213,12 @@ export namespace proto {
 
             /** DeleteIndividualCallLogAction isIncoming. */
             public isIncoming?: (boolean|null);
+
+            /** DeleteIndividualCallLogAction _peerJid. */
+            public _peerJid?: "peerJid";
+
+            /** DeleteIndividualCallLogAction _isIncoming. */
+            public _isIncoming?: "isIncoming";
 
             /**
              * Creates a new DeleteIndividualCallLogAction instance using the specified properties.
@@ -45232,6 +50323,12 @@ export namespace proto {
             /** DeleteMessageForMeAction messageTimestamp. */
             public messageTimestamp?: (number|Long|null);
 
+            /** DeleteMessageForMeAction _deleteMedia. */
+            public _deleteMedia?: "deleteMedia";
+
+            /** DeleteMessageForMeAction _messageTimestamp. */
+            public _messageTimestamp?: "messageTimestamp";
+
             /**
              * Creates a new DeleteMessageForMeAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -45328,6 +50425,9 @@ export namespace proto {
 
             /** ExternalWebBetaAction isOptIn. */
             public isOptIn?: (boolean|null);
+
+            /** ExternalWebBetaAction _isOptIn. */
+            public _isOptIn?: "isOptIn";
 
             /**
              * Creates a new ExternalWebBetaAction instance using the specified properties.
@@ -45525,6 +50625,9 @@ export namespace proto {
                 /** Favorite id. */
                 public id?: (string|null);
 
+                /** Favorite _id. */
+                public _id?: "id";
+
                 /**
                  * Creates a new Favorite instance using the specified properties.
                  * @param [properties] Properties to set
@@ -45623,6 +50726,9 @@ export namespace proto {
             /** KeyExpiration expiredKeyEpoch. */
             public expiredKeyEpoch?: (number|null);
 
+            /** KeyExpiration _expiredKeyEpoch. */
+            public _expiredKeyEpoch?: "expiredKeyEpoch";
+
             /**
              * Creates a new KeyExpiration instance using the specified properties.
              * @param [properties] Properties to set
@@ -45719,6 +50825,9 @@ export namespace proto {
 
             /** LabelAssociationAction labeled. */
             public labeled?: (boolean|null);
+
+            /** LabelAssociationAction _labeled. */
+            public _labeled?: "labeled";
 
             /**
              * Creates a new LabelAssociationAction instance using the specified properties.
@@ -45858,6 +50967,30 @@ export namespace proto {
 
             /** LabelEditAction isImmutable. */
             public isImmutable?: (boolean|null);
+
+            /** LabelEditAction _name. */
+            public _name?: "name";
+
+            /** LabelEditAction _color. */
+            public _color?: "color";
+
+            /** LabelEditAction _predefinedId. */
+            public _predefinedId?: "predefinedId";
+
+            /** LabelEditAction _deleted. */
+            public _deleted?: "deleted";
+
+            /** LabelEditAction _orderIndex. */
+            public _orderIndex?: "orderIndex";
+
+            /** LabelEditAction _isActive. */
+            public _isActive?: "isActive";
+
+            /** LabelEditAction _type. */
+            public _type?: "type";
+
+            /** LabelEditAction _isImmutable. */
+            public _isImmutable?: "isImmutable";
 
             /**
              * Creates a new LabelEditAction instance using the specified properties.
@@ -46086,6 +51219,18 @@ export namespace proto {
             /** LidContactAction saveOnPrimaryAddressbook. */
             public saveOnPrimaryAddressbook?: (boolean|null);
 
+            /** LidContactAction _fullName. */
+            public _fullName?: "fullName";
+
+            /** LidContactAction _firstName. */
+            public _firstName?: "firstName";
+
+            /** LidContactAction _username. */
+            public _username?: "username";
+
+            /** LidContactAction _saveOnPrimaryAddressbook. */
+            public _saveOnPrimaryAddressbook?: "saveOnPrimaryAddressbook";
+
             /**
              * Creates a new LidContactAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -46183,6 +51328,9 @@ export namespace proto {
             /** LocaleSetting locale. */
             public locale?: (string|null);
 
+            /** LocaleSetting _locale. */
+            public _locale?: "locale";
+
             /**
              * Creates a new LocaleSetting instance using the specified properties.
              * @param [properties] Properties to set
@@ -46279,6 +51427,9 @@ export namespace proto {
 
             /** LockChatAction locked. */
             public locked?: (boolean|null);
+
+            /** LockChatAction _locked. */
+            public _locked?: "locked";
 
             /**
              * Creates a new LockChatAction instance using the specified properties.
@@ -46382,6 +51533,12 @@ export namespace proto {
 
             /** MarkChatAsReadAction messageRange. */
             public messageRange?: (proto.SyncActionValue.ISyncActionMessageRange|null);
+
+            /** MarkChatAsReadAction _read. */
+            public _read?: "read";
+
+            /** MarkChatAsReadAction _messageRange. */
+            public _messageRange?: "messageRange";
 
             /**
              * Creates a new MarkChatAsReadAction instance using the specified properties.
@@ -46516,6 +51673,27 @@ export namespace proto {
             /** MarketingMessageAction mediaId. */
             public mediaId?: (string|null);
 
+            /** MarketingMessageAction _name. */
+            public _name?: "name";
+
+            /** MarketingMessageAction _message. */
+            public _message?: "message";
+
+            /** MarketingMessageAction _type. */
+            public _type?: "type";
+
+            /** MarketingMessageAction _createdAt. */
+            public _createdAt?: "createdAt";
+
+            /** MarketingMessageAction _lastSentAt. */
+            public _lastSentAt?: "lastSentAt";
+
+            /** MarketingMessageAction _isDeleted. */
+            public _isDeleted?: "isDeleted";
+
+            /** MarketingMessageAction _mediaId. */
+            public _mediaId?: "mediaId";
+
             /**
              * Creates a new MarketingMessageAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -46620,6 +51798,9 @@ export namespace proto {
 
             /** MarketingMessageBroadcastAction repliedCount. */
             public repliedCount?: (number|null);
+
+            /** MarketingMessageBroadcastAction _repliedCount. */
+            public _repliedCount?: "repliedCount";
 
             /**
              * Creates a new MarketingMessageBroadcastAction instance using the specified properties.
@@ -46735,6 +51916,12 @@ export namespace proto {
 
             /** MerchantPaymentPartnerAction credentialId. */
             public credentialId?: (string|null);
+
+            /** MerchantPaymentPartnerAction _gatewayName. */
+            public _gatewayName?: "gatewayName";
+
+            /** MerchantPaymentPartnerAction _credentialId. */
+            public _credentialId?: "credentialId";
 
             /**
              * Creates a new MerchantPaymentPartnerAction instance using the specified properties.
@@ -46853,6 +52040,15 @@ export namespace proto {
 
             /** MuteAction autoMuted. */
             public autoMuted?: (boolean|null);
+
+            /** MuteAction _muted. */
+            public _muted?: "muted";
+
+            /** MuteAction _muteEndTimestamp. */
+            public _muteEndTimestamp?: "muteEndTimestamp";
+
+            /** MuteAction _autoMuted. */
+            public _autoMuted?: "autoMuted";
 
             /**
              * Creates a new MuteAction instance using the specified properties.
@@ -46975,6 +52171,21 @@ export namespace proto {
             /** NoteEditAction unstructuredContent. */
             public unstructuredContent?: (string|null);
 
+            /** NoteEditAction _type. */
+            public _type?: "type";
+
+            /** NoteEditAction _chatJid. */
+            public _chatJid?: "chatJid";
+
+            /** NoteEditAction _createdAt. */
+            public _createdAt?: "createdAt";
+
+            /** NoteEditAction _deleted. */
+            public _deleted?: "deleted";
+
+            /** NoteEditAction _unstructuredContent. */
+            public _unstructuredContent?: "unstructuredContent";
+
             /**
              * Creates a new NoteEditAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -47080,6 +52291,9 @@ export namespace proto {
 
             /** NotificationActivitySettingAction notificationActivitySetting. */
             public notificationActivitySetting?: (proto.SyncActionValue.NotificationActivitySettingAction.NotificationActivitySetting|null);
+
+            /** NotificationActivitySettingAction _notificationActivitySetting. */
+            public _notificationActivitySetting?: "notificationActivitySetting";
 
             /**
              * Creates a new NotificationActivitySettingAction instance using the specified properties.
@@ -47189,6 +52403,9 @@ export namespace proto {
             /** NuxAction acknowledged. */
             public acknowledged?: (boolean|null);
 
+            /** NuxAction _acknowledged. */
+            public _acknowledged?: "acknowledged";
+
             /**
              * Creates a new NuxAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -47285,6 +52502,9 @@ export namespace proto {
 
             /** PaymentInfoAction cpi. */
             public cpi?: (string|null);
+
+            /** PaymentInfoAction _cpi. */
+            public _cpi?: "cpi";
 
             /**
              * Creates a new PaymentInfoAction instance using the specified properties.
@@ -47494,6 +52714,9 @@ export namespace proto {
             /** PinAction pinned. */
             public pinned?: (boolean|null);
 
+            /** PinAction _pinned. */
+            public _pinned?: "pinned";
+
             /**
              * Creates a new PinAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -47590,6 +52813,9 @@ export namespace proto {
 
             /** PnForLidChatAction pnJid. */
             public pnJid?: (string|null);
+
+            /** PnForLidChatAction _pnJid. */
+            public _pnJid?: "pnJid";
 
             /**
              * Creates a new PnForLidChatAction instance using the specified properties.
@@ -47785,6 +53011,9 @@ export namespace proto {
             /** PrimaryVersionAction version. */
             public version?: (string|null);
 
+            /** PrimaryVersionAction _version. */
+            public _version?: "version";
+
             /**
              * Creates a new PrimaryVersionAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -47881,6 +53110,9 @@ export namespace proto {
 
             /** PrivacySettingDisableLinkPreviewsAction isPreviewsDisabled. */
             public isPreviewsDisabled?: (boolean|null);
+
+            /** PrivacySettingDisableLinkPreviewsAction _isPreviewsDisabled. */
+            public _isPreviewsDisabled?: "isPreviewsDisabled";
 
             /**
              * Creates a new PrivacySettingDisableLinkPreviewsAction instance using the specified properties.
@@ -47979,6 +53211,9 @@ export namespace proto {
             /** PrivacySettingRelayAllCalls isEnabled. */
             public isEnabled?: (boolean|null);
 
+            /** PrivacySettingRelayAllCalls _isEnabled. */
+            public _isEnabled?: "isEnabled";
+
             /**
              * Creates a new PrivacySettingRelayAllCalls instance using the specified properties.
              * @param [properties] Properties to set
@@ -48075,6 +53310,9 @@ export namespace proto {
 
             /** PushNameSetting name. */
             public name?: (string|null);
+
+            /** PushNameSetting _name. */
+            public _name?: "name";
 
             /**
              * Creates a new PushNameSetting instance using the specified properties.
@@ -48196,6 +53434,18 @@ export namespace proto {
 
             /** QuickReplyAction deleted. */
             public deleted?: (boolean|null);
+
+            /** QuickReplyAction _shortcut. */
+            public _shortcut?: "shortcut";
+
+            /** QuickReplyAction _message. */
+            public _message?: "message";
+
+            /** QuickReplyAction _count. */
+            public _count?: "count";
+
+            /** QuickReplyAction _deleted. */
+            public _deleted?: "deleted";
 
             /**
              * Creates a new QuickReplyAction instance using the specified properties.
@@ -48391,6 +53641,9 @@ export namespace proto {
             /** RemoveRecentStickerAction lastStickerSentTs. */
             public lastStickerSentTs?: (number|Long|null);
 
+            /** RemoveRecentStickerAction _lastStickerSentTs. */
+            public _lastStickerSentTs?: "lastStickerSentTs";
+
             /**
              * Creates a new RemoveRecentStickerAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -48488,6 +53741,9 @@ export namespace proto {
             /** SecurityNotificationSetting showNotification. */
             public showNotification?: (boolean|null);
 
+            /** SecurityNotificationSetting _showNotification. */
+            public _showNotification?: "showNotification";
+
             /**
              * Creates a new SecurityNotificationSetting instance using the specified properties.
              * @param [properties] Properties to set
@@ -48584,6 +53840,9 @@ export namespace proto {
 
             /** StarAction starred. */
             public starred?: (boolean|null);
+
+            /** StarAction _starred. */
+            public _starred?: "starred";
 
             /**
              * Creates a new StarAction instance using the specified properties.
@@ -48687,6 +53946,9 @@ export namespace proto {
 
             /** StatusPrivacyAction userJid. */
             public userJid: string[];
+
+            /** StatusPrivacyAction _mode. */
+            public _mode?: "mode";
 
             /**
              * Creates a new StatusPrivacyAction instance using the specified properties.
@@ -48855,6 +54117,39 @@ export namespace proto {
             /** StickerAction isLottie. */
             public isLottie?: (boolean|null);
 
+            /** StickerAction _url. */
+            public _url?: "url";
+
+            /** StickerAction _fileEncSha256. */
+            public _fileEncSha256?: "fileEncSha256";
+
+            /** StickerAction _mediaKey. */
+            public _mediaKey?: "mediaKey";
+
+            /** StickerAction _mimetype. */
+            public _mimetype?: "mimetype";
+
+            /** StickerAction _height. */
+            public _height?: "height";
+
+            /** StickerAction _width. */
+            public _width?: "width";
+
+            /** StickerAction _directPath. */
+            public _directPath?: "directPath";
+
+            /** StickerAction _fileLength. */
+            public _fileLength?: "fileLength";
+
+            /** StickerAction _isFavorite. */
+            public _isFavorite?: "isFavorite";
+
+            /** StickerAction _deviceIdHint. */
+            public _deviceIdHint?: "deviceIdHint";
+
+            /** StickerAction _isLottie. */
+            public _isLottie?: "isLottie";
+
             /**
              * Creates a new StickerAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -48964,6 +54259,15 @@ export namespace proto {
             /** SubscriptionAction expirationDate. */
             public expirationDate?: (number|Long|null);
 
+            /** SubscriptionAction _isDeactivated. */
+            public _isDeactivated?: "isDeactivated";
+
+            /** SubscriptionAction _isAutoRenewing. */
+            public _isAutoRenewing?: "isAutoRenewing";
+
+            /** SubscriptionAction _expirationDate. */
+            public _expirationDate?: "expirationDate";
+
             /**
              * Creates a new SubscriptionAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -49066,6 +54370,12 @@ export namespace proto {
 
             /** SyncActionMessage timestamp. */
             public timestamp?: (number|Long|null);
+
+            /** SyncActionMessage _key. */
+            public _key?: "key";
+
+            /** SyncActionMessage _timestamp. */
+            public _timestamp?: "timestamp";
 
             /**
              * Creates a new SyncActionMessage instance using the specified properties.
@@ -49176,6 +54486,12 @@ export namespace proto {
             /** SyncActionMessageRange messages. */
             public messages: proto.SyncActionValue.ISyncActionMessage[];
 
+            /** SyncActionMessageRange _lastMessageTimestamp. */
+            public _lastMessageTimestamp?: "lastMessageTimestamp";
+
+            /** SyncActionMessageRange _lastSystemMessageTimestamp. */
+            public _lastSystemMessageTimestamp?: "lastSystemMessageTimestamp";
+
             /**
              * Creates a new SyncActionMessageRange instance using the specified properties.
              * @param [properties] Properties to set
@@ -49272,6 +54588,9 @@ export namespace proto {
 
             /** TimeFormatAction isTwentyFourHourFormatEnabled. */
             public isTwentyFourHourFormatEnabled?: (boolean|null);
+
+            /** TimeFormatAction _isTwentyFourHourFormatEnabled. */
+            public _isTwentyFourHourFormatEnabled?: "isTwentyFourHourFormatEnabled";
 
             /**
              * Creates a new TimeFormatAction instance using the specified properties.
@@ -49370,6 +54689,9 @@ export namespace proto {
             /** UnarchiveChatsSetting unarchiveChats. */
             public unarchiveChats?: (boolean|null);
 
+            /** UnarchiveChatsSetting _unarchiveChats. */
+            public _unarchiveChats?: "unarchiveChats";
+
             /**
              * Creates a new UnarchiveChatsSetting instance using the specified properties.
              * @param [properties] Properties to set
@@ -49467,6 +54789,9 @@ export namespace proto {
             /** UserStatusMuteAction muted. */
             public muted?: (boolean|null);
 
+            /** UserStatusMuteAction _muted. */
+            public _muted?: "muted";
+
             /**
              * Creates a new UserStatusMuteAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -49563,6 +54888,9 @@ export namespace proto {
 
             /** UsernameChatStartModeAction chatStartMode. */
             public chatStartMode?: (proto.SyncActionValue.UsernameChatStartModeAction.ChatStartMode|null);
+
+            /** UsernameChatStartModeAction _chatStartMode. */
+            public _chatStartMode?: "chatStartMode";
 
             /**
              * Creates a new UsernameChatStartModeAction instance using the specified properties.
@@ -49670,6 +54998,9 @@ export namespace proto {
             /** WaffleAccountLinkStateAction linkState. */
             public linkState?: (proto.SyncActionValue.WaffleAccountLinkStateAction.AccountLinkState|null);
 
+            /** WaffleAccountLinkStateAction _linkState. */
+            public _linkState?: "linkState";
+
             /**
              * Creates a new WaffleAccountLinkStateAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -49775,6 +55106,9 @@ export namespace proto {
             /** WamoUserIdentifierAction identifier. */
             public identifier?: (string|null);
 
+            /** WamoUserIdentifierAction _identifier. */
+            public _identifier?: "identifier";
+
             /**
              * Creates a new WamoUserIdentifierAction instance using the specified properties.
              * @param [properties] Properties to set
@@ -49872,6 +55206,9 @@ export namespace proto {
 
         /** SyncdIndex blob. */
         public blob?: (Uint8Array|null);
+
+        /** SyncdIndex _blob. */
+        public _blob?: "blob";
 
         /**
          * Creates a new SyncdIndex instance using the specified properties.
@@ -49975,6 +55312,12 @@ export namespace proto {
 
         /** SyncdMutation record. */
         public record?: (proto.ISyncdRecord|null);
+
+        /** SyncdMutation _operation. */
+        public _operation?: "operation";
+
+        /** SyncdMutation _record. */
+        public _record?: "record";
 
         /**
          * Creates a new SyncdMutation instance using the specified properties.
@@ -50227,6 +55570,30 @@ export namespace proto {
         /** SyncdPatch clientDebugData. */
         public clientDebugData?: (Uint8Array|null);
 
+        /** SyncdPatch _version. */
+        public _version?: "version";
+
+        /** SyncdPatch _externalMutations. */
+        public _externalMutations?: "externalMutations";
+
+        /** SyncdPatch _snapshotMac. */
+        public _snapshotMac?: "snapshotMac";
+
+        /** SyncdPatch _patchMac. */
+        public _patchMac?: "patchMac";
+
+        /** SyncdPatch _keyId. */
+        public _keyId?: "keyId";
+
+        /** SyncdPatch _exitCode. */
+        public _exitCode?: "exitCode";
+
+        /** SyncdPatch _deviceIndex. */
+        public _deviceIndex?: "deviceIndex";
+
+        /** SyncdPatch _clientDebugData. */
+        public _clientDebugData?: "clientDebugData";
+
         /**
          * Creates a new SyncdPatch instance using the specified properties.
          * @param [properties] Properties to set
@@ -50335,6 +55702,15 @@ export namespace proto {
 
         /** SyncdRecord keyId. */
         public keyId?: (proto.IKeyId|null);
+
+        /** SyncdRecord _index. */
+        public _index?: "index";
+
+        /** SyncdRecord _value. */
+        public _value?: "value";
+
+        /** SyncdRecord _keyId. */
+        public _keyId?: "keyId";
 
         /**
          * Creates a new SyncdRecord instance using the specified properties.
@@ -50451,6 +55827,15 @@ export namespace proto {
         /** SyncdSnapshot keyId. */
         public keyId?: (proto.IKeyId|null);
 
+        /** SyncdSnapshot _version. */
+        public _version?: "version";
+
+        /** SyncdSnapshot _mac. */
+        public _mac?: "mac";
+
+        /** SyncdSnapshot _keyId. */
+        public _keyId?: "keyId";
+
         /**
          * Creates a new SyncdSnapshot instance using the specified properties.
          * @param [properties] Properties to set
@@ -50548,6 +55933,9 @@ export namespace proto {
         /** SyncdValue blob. */
         public blob?: (Uint8Array|null);
 
+        /** SyncdValue _blob. */
+        public _blob?: "blob";
+
         /**
          * Creates a new SyncdValue instance using the specified properties.
          * @param [properties] Properties to set
@@ -50644,6 +56032,9 @@ export namespace proto {
 
         /** SyncdVersion version. */
         public version?: (number|Long|null);
+
+        /** SyncdVersion _version. */
+        public _version?: "version";
 
         /**
          * Creates a new SyncdVersion instance using the specified properties.
@@ -50747,6 +56138,12 @@ export namespace proto {
 
         /** TapLinkAction tapUrl. */
         public tapUrl?: (string|null);
+
+        /** TapLinkAction _title. */
+        public _title?: "title";
+
+        /** TapLinkAction _tapUrl. */
+        public _tapUrl?: "tapUrl";
 
         /**
          * Creates a new TapLinkAction instance using the specified properties.
@@ -50863,6 +56260,9 @@ export namespace proto {
         /** TemplateButton callButton. */
         public callButton?: (proto.TemplateButton.ICallButton|null);
 
+        /** TemplateButton _index. */
+        public _index?: "index";
+
         /** TemplateButton button. */
         public button?: ("quickReplyButton"|"urlButton"|"callButton");
 
@@ -50971,6 +56371,12 @@ export namespace proto {
             /** CallButton phoneNumber. */
             public phoneNumber?: (proto.Message.IHighlyStructuredMessage|null);
 
+            /** CallButton _displayText. */
+            public _displayText?: "displayText";
+
+            /** CallButton _phoneNumber. */
+            public _phoneNumber?: "phoneNumber";
+
             /**
              * Creates a new CallButton instance using the specified properties.
              * @param [properties] Properties to set
@@ -51074,6 +56480,12 @@ export namespace proto {
             /** QuickReplyButton id. */
             public id?: (string|null);
 
+            /** QuickReplyButton _displayText. */
+            public _displayText?: "displayText";
+
+            /** QuickReplyButton _id. */
+            public _id?: "id";
+
             /**
              * Creates a new QuickReplyButton instance using the specified properties.
              * @param [properties] Properties to set
@@ -51176,6 +56588,12 @@ export namespace proto {
 
             /** URLButton url. */
             public url?: (proto.Message.IHighlyStructuredMessage|null);
+
+            /** URLButton _displayText. */
+            public _displayText?: "displayText";
+
+            /** URLButton _url. */
+            public _url?: "url";
 
             /**
              * Creates a new URLButton instance using the specified properties.
@@ -51392,6 +56810,18 @@ export namespace proto {
             /** UrlTrackingMapElement cardIndex. */
             public cardIndex?: (number|null);
 
+            /** UrlTrackingMapElement _originalUrl. */
+            public _originalUrl?: "originalUrl";
+
+            /** UrlTrackingMapElement _unconsentedUsersUrl. */
+            public _unconsentedUsersUrl?: "unconsentedUsersUrl";
+
+            /** UrlTrackingMapElement _consentedUsersUrl. */
+            public _consentedUsersUrl?: "consentedUsersUrl";
+
+            /** UrlTrackingMapElement _cardIndex. */
+            public _cardIndex?: "cardIndex";
+
             /**
              * Creates a new UrlTrackingMapElement instance using the specified properties.
              * @param [properties] Properties to set
@@ -51507,6 +56937,15 @@ export namespace proto {
 
         /** UserPassword transformedData. */
         public transformedData?: (Uint8Array|null);
+
+        /** UserPassword _encoding. */
+        public _encoding?: "encoding";
+
+        /** UserPassword _transformer. */
+        public _transformer?: "transformer";
+
+        /** UserPassword _transformedData. */
+        public _transformedData?: "transformedData";
 
         /**
          * Creates a new UserPassword instance using the specified properties.
@@ -51625,6 +57064,12 @@ export namespace proto {
 
             /** TransformerArg value. */
             public value?: (proto.UserPassword.TransformerArg.IValue|null);
+
+            /** TransformerArg _key. */
+            public _key?: "key";
+
+            /** TransformerArg _value. */
+            public _value?: "value";
 
             /**
              * Creates a new TransformerArg instance using the specified properties.
@@ -51863,6 +57308,15 @@ export namespace proto {
         /** UserReceipt deliveredDeviceJid. */
         public deliveredDeviceJid: string[];
 
+        /** UserReceipt _receiptTimestamp. */
+        public _receiptTimestamp?: "receiptTimestamp";
+
+        /** UserReceipt _readTimestamp. */
+        public _readTimestamp?: "readTimestamp";
+
+        /** UserReceipt _playedTimestamp. */
+        public _playedTimestamp?: "playedTimestamp";
+
         /**
          * Creates a new UserReceipt instance using the specified properties.
          * @param [properties] Properties to set
@@ -51971,6 +57425,15 @@ export namespace proto {
 
         /** VerifiedNameCertificate serverSignature. */
         public serverSignature?: (Uint8Array|null);
+
+        /** VerifiedNameCertificate _details. */
+        public _details?: "details";
+
+        /** VerifiedNameCertificate _signature. */
+        public _signature?: "signature";
+
+        /** VerifiedNameCertificate _serverSignature. */
+        public _serverSignature?: "serverSignature";
 
         /**
          * Creates a new VerifiedNameCertificate instance using the specified properties.
@@ -52095,6 +57558,18 @@ export namespace proto {
             /** Details issueTime. */
             public issueTime?: (number|Long|null);
 
+            /** Details _serial. */
+            public _serial?: "serial";
+
+            /** Details _issuer. */
+            public _issuer?: "issuer";
+
+            /** Details _verifiedName. */
+            public _verifiedName?: "verifiedName";
+
+            /** Details _issueTime. */
+            public _issueTime?: "issueTime";
+
             /**
              * Creates a new Details instance using the specified properties.
              * @param [properties] Properties to set
@@ -52198,6 +57673,12 @@ export namespace proto {
 
         /** WallpaperSettings opacity. */
         public opacity?: (number|null);
+
+        /** WallpaperSettings _filename. */
+        public _filename?: "filename";
+
+        /** WallpaperSettings _opacity. */
+        public _opacity?: "opacity";
 
         /**
          * Creates a new WallpaperSettings instance using the specified properties.
@@ -52559,6 +58040,141 @@ export namespace proto {
 
         /** WebFeatures noDeleteMessageTimeLimit. */
         public noDeleteMessageTimeLimit?: (proto.WebFeatures.Flag|null);
+
+        /** WebFeatures _labelsDisplay. */
+        public _labelsDisplay?: "labelsDisplay";
+
+        /** WebFeatures _voipIndividualOutgoing. */
+        public _voipIndividualOutgoing?: "voipIndividualOutgoing";
+
+        /** WebFeatures _groupsV3. */
+        public _groupsV3?: "groupsV3";
+
+        /** WebFeatures _groupsV3Create. */
+        public _groupsV3Create?: "groupsV3Create";
+
+        /** WebFeatures _changeNumberV2. */
+        public _changeNumberV2?: "changeNumberV2";
+
+        /** WebFeatures _queryStatusV3Thumbnail. */
+        public _queryStatusV3Thumbnail?: "queryStatusV3Thumbnail";
+
+        /** WebFeatures _liveLocations. */
+        public _liveLocations?: "liveLocations";
+
+        /** WebFeatures _queryVname. */
+        public _queryVname?: "queryVname";
+
+        /** WebFeatures _voipIndividualIncoming. */
+        public _voipIndividualIncoming?: "voipIndividualIncoming";
+
+        /** WebFeatures _quickRepliesQuery. */
+        public _quickRepliesQuery?: "quickRepliesQuery";
+
+        /** WebFeatures _payments. */
+        public _payments?: "payments";
+
+        /** WebFeatures _stickerPackQuery. */
+        public _stickerPackQuery?: "stickerPackQuery";
+
+        /** WebFeatures _liveLocationsFinal. */
+        public _liveLocationsFinal?: "liveLocationsFinal";
+
+        /** WebFeatures _labelsEdit. */
+        public _labelsEdit?: "labelsEdit";
+
+        /** WebFeatures _mediaUpload. */
+        public _mediaUpload?: "mediaUpload";
+
+        /** WebFeatures _mediaUploadRichQuickReplies. */
+        public _mediaUploadRichQuickReplies?: "mediaUploadRichQuickReplies";
+
+        /** WebFeatures _vnameV2. */
+        public _vnameV2?: "vnameV2";
+
+        /** WebFeatures _videoPlaybackUrl. */
+        public _videoPlaybackUrl?: "videoPlaybackUrl";
+
+        /** WebFeatures _statusRanking. */
+        public _statusRanking?: "statusRanking";
+
+        /** WebFeatures _voipIndividualVideo. */
+        public _voipIndividualVideo?: "voipIndividualVideo";
+
+        /** WebFeatures _thirdPartyStickers. */
+        public _thirdPartyStickers?: "thirdPartyStickers";
+
+        /** WebFeatures _frequentlyForwardedSetting. */
+        public _frequentlyForwardedSetting?: "frequentlyForwardedSetting";
+
+        /** WebFeatures _groupsV4JoinPermission. */
+        public _groupsV4JoinPermission?: "groupsV4JoinPermission";
+
+        /** WebFeatures _recentStickers. */
+        public _recentStickers?: "recentStickers";
+
+        /** WebFeatures _catalog. */
+        public _catalog?: "catalog";
+
+        /** WebFeatures _starredStickers. */
+        public _starredStickers?: "starredStickers";
+
+        /** WebFeatures _voipGroupCall. */
+        public _voipGroupCall?: "voipGroupCall";
+
+        /** WebFeatures _templateMessage. */
+        public _templateMessage?: "templateMessage";
+
+        /** WebFeatures _templateMessageInteractivity. */
+        public _templateMessageInteractivity?: "templateMessageInteractivity";
+
+        /** WebFeatures _ephemeralMessages. */
+        public _ephemeralMessages?: "ephemeralMessages";
+
+        /** WebFeatures _e2ENotificationSync. */
+        public _e2ENotificationSync?: "e2ENotificationSync";
+
+        /** WebFeatures _recentStickersV2. */
+        public _recentStickersV2?: "recentStickersV2";
+
+        /** WebFeatures _recentStickersV3. */
+        public _recentStickersV3?: "recentStickersV3";
+
+        /** WebFeatures _userNotice. */
+        public _userNotice?: "userNotice";
+
+        /** WebFeatures _support. */
+        public _support?: "support";
+
+        /** WebFeatures _groupUiiCleanup. */
+        public _groupUiiCleanup?: "groupUiiCleanup";
+
+        /** WebFeatures _groupDogfoodingInternalOnly. */
+        public _groupDogfoodingInternalOnly?: "groupDogfoodingInternalOnly";
+
+        /** WebFeatures _settingsSync. */
+        public _settingsSync?: "settingsSync";
+
+        /** WebFeatures _archiveV2. */
+        public _archiveV2?: "archiveV2";
+
+        /** WebFeatures _ephemeralAllowGroupMembers. */
+        public _ephemeralAllowGroupMembers?: "ephemeralAllowGroupMembers";
+
+        /** WebFeatures _ephemeral24HDuration. */
+        public _ephemeral24HDuration?: "ephemeral24HDuration";
+
+        /** WebFeatures _mdForceUpgrade. */
+        public _mdForceUpgrade?: "mdForceUpgrade";
+
+        /** WebFeatures _disappearingMode. */
+        public _disappearingMode?: "disappearingMode";
+
+        /** WebFeatures _externalMdOptInAvailable. */
+        public _externalMdOptInAvailable?: "externalMdOptInAvailable";
+
+        /** WebFeatures _noDeleteMessageTimeLimit. */
+        public _noDeleteMessageTimeLimit?: "noDeleteMessageTimeLimit";
 
         /**
          * Creates a new WebFeatures instance using the specified properties.
@@ -53034,6 +58650,159 @@ export namespace proto {
         /** WebMessageInfo botTargetId. */
         public botTargetId?: (string|null);
 
+        /** WebMessageInfo _message. */
+        public _message?: "message";
+
+        /** WebMessageInfo _messageTimestamp. */
+        public _messageTimestamp?: "messageTimestamp";
+
+        /** WebMessageInfo _status. */
+        public _status?: "status";
+
+        /** WebMessageInfo _participant. */
+        public _participant?: "participant";
+
+        /** WebMessageInfo _messageC2STimestamp. */
+        public _messageC2STimestamp?: "messageC2STimestamp";
+
+        /** WebMessageInfo _ignore. */
+        public _ignore?: "ignore";
+
+        /** WebMessageInfo _starred. */
+        public _starred?: "starred";
+
+        /** WebMessageInfo _broadcast. */
+        public _broadcast?: "broadcast";
+
+        /** WebMessageInfo _pushName. */
+        public _pushName?: "pushName";
+
+        /** WebMessageInfo _mediaCiphertextSha256. */
+        public _mediaCiphertextSha256?: "mediaCiphertextSha256";
+
+        /** WebMessageInfo _multicast. */
+        public _multicast?: "multicast";
+
+        /** WebMessageInfo _urlText. */
+        public _urlText?: "urlText";
+
+        /** WebMessageInfo _urlNumber. */
+        public _urlNumber?: "urlNumber";
+
+        /** WebMessageInfo _messageStubType. */
+        public _messageStubType?: "messageStubType";
+
+        /** WebMessageInfo _clearMedia. */
+        public _clearMedia?: "clearMedia";
+
+        /** WebMessageInfo _duration. */
+        public _duration?: "duration";
+
+        /** WebMessageInfo _paymentInfo. */
+        public _paymentInfo?: "paymentInfo";
+
+        /** WebMessageInfo _finalLiveLocation. */
+        public _finalLiveLocation?: "finalLiveLocation";
+
+        /** WebMessageInfo _quotedPaymentInfo. */
+        public _quotedPaymentInfo?: "quotedPaymentInfo";
+
+        /** WebMessageInfo _ephemeralStartTimestamp. */
+        public _ephemeralStartTimestamp?: "ephemeralStartTimestamp";
+
+        /** WebMessageInfo _ephemeralDuration. */
+        public _ephemeralDuration?: "ephemeralDuration";
+
+        /** WebMessageInfo _ephemeralOffToOn. */
+        public _ephemeralOffToOn?: "ephemeralOffToOn";
+
+        /** WebMessageInfo _ephemeralOutOfSync. */
+        public _ephemeralOutOfSync?: "ephemeralOutOfSync";
+
+        /** WebMessageInfo _bizPrivacyStatus. */
+        public _bizPrivacyStatus?: "bizPrivacyStatus";
+
+        /** WebMessageInfo _verifiedBizName. */
+        public _verifiedBizName?: "verifiedBizName";
+
+        /** WebMessageInfo _mediaData. */
+        public _mediaData?: "mediaData";
+
+        /** WebMessageInfo _photoChange. */
+        public _photoChange?: "photoChange";
+
+        /** WebMessageInfo _quotedStickerData. */
+        public _quotedStickerData?: "quotedStickerData";
+
+        /** WebMessageInfo _futureproofData. */
+        public _futureproofData?: "futureproofData";
+
+        /** WebMessageInfo _statusPsa. */
+        public _statusPsa?: "statusPsa";
+
+        /** WebMessageInfo _pollAdditionalMetadata. */
+        public _pollAdditionalMetadata?: "pollAdditionalMetadata";
+
+        /** WebMessageInfo _agentId. */
+        public _agentId?: "agentId";
+
+        /** WebMessageInfo _statusAlreadyViewed. */
+        public _statusAlreadyViewed?: "statusAlreadyViewed";
+
+        /** WebMessageInfo _messageSecret. */
+        public _messageSecret?: "messageSecret";
+
+        /** WebMessageInfo _keepInChat. */
+        public _keepInChat?: "keepInChat";
+
+        /** WebMessageInfo _originalSelfAuthorUserJidString. */
+        public _originalSelfAuthorUserJidString?: "originalSelfAuthorUserJidString";
+
+        /** WebMessageInfo _revokeMessageTimestamp. */
+        public _revokeMessageTimestamp?: "revokeMessageTimestamp";
+
+        /** WebMessageInfo _pinInChat. */
+        public _pinInChat?: "pinInChat";
+
+        /** WebMessageInfo _premiumMessageInfo. */
+        public _premiumMessageInfo?: "premiumMessageInfo";
+
+        /** WebMessageInfo _is1PBizBotMessage. */
+        public _is1PBizBotMessage?: "is1PBizBotMessage";
+
+        /** WebMessageInfo _isGroupHistoryMessage. */
+        public _isGroupHistoryMessage?: "isGroupHistoryMessage";
+
+        /** WebMessageInfo _botMessageInvokerJid. */
+        public _botMessageInvokerJid?: "botMessageInvokerJid";
+
+        /** WebMessageInfo _commentMetadata. */
+        public _commentMetadata?: "commentMetadata";
+
+        /** WebMessageInfo _reportingTokenInfo. */
+        public _reportingTokenInfo?: "reportingTokenInfo";
+
+        /** WebMessageInfo _newsletterServerId. */
+        public _newsletterServerId?: "newsletterServerId";
+
+        /** WebMessageInfo _eventAdditionalMetadata. */
+        public _eventAdditionalMetadata?: "eventAdditionalMetadata";
+
+        /** WebMessageInfo _isMentionedInStatus. */
+        public _isMentionedInStatus?: "isMentionedInStatus";
+
+        /** WebMessageInfo _targetMessageId. */
+        public _targetMessageId?: "targetMessageId";
+
+        /** WebMessageInfo _statusMentionMessageInfo. */
+        public _statusMentionMessageInfo?: "statusMentionMessageInfo";
+
+        /** WebMessageInfo _isSupportAiMessage. */
+        public _isSupportAiMessage?: "isSupportAiMessage";
+
+        /** WebMessageInfo _botTargetId. */
+        public _botTargetId?: "botTargetId";
+
         /**
          * Creates a new WebMessageInfo instance using the specified properties.
          * @param [properties] Properties to set
@@ -53392,6 +59161,15 @@ export namespace proto {
 
         /** WebNotificationsInfo notifyMessages. */
         public notifyMessages: proto.IWebMessageInfo[];
+
+        /** WebNotificationsInfo _timestamp. */
+        public _timestamp?: "timestamp";
+
+        /** WebNotificationsInfo _unreadChats. */
+        public _unreadChats?: "unreadChats";
+
+        /** WebNotificationsInfo _notifyMessageCount. */
+        public _notifyMessageCount?: "notifyMessageCount";
 
         /**
          * Creates a new WebNotificationsInfo instance using the specified properties.

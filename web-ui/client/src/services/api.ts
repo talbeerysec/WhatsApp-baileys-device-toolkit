@@ -266,6 +266,30 @@ export class ApiService {
     }
   }
 
+  static async getMessageProtobuf(jid: string, messageId: string): Promise<any> {
+    const response: AxiosResponse<ApiResponse<any>> = await api.get(
+      `/api/dev/messages/${encodeURIComponent(jid)}/${encodeURIComponent(messageId)}/protobuf`
+    );
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Failed to get message protobuf');
+    }
+
+    return response.data.data;
+  }
+
+  static async getMessageProtobufRaw(jid: string, messageId: string): Promise<any> {
+    const response: AxiosResponse<ApiResponse<any>> = await api.get(
+      `/api/dev/messages/${encodeURIComponent(jid)}/${encodeURIComponent(messageId)}/protobuf-raw`
+    );
+
+    if (!response.data.success) {
+      throw new Error(response.data.error || 'Failed to get raw message protobuf');
+    }
+
+    return response.data.data;
+  }
+
   // Settings
   static async getBrowserConfig(): Promise<ClientBrowserConfig> {
     const response: AxiosResponse<ApiResponse<ClientBrowserConfig>> = await api.get('/api/settings/browser');
