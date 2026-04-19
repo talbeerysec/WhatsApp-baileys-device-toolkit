@@ -54,9 +54,9 @@ const getClientPayload = (config: SocketConfig) => {
 		userAgent: getUserAgent(config)
 	}
 
-	if (!isAndroidPlatform(config.browser)) {
-		payload.webInfo = getWebInfo(config)
-	}
+	// Always include webInfo — WhatsApp Web companions (even Android-spoofed)
+	// need this to receive full viewOnce media credentials in history sync
+	payload.webInfo = getWebInfo(config)
 
 	return payload
 }
@@ -96,9 +96,16 @@ export const generateRegistrationNode = (
 		platformType: getPlatformType(config.browser[1]),
 		requireFullSync: config.syncFullHistory,
 		historySyncConfig: {
+			// Max storage the companion is willing to accept for history data
 			storageQuotaMb: 10240,
+			// CRITICAL: Request that the primary device embed the initial history
+			// payload directly in the E2E message instead of as a separate media
+			// download. The inline payload preserves full E2E encryption context
+			// and may include viewOnce media credentials (mediaKey, directPath, url)
+			// that the downloadable blob version strips during server-side processing.
 			inlineInitialPayloadInE2EeMsg: true,
-			recentSyncDaysLimit: undefined,
+			// Signal support for various message types so the primary device
+			// includes them in the history sync data (matches upstream Baileys)
 			supportCallLogHistory: false,
 			supportBotUserAgentChatHistory: true,
 			supportCagReactionsAndPolls: true,
@@ -106,10 +113,16 @@ export const generateRegistrationNode = (
 			supportRecentSyncChunkMessageCountTuning: true,
 			supportHostedGroupMsg: true,
 			supportFbidBotChatHistory: true,
-			supportAddOnHistorySyncMigration: undefined,
 			supportMessageAssociation: true,
 		},
 	}
+
+	console.log('[Registration] DeviceProps:', JSON.stringify({
+		os: companion.os,
+		platformType: companion.platformType,
+		requireFullSync: companion.requireFullSync,
+		historySyncConfig: companion.historySyncConfig
+	}))
 
 	const companionProto = proto.DeviceProps.encode(companion).finish()
 

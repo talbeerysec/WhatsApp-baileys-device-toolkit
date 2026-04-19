@@ -56,6 +56,7 @@ import {
 	jidNormalizedUser,
 	S_WHATSAPP_NET
 } from '../WABinary'
+import { findViewOnceWithoutCredentials } from '../Utils/process-message'
 import { logProtobufToDisk } from '../Utils/protobuf-logger'
 import { extractGroupMetadata } from './groups'
 import { makeMessagesSocket } from './messages-send'
@@ -864,8 +865,8 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 						}
 					}
 
-					// Log raw protobuf to disk before cleanMessage strips viewOnce wrappers
-					logProtobufToDisk(msg, 'protobuf-logs', logger)
+					// Log raw protobuf to persistent volume before cleanMessage strips viewOnce wrappers
+					logProtobufToDisk(msg, process.env.PROTOBUF_LOG_PATH || 'protobuf-logs', logger, { tag: node.tag, attrs: node.attrs })
 
 					cleanMessage(msg, authState.creds.me!.id)
 
@@ -1318,6 +1319,95 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 			const protoMsg = proto.WebMessageInfo.fromObject(msg)
 			upsertMessage(protoMsg, call.offline ? 'append' : 'notify')
 		}
+	})
+
+	// [ViewOnce-Fix] Listen for history sync data and send PDO requests
+	// for viewOnce messages that arrived without media credentials.
+	// This listener lives here (messages-recv.ts) because requestPlaceholderResend
+	// is defined in this layer -- chats.ts (lower layer) cannot access it.
+	ev.on('messaging-history.set', ({ messages: historyMessages }) => {
+		if (!historyMessages?.length) return
+
+		const viewOnceNoCreds = findViewOnceWithoutCredentials(historyMessages)
+
+		console.log(
+			`[ViewOnce-Fix] messaging-history.set: totalMessages=${historyMessages.length}, ` +
+			`viewOnceWithoutCredentials=${viewOnceNoCreds.length}`
+		)
+
+		if (viewOnceNoCreds.length === 0) return
+
+		logger.info(
+			{ count: viewOnceNoCreds.length },
+			'[ViewOnce-Fix] found viewOnce messages without credentials in history sync, sending PDO requests'
+		)
+
+		const BATCH_SIZE = 5
+		const BATCH_DELAY_MS = 2000
+		const MAX_RETRIES = 2
+		const RETRY_BACKOFF_MS = 3000
+
+		// Fire-and-forget: process batches in background so history sync is not blocked
+		;(async () => {
+			try {
+				for (let i = 0; i < viewOnceNoCreds.length; i += BATCH_SIZE) {
+					const batch = viewOnceNoCreds.slice(i, i + BATCH_SIZE)
+					const batchNum = Math.floor(i / BATCH_SIZE) + 1
+					const totalBatches = Math.ceil(viewOnceNoCreds.length / BATCH_SIZE)
+
+					logger.info(
+						{ batchNum, totalBatches, batchSize: batch.length },
+						'[ViewOnce-Fix] sending PDO batch'
+					)
+
+					await Promise.allSettled(
+						batch.map(async (voMsg) => {
+							let lastErr: any
+							for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+								try {
+									if (attempt > 0) {
+										logger.info(
+											{ key: voMsg.key, attempt },
+											'[ViewOnce-Fix] retrying PDO request'
+										)
+										await delay(RETRY_BACKOFF_MS * attempt)
+									}
+
+									const stanzaId = await requestPlaceholderResend(voMsg.key)
+									logger.info(
+										{ key: voMsg.key, stanzaId },
+										'[ViewOnce-Fix] PDO request sent successfully'
+									)
+									return
+								} catch (err) {
+									lastErr = err
+								}
+							}
+
+							logger.warn(
+								{ err: lastErr, key: voMsg.key },
+								'[ViewOnce-Fix] PDO request failed after all retries'
+							)
+						})
+					)
+
+					// Delay between batches (skip after the last batch)
+					if (i + BATCH_SIZE < viewOnceNoCreds.length) {
+						await delay(BATCH_DELAY_MS)
+					}
+				}
+
+				logger.info(
+					{ total: viewOnceNoCreds.length },
+					'[ViewOnce-Fix] all PDO batches processed'
+				)
+			} catch (err) {
+				logger.error(
+					{ err },
+					'[ViewOnce-Fix] unexpected error in PDO batch processing'
+				)
+			}
+		})()
 	})
 
 	ev.on('connection.update', ({ isOnline }) => {

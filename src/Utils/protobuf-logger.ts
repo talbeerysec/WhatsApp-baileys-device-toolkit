@@ -13,7 +13,8 @@ const DEFAULT_LOG_DIR = 'protobuf-logs'
 export function logProtobufToDisk(
 	msg: proto.IWebMessageInfo,
 	logDir: string = DEFAULT_LOG_DIR,
-	logger?: Logger
+	logger?: Logger,
+	nodeHeaders?: { tag: string; attrs: { [key: string]: string } }
 ): void {
 	try {
 		const jid = msg.key?.remoteJid || 'unknown'
@@ -30,7 +31,21 @@ export function logProtobufToDisk(
 		// Use instance toJSON if available, otherwise fall back to JSON round-trip
 		const jsonData = typeof (msg as any).toJSON === 'function' ? (msg as any).toJSON() : JSON.parse(JSON.stringify(msg))
 
-		fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf-8')
+		// Wrap protobuf with BinaryNode headers when available
+		let outputData: any
+		if (nodeHeaders) {
+			outputData = {
+				nodeTag: nodeHeaders.tag,
+				nodeAttrs: nodeHeaders.attrs,
+				protobuf: jsonData
+			}
+		} else {
+			outputData = {
+				protobuf: jsonData
+			}
+		}
+
+		fs.writeFileSync(filePath, JSON.stringify(outputData, null, 2), 'utf-8')
 
 		logger?.debug({ jid, messageId, filePath }, 'protobuf logged to disk')
 	} catch (err) {

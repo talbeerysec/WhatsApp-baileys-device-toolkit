@@ -47,13 +47,13 @@ services:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost}
       - LOG_LEVEL=${LOG_LEVEL:-info}
+      - MEDIA_CACHE_PATH=/app/baileys_auth_info/media-cache
+      - PROTOBUF_LOG_PATH=/app/baileys_auth_info/protobuf-logs
     volumes:
-      # Shared authentication state with CLI
+      # Shared authentication state with CLI (also hosts media cache)
       - baileys-auth:/app/baileys_auth_info
       # Server logs
       - baileys-logs:/app/logs
-      # View-once media cache
-      - baileys-media-cache:/app/web-ui/server/media-cache
     networks:
       - baileys-frontend
       - baileys-backend
@@ -158,8 +158,4 @@ volumes:
 
   # Application logs
   baileys-logs:
-    driver: local
-
-  # View-once media cache
-  baileys-media-cache:
     driver: local

@@ -43,15 +43,10 @@ export const cleanMessage = (message: proto.IWebMessageInfo, meId: string) => {
 	// ensure remoteJid and participant doesn't have device or agent in it
 	message.key.remoteJid = jidNormalizedUser(message.key.remoteJid!)
 	message.key.participant = message.key.participant ? jidNormalizedUser(message.key.participant) : undefined
-	// Unwrap viewOnce messages so they're stored as regular media
-	// This eliminates race conditions with async view-once handling
-	if (message.message) {
-		const m = message.message
-		const viewOnceWrapper = m.viewOnceMessage || m.viewOnceMessageV2 || m.viewOnceMessageV2Extension
-		if (viewOnceWrapper?.message) {
-			message.message = viewOnceWrapper.message
-		}
-	}
+	// NOTE: viewOnce wrappers are NOT stripped here — the protobuf.js assignment
+	// `message.message = viewOnceWrapper.message` causes binary field loss (mediaKey,
+	// url, directPath vanish). Instead, downstream code uses normalizeMessageContent()
+	// or unwrapViewOnce() to peek inside the wrapper without modifying the stored message.
 
 	const content = normalizeMessageContent(message.message)
 	// if the message has a reaction, ensure fromMe & remoteJid are from our perspective
@@ -153,6 +148,38 @@ export function decryptPollVote(
 	}
 }
 
+/**
+ * Detect viewOnce messages in a history sync that are missing media credentials.
+ * These need a PLACEHOLDER_MESSAGE_RESEND request to the primary device.
+ */
+export function findViewOnceWithoutCredentials(messages: proto.IWebMessageInfo[]): proto.IWebMessageInfo[] {
+	const results: proto.IWebMessageInfo[] = []
+	for (const msg of messages) {
+		const content = normalizeMessageContent(msg.message)
+		if (!content) continue
+
+		const media = content.imageMessage || content.videoMessage
+		if (!media) continue
+
+		// Check if it's a viewOnce message (either via wrapper or inline flag)
+		const isViewOnce = !!(
+			msg.message?.viewOnceMessage ||
+			msg.message?.viewOnceMessageV2 ||
+			msg.message?.viewOnceMessageV2Extension ||
+			(media as any).viewOnce
+		)
+		if (!isViewOnce) continue
+
+		// Check if it's missing download credentials
+		const hasCredentials = !!(media as any).mediaKey && !!(media as any).directPath
+		if (!hasCredentials) {
+			results.push(msg)
+		}
+	}
+
+	return results
+}
+
 const processMessage = async (
 	message: proto.IWebMessageInfo,
 	{ shouldProcessHistoryMsg, placeholderResendCache, ev, creds, keyStore, logger, options }: ProcessMessageContext
@@ -216,6 +243,11 @@ const processMessage = async (
 						isLatest: histNotification.syncType !== proto.HistorySync.HistorySyncType.ON_DEMAND ? isLatest : undefined,
 						peerDataRequestSessionId: histNotification.peerDataRequestSessionId
 					})
+
+					// NOTE: PDO requests for viewOnce messages without credentials
+					// are handled in messages-recv.ts via the messaging-history.set event listener.
+					// This layer (process-message.ts) does not have access to requestPlaceholderResend
+					// because it is defined in a higher socket layer (messages-recv.ts).
 				}
 
 				break
@@ -263,14 +295,40 @@ const processMessage = async (
 			case proto.Message.ProtocolMessage.Type.PEER_DATA_OPERATION_REQUEST_RESPONSE_MESSAGE:
 				const response = protocolMsg.peerDataOperationRequestResponseMessage!
 				if (response) {
+					console.log(`[PDO Response] stanzaId=${response.stanzaId}, type=${response.peerDataOperationRequestType}, results=${response.peerDataOperationResult?.length}`)
 					placeholderResendCache?.del(response.stanzaId!)
 					// TODO: IMPLEMENT HISTORY SYNC ETC (sticker uploads etc.).
 					const { peerDataOperationResult } = response
 					for (const result of peerDataOperationResult!) {
+						console.log(`[PDO Result] mediaUploadResult=${result.mediaUploadResult}, hasPlaceholderResponse=${!!result.placeholderMessageResendResponse}, hasWebMsgBytes=${!!result.placeholderMessageResendResponse?.webMessageInfoBytes}`)
 						const { placeholderMessageResendResponse: retryResponse } = result
 						//eslint-disable-next-line max-depth
 						if (retryResponse) {
 							const webMessageInfo = proto.WebMessageInfo.decode(retryResponse.webMessageInfoBytes!)
+							const innerMsg = webMessageInfo.message
+							const media = innerMsg?.imageMessage || innerMsg?.videoMessage
+
+							// Detect if this PDO response is for a viewOnce message
+							const isViewOnce = !!(
+								innerMsg?.viewOnceMessage ||
+								innerMsg?.viewOnceMessageV2 ||
+								innerMsg?.viewOnceMessageV2Extension ||
+								(media as any)?.viewOnce
+							)
+							const hasCredentials = !!(media as any)?.mediaKey && !!(media as any)?.directPath
+
+							if (isViewOnce) {
+								console.log(
+									`[ViewOnce-Fix] PDO response received for viewOnce message ` +
+									`msgId=${webMessageInfo.key?.id}, ` +
+									`hasMediaKey=${!!(media as any)?.mediaKey}, ` +
+									`hasDirectPath=${!!(media as any)?.directPath}, ` +
+									`hasCredentials=${hasCredentials}` +
+									`${hasCredentials ? ' (credentials will expire -- download promptly)' : ' (no credentials in PDO response)'}`
+								)
+							}
+
+							console.log(`[PDO Resend] msgId=${webMessageInfo.key?.id}, hasMediaKey=${!!(media as any)?.mediaKey}, hasDirectPath=${!!(media as any)?.directPath}, msgKeys=${innerMsg ? Object.keys(innerMsg).join(',') : 'null'}`)
 							// wait till another upsert event is available, don't want it to be part of the PDO response message
 							setTimeout(() => {
 								ev.emit('messages.upsert', {

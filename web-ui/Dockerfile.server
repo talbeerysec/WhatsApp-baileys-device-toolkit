@@ -98,8 +98,7 @@ COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/web-ui/shared /app/web-ui/shared
 
 # Create necessary directories
-RUN mkdir -p /app/web-ui/baileys_auth_info && \
-    chown -R baileys:baileys /app
+RUN chown -R baileys:baileys /app
 
 # Switch to non-root user
 USER baileys
@@ -107,7 +106,7 @@ USER baileys
 # Environment variables
 ENV NODE_ENV=production \
     PORT=3001 \
-    STORE_PATH=/app/web-ui/baileys_auth_info/baileys_store_multi.json
+    STORE_PATH=/app/baileys_auth_info/baileys_store_multi.json
 
 # Expose port
 EXPOSE 3001

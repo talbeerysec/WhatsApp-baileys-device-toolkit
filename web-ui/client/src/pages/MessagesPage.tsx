@@ -300,8 +300,31 @@ const MessagesPage: React.FC = () => {
                 </Typography>
               )}
 
-              {/* Image */}
-              {msg.hasMedia && msg.mediaType === 'image' && (
+              {/* ViewOnce indicator */}
+              {msg.isViewOnce && (
+                <Chip
+                  label={msg.viewOnceMediaCached ? 'View Once (cached)' : 'View Once'}
+                  size="small"
+                  variant="outlined"
+                  sx={{ mb: 0.5, fontSize: '0.7rem', height: 20 }}
+                />
+              )}
+
+              {/* ViewOnce media unavailable (history sync — no download credentials) */}
+              {msg.hasMedia && msg.isViewOnce && !msg.viewOnceMediaCached && (
+                <Box mb={0.5} sx={{
+                  p: 2, borderRadius: 2, bgcolor: 'action.hover',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  minHeight: 80, border: '1px dashed', borderColor: 'divider'
+                }}>
+                  <Typography variant="body2" color="text.secondary" fontStyle="italic">
+                    {msg.mediaType === 'image' ? 'Image' : msg.mediaType === 'video' ? 'Video' : 'Media'} — view once media expired
+                  </Typography>
+                </Box>
+              )}
+
+              {/* Image (normal or cached viewOnce) */}
+              {msg.hasMedia && msg.mediaType === 'image' && (!msg.isViewOnce || msg.viewOnceMediaCached) && (
                 <Box mb={0.5}>
                   <img
                     src={ApiService.getMediaUrl(decodedJid, msg.id)}
@@ -312,8 +335,8 @@ const MessagesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Video */}
-              {msg.hasMedia && msg.mediaType === 'video' && (
+              {/* Video (normal or cached viewOnce) */}
+              {msg.hasMedia && msg.mediaType === 'video' && (!msg.isViewOnce || msg.viewOnceMediaCached) && (
                 <Box mb={0.5}>
                   <video
                     src={ApiService.getMediaUrl(decodedJid, msg.id)}
@@ -323,8 +346,8 @@ const MessagesPage: React.FC = () => {
                 </Box>
               )}
 
-              {/* Audio */}
-              {msg.hasMedia && msg.mediaType === 'audio' && (
+              {/* Audio (normal or cached viewOnce) */}
+              {msg.hasMedia && msg.mediaType === 'audio' && (!msg.isViewOnce || msg.viewOnceMediaCached) && (
                 <Box mb={0.5}>
                   <audio src={ApiService.getMediaUrl(decodedJid, msg.id)} controls style={{ width: '100%' }} />
                 </Box>
