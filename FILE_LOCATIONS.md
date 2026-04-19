@@ -3,7 +3,7 @@
 ## Frontend (React Components & Services)
 
 ### Device Screen Component
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/client/src/pages/DevicesPage.tsx`
+- **File**: `web-ui/client/src/pages/DevicesPage.tsx`
 - **Purpose**: Main UI for device discovery and ping management
 - **Key Components**:
   - Device discovery form (Get Devices button)
@@ -14,7 +14,7 @@
   - Ping results list (collapsible)
 
 ### API Service Client
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/client/src/services/api.ts`
+- **File**: `web-ui/client/src/services/api.ts`
 - **Purpose**: HTTP client for backend API communication
 - **Key Methods**:
   - `getDevices(user)` - GET /api/devices/:user
@@ -22,7 +22,7 @@
   - `sendToDevice(request)` - POST /api/messages/device
 
 ### Socket Context
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/client/src/contexts/SocketContext.ts`
+- **File**: `web-ui/client/src/contexts/SocketContext.ts`
 - **Purpose**: WebSocket connection management
 - **Events**:
   - Listens for `ping.result` events from backend
@@ -32,13 +32,13 @@
 ## Backend (Server Routes & Services)
 
 ### Devices Routes
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/src/routes/devices.ts`
+- **File**: `web-ui/server/src/routes/devices.ts`
 - **Endpoints**:
   - `GET /api/devices/:user` - Discover devices
   - `POST /api/devices/ping` - Send silent ping
 
 ### Messages Routes
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/src/routes/messages.ts`
+- **File**: `web-ui/server/src/routes/messages.ts`
 - **Endpoints**:
   - `POST /api/messages/send` - Send to JID
   - `POST /api/messages/device` - Send to specific device
@@ -46,7 +46,7 @@
   - `POST /api/messages/read` - Mark as read
 
 ### WhatsApp Service
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/src/services/whatsapp.ts`
+- **File**: `web-ui/server/src/services/whatsapp.ts`
 - **Key Methods**:
   - `getDevices(user)` - Fetch devices using getUSyncDevices()
   - `silentPing(user, deviceId, type)` - Main ping implementation
@@ -56,7 +56,7 @@
   - `pendingSilentPings: Map<messageId, PendingSilentPing>` - Tracks ongoing pings
 
 ### Socket Service
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/src/services/socket.ts`
+- **File**: `web-ui/server/src/services/socket.ts`
 - **Purpose**: WebSocket event bridge between backend and frontend
 
 ---
@@ -64,7 +64,7 @@
 ## Shared Types
 
 ### API Types
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/shared/types/api.ts`
+- **File**: `web-ui/shared/types/api.ts`
 - **Key Types**:
   - `DeviceInfo` - Device representation {user, device}
   - `DeviceStatus` - Status tracking {user, deviceId, status, fingerprint}
@@ -76,8 +76,8 @@
 ## Baileys Library Integration
 
 ### Main Library
-- **Location**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/lib/` (compiled)
-- **Source**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/src/` (TypeScript source)
+- **Location**: `lib/` (compiled)
+- **Source**: `src/` (TypeScript source)
 
 ### Key Functions Used
 - `makeWASocket()` - Create WhatsApp socket
@@ -93,15 +93,15 @@
 ## Configuration Files
 
 ### Environment
-- **Server**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/.env`
-- **Client**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/client/.env`
+- **Server**: `web-ui/server/.env`
+- **Client**: `web-ui/client/.env`
 
 ### Auth State
-- **Storage**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/baileys_auth_info/`
+- **Storage**: `baileys_auth_info/`
 - **Files**: creds.json, keys/ (encrypted Signal keys)
 
 ### Message Store
-- **File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/baileys_store_multi.json`
+- **File**: `baileys_store_multi.json`
 - **Purpose**: In-memory store for messages, chats, contacts
 
 ---

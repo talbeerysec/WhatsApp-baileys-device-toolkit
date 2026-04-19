@@ -27,6 +27,8 @@ import NodeCache from 'node-cache';
 import P from 'pino';
 import { ConnectionStatus, ChatInfo, ContactInfo, DeviceInfo, SilentPingResult, PrekeyBundle, UserProfile, MessageInfo } from '../../../shared/types/api';
 
+const MEDIA_CACHE_DIR = process.env.MEDIA_CACHE_PATH || path.join(__dirname, '../../media-cache');
+
 interface PendingSilentPing {
   user: string;
   deviceId: number;
@@ -186,9 +188,10 @@ export class WhatsAppService extends EventEmitter {
       const hasExistingAuth = state.creds.registered;
       const hasUserInfo = state.creds.me?.id;
       const hasAccount = state.creds.account;
-      // Only consider session data valid if we have an actual creds file AND registered flag is true
+      // Consider session valid if we have creds file + identity keys + user info OR registered flag
+      // Note: Android companion devices may have registered=false even with valid sessions
       const hasSessionData = hasCredsFile && state.creds.noiseKey && state.creds.signedIdentityKey;
-      const hasValidSession = hasSessionData && hasExistingAuth && (hasUserInfo || hasAccount);
+      const hasValidSession = hasSessionData && (hasExistingAuth || hasUserInfo || hasAccount);
 
       console.log(`🔄 Initializing WhatsApp connection with version ${version.join('.')}`);
       console.log(`🔐 Authentication status:`);
@@ -355,6 +358,51 @@ export class WhatsAppService extends EventEmitter {
               hasName: !!c.name
             })), null, 2));
           }
+
+          // Diagnostic: log viewOnce messages and their media field presence
+          if (messages && messages.length > 0) {
+            let mediaMsgCount = 0;
+            let viewOnceCount = 0;
+            for (const msg of messages) {
+              if (!msg.message) continue;
+
+              // Check for viewOnce wrapper
+              const rawMsg = msg.message as any;
+              const voWrapper = rawMsg.viewOnceMessage || rawMsg.viewOnceMessageV2 || rawMsg.viewOnceMessageV2Extension;
+              if (voWrapper?.message) {
+                viewOnceCount++;
+                const inner = voWrapper.message;
+                const mediaMsg = inner.imageMessage || inner.videoMessage || inner.audioMessage || inner.documentMessage;
+                if (mediaMsg) {
+                  console.log(
+                    `[HistorySync:WebUI] viewOnce msg ${msg.key?.id}: ` +
+                    `mediaKey=${!!mediaMsg.mediaKey}, directPath=${!!mediaMsg.directPath}, url=${!!mediaMsg.url}, ` +
+                    `fields=[${Object.keys(mediaMsg).join(',')}]`
+                  );
+                }
+              }
+
+              const content = WhatsAppService.unwrapViewOnce(msg.message);
+              const mediaMsg = WhatsAppService.getMediaMsg(content);
+              if (!mediaMsg) continue;
+
+              const jid = msg.key?.remoteJid;
+              const messageId = msg.key?.id;
+              if (!jid || !messageId) continue;
+
+              mediaMsgCount++;
+              // Cache in background — don't block the event handler
+              this.cacheMedia(msg, jid, messageId, mediaMsg.mimetype).catch((err) => {
+                console.warn(`Failed to cache history media for ${messageId}:`, err?.message || err);
+              });
+            }
+            if (mediaMsgCount > 0) {
+              console.log(`Caching media for ${mediaMsgCount} history sync messages`);
+            }
+            if (viewOnceCount > 0) {
+              console.log(`[HistorySync:WebUI] Found ${viewOnceCount} viewOnce messages in history sync`);
+            }
+          }
         }
 
         // Handle contacts upsert (new contacts added)
@@ -427,7 +475,7 @@ export class WhatsAppService extends EventEmitter {
           this.updateConnectionStatus('close', false, undefined, 'Clearing corrupt app state. Please wait...');
 
           try {
-            const authPath = path.join(process.cwd(), 'baileys_auth_info');
+            const authPath = path.resolve(__dirname, '../../../../baileys_auth_info');
 
             // Delete only app-state-sync-* files, preserve creds.json and keys
             const files = fs.readdirSync(authPath);
@@ -548,9 +596,62 @@ export class WhatsAppService extends EventEmitter {
     }
   }
 
+  /** Unwrap viewOnce wrappers — history sync messages may not go through cleanMessage() */
+  private static unwrapViewOnce(message: any): any {
+    if (!message) return message;
+    const wrapper = message.viewOnceMessage || message.viewOnceMessageV2 || message.viewOnceMessageV2Extension;
+    return wrapper?.message || message;
+  }
+
+  private static getMediaMsg(content: any): any {
+    return content?.imageMessage || content?.videoMessage || content?.audioMessage || content?.documentMessage || content?.stickerMessage;
+  }
+
   private handleMessagesUpsert(upsert: any): void {
     console.log('📨 New messages:', upsert.messages.length);
     this.emit('messages.upsert', upsert);
+
+    // Proactively cache media for all incoming messages (especially viewOnce which expires quickly)
+    for (const msg of upsert.messages) {
+      if (!msg.message) continue;
+      const content = WhatsAppService.unwrapViewOnce(msg.message);
+      const mediaMsg = WhatsAppService.getMediaMsg(content);
+      if (!mediaMsg) continue;
+
+      const jid = msg.key?.remoteJid;
+      const messageId = msg.key?.id;
+      if (!jid || !messageId) continue;
+
+      // Cache in background — don't block the event handler
+      this.cacheMedia(msg, jid, messageId, mediaMsg.mimetype).catch((err) => {
+        console.warn(`⚠️ Failed to cache media for ${messageId}:`, err?.message || err);
+      });
+    }
+  }
+
+  private async cacheMedia(msg: any, jid: string, messageId: string, mimetype?: string): Promise<void> {
+    const sanitizedJid = jid.replace(/[/:*?"<>|]/g, '_');
+    const cacheDir = path.join(MEDIA_CACHE_DIR, sanitizedJid);
+
+    // Check if already cached
+    if (fs.existsSync(cacheDir)) {
+      const existing = fs.readdirSync(cacheDir).find((f: string) => f.startsWith(messageId));
+      if (existing) return;
+    }
+
+    const buffer = await downloadMediaMessage(msg, 'buffer', {});
+
+    const extMap: { [key: string]: string } = {
+      'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp', 'image/gif': '.gif',
+      'video/mp4': '.mp4', 'video/3gpp': '.3gp',
+      'audio/ogg': '.ogg', 'audio/mpeg': '.mp3', 'audio/mp4': '.m4a',
+      'application/pdf': '.pdf',
+    };
+    const ext = extMap[mimetype || ''] || '.bin';
+
+    fs.mkdirSync(cacheDir, { recursive: true });
+    fs.writeFileSync(path.join(cacheDir, `${messageId}${ext}`), buffer as Buffer);
+    console.log(`💾 Cached media ${messageId}${ext} for ${jid}`);
   }
 
   private handleMessagesUpdate(updates: any[]): void {
@@ -695,7 +796,7 @@ export class WhatsAppService extends EventEmitter {
           const groupIdMatch = chat.id.match(/^(.+)@g\.us$/);
           name = groupIdMatch ? `Group (${groupIdMatch[1].substring(0, 10)}...)` : 'Group Chat';
         } else {
-          // Individual chat - extract phone number from JID (e.g., "972547837628@s.whatsapp.net" -> "+972547837628")
+          // Individual chat - extract phone number from JID (e.g., "1234567890@s.whatsapp.net" -> "+1234567890")
           const phoneMatch = chat.id.match(/^(\d+)@/);
           if (phoneMatch) {
             name = `+${phoneMatch[1]}`;
@@ -809,7 +910,7 @@ export class WhatsAppService extends EventEmitter {
         if (!name) {
           const phoneMatch = contact.id.match(/^(\d+)@/);
           if (phoneMatch) {
-            // Format phone number nicely (e.g., "972547837628")
+            // Format phone number nicely (e.g., "1234567890")
             name = phoneMatch[1];
           } else {
             name = contact.id.split('@')[0];
@@ -840,8 +941,8 @@ export class WhatsAppService extends EventEmitter {
       const rawMessage = msg.message;
       if (!rawMessage) continue;
 
-      // Use rawMessage directly as content (Baileys core now strips viewOnce wrappers)
-      const content = rawMessage;
+      // Unwrap viewOnce wrappers (history sync messages may not go through cleanMessage())
+      const content = WhatsAppService.unwrapViewOnce(rawMessage);
 
       // Extract text
       const text = content?.conversation
@@ -863,12 +964,41 @@ export class WhatsAppService extends EventEmitter {
       // Get mimetype from media message
       let mimetype: string | undefined = undefined;
       if (mediaType) {
-        const mediaMsg = content?.imageMessage || content?.videoMessage || content?.audioMessage || content?.documentMessage || content?.stickerMessage;
+        const mediaMsg = WhatsAppService.getMediaMsg(content);
         mimetype = mediaMsg?.mimetype;
       }
 
       // Get caption
       const caption = content?.imageMessage?.caption || content?.videoMessage?.caption || undefined;
+
+      // Detect viewOnce: either from wrapper (viewOnceMessage/V2/V2Extension) or direct flag on media
+      const mediaMsg = WhatsAppService.getMediaMsg(content);
+      const isViewOnce = !!(
+        rawMessage.viewOnceMessage || rawMessage.viewOnceMessageV2 || rawMessage.viewOnceMessageV2Extension ||
+        mediaMsg?.viewOnce
+      );
+
+      // Check if viewOnce media is available (has download credentials OR cached on disk)
+      let viewOnceMediaCached = false;
+      if (isViewOnce && hasMedia) {
+        // First check if the message has valid download credentials (real-time viewOnce)
+        const mk = mediaMsg?.mediaKey;
+        const hasMediaKey = mk != null && (typeof mk !== 'object' || (mk as any).length > 0);
+        const hasDirectPath = !!mediaMsg?.directPath;
+        if (hasMediaKey && hasDirectPath) {
+          viewOnceMediaCached = true; // downloadable on demand
+        } else {
+          // Fall back to disk cache check
+          const sanitizedJid = jid.replace(/[/:*?"<>|]/g, '_');
+          const cacheDir = path.join(MEDIA_CACHE_DIR, sanitizedJid);
+          try {
+            if (fs.existsSync(cacheDir)) {
+              const cached = fs.readdirSync(cacheDir).find((f: string) => f.startsWith(msg.key?.id || ''));
+              viewOnceMediaCached = !!cached;
+            }
+          } catch {}
+        }
+      }
 
       result.push({
         id: msg.key?.id || '',
@@ -879,8 +1009,8 @@ export class WhatsAppService extends EventEmitter {
         text: text || undefined,
         mediaType,
         hasMedia,
-        isViewOnce: false,
-        viewOnceMediaCached: false,
+        isViewOnce,
+        viewOnceMediaCached,
         mimetype,
         caption,
       });
@@ -898,7 +1028,7 @@ export class WhatsAppService extends EventEmitter {
 
     // Clear cached media for this chat
     const sanitizedJid = jid.replace(/[/:*?"<>|]/g, '_');
-    const cacheDir = path.join(__dirname, '../../media-cache', sanitizedJid);
+    const cacheDir = path.join(MEDIA_CACHE_DIR, sanitizedJid);
     try {
       if (fs.existsSync(cacheDir)) {
         fs.rmSync(cacheDir, { recursive: true, force: true });
@@ -912,7 +1042,7 @@ export class WhatsAppService extends EventEmitter {
   async getMessageMedia(jid: string, messageId: string): Promise<{ buffer: Buffer; mimetype: string } | null> {
     // First check cache
     const sanitizedJid = jid.replace(/[/:*?"<>|]/g, '_');
-    const cacheDir = path.join(__dirname, '../../media-cache', sanitizedJid);
+    const cacheDir = path.join(MEDIA_CACHE_DIR, sanitizedJid);
 
     try {
       if (fs.existsSync(cacheDir)) {
@@ -951,20 +1081,45 @@ export class WhatsAppService extends EventEmitter {
       throw new Error('WhatsApp not connected');
     }
 
-    if (!this.store) return null;
+    if (!this.store) { console.log(`[getMessageMedia] no store`); return null; }
 
     const messages = this.store.messages[jid];
-    if (!messages || !messages.array) return null;
+    if (!messages || !messages.array) {
+      console.log(`[getMessageMedia] no messages for jid ${jid}, available jids: ${Object.keys(this.store.messages).length}`);
+      return null;
+    }
 
     const msg = messages.array.find((m: any) => m.key?.id === messageId);
-    if (!msg || !msg.message) return null;
+    if (!msg || !msg.message) {
+      console.log(`[getMessageMedia] message ${messageId} not found in ${messages.array.length} messages for ${jid}`);
+      return null;
+    }
 
     try {
+      // Unwrap viewOnce wrappers to check media credentials
+      const rawMsg = msg.message as any;
+      const unwrapped = WhatsAppService.unwrapViewOnce(rawMsg);
+      const mediaContent = unwrapped?.imageMessage || unwrapped?.videoMessage || unwrapped?.audioMessage || unwrapped?.documentMessage || unwrapped?.stickerMessage;
+      // Check both wrapper-style viewOnce and flag-style viewOnce
+      const isViewOnce = !!(rawMsg.viewOnceMessage || rawMsg.viewOnceMessageV2 || rawMsg.viewOnceMessageV2Extension || mediaContent?.viewOnce);
+
+      if (isViewOnce && mediaContent) {
+        const mk = mediaContent.mediaKey;
+        const hasMediaKey = mk != null && (typeof mk !== 'object' || mk.length > 0);
+        const hasDirectPath = !!mediaContent.directPath;
+
+        if (!hasMediaKey || !hasDirectPath) {
+          // ViewOnce media from history sync — WhatsApp strips download credentials.
+          console.log(`[getMessageMedia] viewOnce msg ${messageId}: media unavailable (history sync stripped credentials)`);
+          return null;
+        }
+      }
+
       const buffer = await downloadMediaMessage(msg, 'buffer', {});
 
-      // Baileys core now strips viewOnce wrappers, so use rawMessage directly
-      const content = msg.message;
-      const mediaMsg = content?.imageMessage || content?.videoMessage || content?.audioMessage || content?.documentMessage || content?.stickerMessage;
+      // Unwrap viewOnce wrappers (history sync messages may not be cleaned)
+      const content = WhatsAppService.unwrapViewOnce(msg.message);
+      const mediaMsg = WhatsAppService.getMediaMsg(content);
       const mimetype = mediaMsg?.mimetype || 'application/octet-stream';
 
       return { buffer: buffer as Buffer, mimetype };
@@ -1851,7 +2006,8 @@ export class WhatsAppService extends EventEmitter {
 
   getRawProtobufLog(jid: string, messageId: string): object | null {
     const safeJid = jid.replace(/[@:]/g, '_');
-    const filePath = path.join('protobuf-logs', safeJid, messageId + '.json');
+    const logDir = process.env.PROTOBUF_LOG_PATH || 'protobuf-logs';
+    const filePath = path.join(logDir, safeJid, messageId + '.json');
     try {
       const data = fs.readFileSync(filePath, 'utf-8');
       return JSON.parse(data);

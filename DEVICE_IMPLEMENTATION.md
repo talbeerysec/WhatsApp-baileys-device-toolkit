@@ -8,7 +8,7 @@ The WhatsApp Baileys Device Toolkit includes a comprehensive device management s
 ## 1. Device Screen UI Component
 
 ### Location
-**File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/client/src/pages/DevicesPage.tsx`
+**File**: `web-ui/client/src/pages/DevicesPage.tsx`
 
 ### Key Features
 
@@ -75,7 +75,7 @@ socket.on('ping.result', handlePingResult)
 ### Backend Routes
 
 #### 2.1 Devices Routes
-**File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/src/routes/devices.ts`
+**File**: `web-ui/server/src/routes/devices.ts`
 
 ```
 GET  /api/devices/:user          - Get devices for a user
@@ -101,7 +101,7 @@ Response: { success: true, message: string }
 ```
 
 #### 2.2 Messages Routes
-**File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/src/routes/messages.ts`
+**File**: `web-ui/server/src/routes/messages.ts`
 
 ```
 POST /api/messages/send          - Send message to JID
@@ -179,7 +179,7 @@ await this.sock.relayMessage(jid, message, {
 ## 4. Ping Functionality - Backend Implementation
 
 ### Location
-**File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/server/src/services/whatsapp.ts`
+**File**: `web-ui/server/src/services/whatsapp.ts`
 
 ### 4.1 Silent Ping Workflow
 
@@ -400,7 +400,7 @@ async getDevices(user: string): Promise<DeviceInfo[]> {
 ## 6. Shared Types
 
 ### Location
-**File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/shared/types/api.ts`
+**File**: `web-ui/shared/types/api.ts`
 
 ### Key Types
 
@@ -453,7 +453,7 @@ interface SilentPingResult {
 ## 7. API Client Service
 
 ### Location
-**File**: `/Users/talbeery/Documents/GitHub/WhatsApp-baileys-device-toolkit/web-ui/client/src/services/api.ts`
+**File**: `web-ui/client/src/services/api.ts`
 
 ### Device-Related Methods
 
