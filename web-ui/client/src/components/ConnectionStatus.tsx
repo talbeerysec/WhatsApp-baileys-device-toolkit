@@ -26,10 +26,13 @@ import {
   PowerSettingsNew as DisconnectIcon
 } from '@mui/icons-material';
 import { useWhatsApp } from '../contexts/WhatsAppContext';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { maskName, maskJid } from '../utils/privacyUtils';
 import { ApiService } from '../services/api';
 
 const ConnectionStatus: React.FC = () => {
   const { connectionStatus } = useWhatsApp();
+  const { privacyMode } = usePrivacy();
   const [isClearing, setIsClearing] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
@@ -157,7 +160,7 @@ const ConnectionStatus: React.FC = () => {
               <PersonIcon fontSize="small" />
             </Avatar>
             <Typography variant="body2" color="text.secondary">
-              {connectionStatus.user.name} ({connectionStatus.user.id})
+              {privacyMode ? maskName(connectionStatus.user.name) : connectionStatus.user.name} ({privacyMode ? maskJid(connectionStatus.user.id) : connectionStatus.user.id})
             </Typography>
           </Box>
         )}

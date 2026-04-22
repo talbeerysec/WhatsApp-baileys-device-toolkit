@@ -12,9 +12,12 @@ import {
 } from '@mui/material';
 import ConnectionStatus from '../components/ConnectionStatus';
 import { useWhatsApp } from '../contexts/WhatsAppContext';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { maskChatDisplay } from '../utils/privacyUtils';
 
 const HomePage: React.FC = () => {
   const { chats, contacts, connectionStatus } = useWhatsApp();
+  const { privacyMode } = usePrivacy();
 
   const stats = [
     { label: 'Total Chats', value: chats.length, color: 'primary' },
@@ -64,43 +67,45 @@ const HomePage: React.FC = () => {
           </Card>
         </Grid>
 
-        {/* Recent Chats */}
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Recent Chats
-              </Typography>
-              {recentChats.length > 0 ? (
-                <List dense>
-                  {recentChats.map((chat) => (
-                    <ListItem key={chat.id} divider>
-                      <ListItemText
-                        primary={chat.name || chat.id}
-                        secondary={
-                          chat.lastMessage 
-                            ? `${chat.lastMessage.text.substring(0, 50)}${chat.lastMessage.text.length > 50 ? '...' : ''}`
-                            : 'No messages'
-                        }
-                      />
-                      {chat.unreadCount && chat.unreadCount > 0 && (
-                        <Chip
-                          label={chat.unreadCount}
-                          size="small"
-                          color="primary"
-                        />
-                      )}
-                    </ListItem>
-                  ))}
-                </List>
-              ) : (
-                <Typography color="text.secondary">
-                  No chats available
+        {/* Recent Chats - hidden in privacy mode */}
+        {!privacyMode && (
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Recent Chats
                 </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+                {recentChats.length > 0 ? (
+                  <List dense>
+                    {recentChats.map((chat) => (
+                      <ListItem key={chat.id} divider>
+                        <ListItemText
+                          primary={chat.name || chat.id}
+                          secondary={
+                            chat.lastMessage
+                              ? `${chat.lastMessage.text.substring(0, 50)}${chat.lastMessage.text.length > 50 ? '...' : ''}`
+                              : 'No messages'
+                          }
+                        />
+                        {chat.unreadCount && chat.unreadCount > 0 && (
+                          <Chip
+                            label={chat.unreadCount}
+                            size="small"
+                            color="primary"
+                          />
+                        )}
+                      </ListItem>
+                    ))}
+                  </List>
+                ) : (
+                  <Typography color="text.secondary">
+                    No chats available
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        )}
 
         {/* System Status */}
         <Grid item xs={12} md={6}>

@@ -60,6 +60,8 @@ import { ApiService } from '../services/api';
 import { DeviceInfo, SilentPingResult, DeviceStatus, UserProfile, DevicePrekeyData } from '../../../shared/types/api';
 import { useSocket } from '../contexts/SocketContext';
 import { sanitizePhoneNumber } from '../utils/phoneUtils';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { maskPhoneNumber, maskName } from '../utils/privacyUtils';
 import { OSDisplay } from '../components/OSDisplay';
 import { calculateDeviceAge } from '../../../shared/utils/prekey-inference';
 import { useLocation } from 'react-router-dom';
@@ -79,6 +81,8 @@ const DevicesPage: React.FC = () => {
   const [profileLoading, setProfileLoading] = useState(false);
   const { socket } = useSocket();
   const location = useLocation();
+  const { privacyMode } = usePrivacy();
+  const displayUser = privacyMode ? maskPhoneNumber(user) : user;
 
   // Handle pre-filled phone number from navigation (e.g., from Contacts page)
   useEffect(() => {
@@ -130,7 +134,7 @@ const DevicesPage: React.FC = () => {
 
       setDevices(devicesResult);
       setUserProfile(profileResult);
-      setMessage(`Found ${devicesResult.length} device(s) for user ${sanitizedUser}`);
+      setMessage(`Found ${devicesResult.length} device(s) for user ${privacyMode ? maskPhoneNumber(sanitizedUser) : sanitizedUser}`);
 
       // Initialize device statuses with passive inference from prekey bundles
       const newStatuses = new Map<string, DeviceStatus>();
@@ -650,9 +654,12 @@ const DevicesPage: React.FC = () => {
                   <TextField
                     fullWidth
                     label="User (phone number)"
+                    type={privacyMode ? 'password' : 'text'}
                     value={user}
                     onChange={(e) => setUser(sanitizePhoneNumber(e.target.value))}
                     placeholder="1234567890"
+                    autoComplete={privacyMode ? 'off' : undefined}
+                    inputProps={privacyMode ? { autoComplete: 'off', list: 'autocomplete-off' } : undefined}
                   />
                 </Grid>
                 <Grid item xs={12} sm={4}>
@@ -684,7 +691,7 @@ const DevicesPage: React.FC = () => {
           </Card>
         </Grid>
 
-        {userProfile && (
+        {userProfile && !privacyMode && (
           <Grid item xs={12}>
             <Card>
               <CardContent>
@@ -765,20 +772,22 @@ const DevicesPage: React.FC = () => {
                   {/* User Info */}
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="h6">
-                      {userProfile.displayName || userProfile.contactName || userProfile.phoneNumber}
+                      {privacyMode
+                        ? maskName(userProfile.displayName) || maskName(userProfile.contactName) || maskPhoneNumber(userProfile.phoneNumber)
+                        : userProfile.displayName || userProfile.contactName || userProfile.phoneNumber}
                     </Typography>
 
                     {/* Show contact name if different from display name */}
                     {userProfile.contactName && userProfile.displayName && userProfile.contactName !== userProfile.displayName && (
                       <Typography variant="body2" color="text.secondary">
-                        Contact: {userProfile.contactName}
+                        Contact: {privacyMode ? maskName(userProfile.contactName) : userProfile.contactName}
                       </Typography>
                     )}
 
                     {/* Show phone number if not already displayed */}
                     {userProfile.displayName && userProfile.phoneNumber !== userProfile.displayName && (
                       <Typography variant="body2" color="text.secondary">
-                        {userProfile.phoneNumber}
+                        {privacyMode ? maskPhoneNumber(userProfile.phoneNumber) : userProfile.phoneNumber}
                       </Typography>
                     )}
 
@@ -820,7 +829,7 @@ const DevicesPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Devices for {user}
+                  Devices for {displayUser}
                 </Typography>
                 <TableContainer component={Paper} variant="outlined">
                   <Table>
@@ -848,7 +857,7 @@ const DevicesPage: React.FC = () => {
                                 Device {deviceId}
                               </Typography>
                               <Typography variant="caption" color="text.secondary">
-                                {device.user}
+                                {privacyMode ? maskPhoneNumber(device.user) : device.user}
                               </Typography>
                             </TableCell>
                             <TableCell>
@@ -1307,7 +1316,7 @@ const DevicesPage: React.FC = () => {
                           primary={
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                               <Typography variant="subtitle1">
-                                {result.user}:{result.deviceId}
+                                {privacyMode ? maskPhoneNumber(result.user) : result.user}:{result.deviceId}
                               </Typography>
                               <Chip 
                                 label={result.type === 'call-reject' ? 'CALL-REJECT' : result.type === 'unknown' ? 'UNKNOWN' : result.type === 'poll-response' ? 'POLL-RESPONSE' : result.type === 'button-response' ? 'BUTTON-RESPONSE' : result.type === 'device-sent' ? 'DEVICE-SENT' : result.type === 'app-state' ? 'APP-STATE' : result.type === 'peer-data-operation' ? 'PEER-DATA-OP' : result.type === 'malformed-message' ? 'MALFORMED-MSG' : result.type.toUpperCase()} 

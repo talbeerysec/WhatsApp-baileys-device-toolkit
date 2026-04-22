@@ -1,6 +1,7 @@
 // import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { PrivacyProvider } from './contexts/PrivacyContext';
 import { WhatsAppProvider } from './contexts/WhatsAppContext';
 import { SocketProvider } from './contexts/SocketContext';
 import LoginPage from './pages/LoginPage';
@@ -10,23 +11,25 @@ import './utils/persistentLogger'; // Initialize persistent logger globally
 
 function App() {
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/*"
-          element={
-            <ProtectedRoute>
-              <SocketProvider>
-                <WhatsAppProvider>
-                  <Dashboard />
-                </WhatsAppProvider>
-              </SocketProvider>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </AuthProvider>
+    <PrivacyProvider>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <SocketProvider>
+                  <WhatsAppProvider>
+                    <Dashboard />
+                  </WhatsAppProvider>
+                </SocketProvider>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </PrivacyProvider>
   );
 }
 

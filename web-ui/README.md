@@ -15,6 +15,7 @@ A modern web interface for the Baileys WhatsApp Web API library, providing a use
 - 📊 **Dashboard** - Overview of connection status and statistics
 - 🔄 **Session Management** - Automatic session reuse and QR code regeneration
 - ⚡ **Enhanced Stability** - Improved connection handling and timeout management
+- 🔒 **Privacy Mode** - Optional demo mode that masks phone numbers and names with asterisks
 
 ## Architecture
 
@@ -179,6 +180,38 @@ The web interface provides seamless QR code authentication:
 - **QR Expired**: QR codes auto-refresh; wait for new QR or refresh the page
 - **Connection Loops**: Ensure WhatsApp Desktop app is closed to avoid conflicts
 - **Clear Session**: Use "Start Fresh Authentication" if authentication is stuck
+
+## Privacy Mode
+
+The web UI includes an optional **Privacy Mode** for presentations and demos, which masks sensitive information so you can safely show the interface without exposing real phone numbers or contact names.
+
+### How to Enable
+
+1. Go to the **Login page** (`/login`)
+2. Toggle the **Privacy Mode** switch at the bottom of the page (below the Sign In button)
+3. The setting persists in your browser's localStorage
+
+### What Gets Masked
+
+| Page | What's masked |
+|------|---------------|
+| **Home (Dashboard)** | Recent Chats section is completely hidden; user ID masked in Connection Status |
+| **Devices** | Phone number input uses password field; autocomplete disabled; user profile card hidden entirely (no picture, name, or about); phone numbers masked in device table, status messages, and ping results |
+| **Prekey Bundles** | Phone number input uses password field; autocomplete disabled; phone number masked in results heading |
+
+### How Masking Works
+
+- **Phone numbers**: All digits replaced with `*` (e.g., `972547837628` → `************`)
+- **JIDs**: Number portion masked, domain preserved (e.g., `1234567890@s.whatsapp.net` → `**********@s.whatsapp.net`)
+- **Names**: All word characters replaced with `*` when privacy mode is active
+- **Profile cards**: Hidden entirely in privacy mode (no profile picture, display name, or about text)
+
+### Technical Details
+
+- State managed via React Context (`PrivacyContext`) with `localStorage` persistence
+- Masking is **display-only** — API calls and internal state use real values
+- Masking utilities located in `web-ui/client/src/utils/privacyUtils.ts`
+- Toggle available on the login page so it can be enabled before accessing any data
 
 ## Configuration
 

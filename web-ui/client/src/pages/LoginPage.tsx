@@ -8,16 +8,20 @@ import {
   Typography,
   Alert,
   CircularProgress,
-  Container
+  Container,
+  FormControlLabel,
+  Switch
 } from '@mui/material';
-import { WhatsApp as WhatsAppIcon } from '@mui/icons-material';
+import { WhatsApp as WhatsAppIcon, VisibilityOff as VisibilityOffIcon } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { usePrivacy } from '../contexts/PrivacyContext';
 
 const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
+  const { privacyMode, togglePrivacyMode } = usePrivacy();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -124,6 +128,31 @@ const LoginPage: React.FC = () => {
             Default password: admin123
           </Typography>
         </Paper>
+
+        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <FormControlLabel
+            control={
+              <Switch
+                size="small"
+                checked={privacyMode}
+                onChange={togglePrivacyMode}
+              />
+            }
+            label={
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <VisibilityOffIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                <Typography variant="caption" color="text.secondary">
+                  Privacy Mode
+                </Typography>
+              </Box>
+            }
+          />
+          {privacyMode && (
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, fontSize: '0.7rem' }}>
+              Masks phone numbers for demos
+            </Typography>
+          )}
+        </Box>
       </Box>
     </Container>
   );

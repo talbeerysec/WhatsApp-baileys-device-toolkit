@@ -15,12 +15,15 @@ import { ApiService } from '../services/api';
 import { DeviceCard } from '../components/DeviceCard';
 import { PrekeyData } from '../../../shared/types/api';
 import { sanitizePhoneNumber } from '../utils/phoneUtils';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { maskPhoneNumber } from '../utils/privacyUtils';
 
 const PrekeyPage: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [prekeyData, setPrekeyData] = useState<PrekeyData | null>(null);
+  const { privacyMode } = usePrivacy();
 
   const handleFetchPrekeys = async () => {
     if (!phoneNumber) {
@@ -67,11 +70,14 @@ const PrekeyPage: React.FC = () => {
                 fullWidth
                 label="Phone Number"
                 placeholder="1234567890"
+                type={privacyMode ? 'password' : 'text'}
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 onKeyPress={handleKeyPress}
                 disabled={loading}
                 helperText="Enter phone number (numbers only, no + or country code)"
+                autoComplete={privacyMode ? 'off' : undefined}
+                inputProps={privacyMode ? { autoComplete: 'off', list: 'autocomplete-off' } : undefined}
               />
               <Button
                 variant="contained"
@@ -104,7 +110,7 @@ const PrekeyPage: React.FC = () => {
         {prekeyData && (
           <Box>
             <Typography variant="h6" gutterBottom>
-              Results for {prekeyData.phoneNumber}
+              Results for {privacyMode ? maskPhoneNumber(prekeyData.phoneNumber) : prekeyData.phoneNumber}
             </Typography>
             <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 2 }}>
               Fetched {prekeyData.devices.length} device(s) at {new Date(prekeyData.fetchedAt).toLocaleString()}
