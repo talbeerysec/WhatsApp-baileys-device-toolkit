@@ -13,7 +13,6 @@ This is a specialized fork of [Baileys](https://github.com/WhiskeySockets/Bailey
 - **Device-Specific Targeting**: Send messages and operations to specific devices using device IDs
 - **Silent Ping Operations**: 11 different types of silent ping for comprehensive device testing
 - **Device Fingerprinting**: Advanced device identification and analysis capabilities
-- **iOS Device Detection**: Improved iOS device classification with race condition fix
 
 ### 🌐 Modern Web Interface
 - **React-based UI**: Clean, responsive interface built with Material-UI
@@ -170,66 +169,6 @@ For Docker, ports can be customized via environment variables:
 HTTP_PORT=8080    # Change from default 80
 HTTPS_PORT=8443   # Change from default 443
 ```
-
-## 📝 Recent Updates
-
-### February 2026 Enhancements
-- **Baileys/Clawd Detection**: Identify third-party WhatsApp clients (Baileys implementations) via reaction ping
-  - WhatsApp fixed the reaction ping vulnerability - official clients no longer respond
-  - Devices showing as "Web or Windows" that respond to reaction ping are flagged as "Baileys/Clawd"
-  - Purple robot icon with "Baileys detected" badge in the UI
-  - Useful for detecting unofficial WhatsApp API clients
-
-### January 2026 Enhancements
-- **Browser Configuration Settings**: New settings page to customize client identification shown in WhatsApp's linked devices screen
-  - Preset and custom platform options
-  - Real-time preview of client display name
-  - Persisted configuration in `baileys_auth_info/browser-config.json`
-- **Improved Device Detection**: Added "Web or Windows" OS type for ambiguous desktop device detection
-  - Visual dual-icon display when device type cannot be definitively determined
-  - Enhanced confidence levels for device fingerprinting
-- **Full Contact Sync**: Comprehensive contact fetching via app state resync
-  - Extracts contacts from multiple sources (app state, chats, messages)
-  - Improved name resolution from `pushName` fields
-- **Error 428 Recovery**: Automatic recovery for connection closures
-- **Contact Name Persistence**: Fixed issues with contact names not updating in UI
-
-### v6.7.21
-- **Upgraded to Baileys v6.7.21**: Merged 185+ commits from upstream with bug fixes
-- **Fixed Device Linking**: Resolved 401 timeout issues during QR code authentication
-- **ES Module Support**: Updated build system for better compatibility
-- **iOS Device Detection Fix**: Fixed race condition in delete ping response handling
-- **Improved Stability**: Enhanced error handling and session management
-
-### December 2025 Enhancements
-- **Docker Support**: Complete Docker setup with multi-stage builds for development and production
-- **Full History Sync**: Enabled `syncFullHistory` to populate contacts and chats from WhatsApp
-- **Contact Filtering**: Automatic filtering to exclude groups, broadcasts, and linked devices from contacts
-- **Web UI Improvements**: Enhanced authentication flow with retry logic and connection delays
-- **Comprehensive Documentation**: Added detailed guides for Docker deployment, protocol analysis, and device management
-
-## ⚠️ Known Limitations
-
-### Contact Names During Initial Sync
-
-WhatsApp's protocol behavior regarding contact synchronization:
-
-- **Individual contacts** (phone numbers) are synced **WITHOUT names** during history sync
-- **Group chats** are synced **WITH names** during history sync
-- Initial sync typically shows ~18-20% of contacts with names (mostly groups and recently active contacts)
-- Individual contact names populate **gradually** as contacts send you messages (via `pushName` field in messages)
-- This is **expected WhatsApp protocol behavior**, not a bug in Baileys
-
-**Example after initial authentication:**
-```
-Total contacts synced: 578
-Contacts with names: 106 (18%)
-  - Groups: ~124 (with names)
-  - Individuals: ~395 (mostly showing as phone numbers initially)
-  - Other types: ~59
-```
-
-Contact names will automatically update through `contacts.update` events as people message you. Over time, more names will populate based on messaging activity.
 
 ## 🤝 Contributing & License
 
